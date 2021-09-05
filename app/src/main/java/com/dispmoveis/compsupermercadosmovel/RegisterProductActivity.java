@@ -8,7 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 public class RegisterProductActivity extends AppCompatActivity {
+
+    static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +37,14 @@ public class RegisterProductActivity extends AppCompatActivity {
                 Double price = Double.parseDouble(etndPrice.getText().toString());
                 Double totalPrice = price * add;
                 String ProductTotal = "Total (produto x" + add.toString() + "): R$ " +
-                        totalPrice.toString();
+                        decimalFormat.format(totalPrice);
                 etnAmount.setText(add.toString());
-                tvProductTotal.setText(ProductTotal);
+                if (totalPrice > 0){
+                    tvProductTotal.setText(ProductTotal);
+                }
             }
         });
+
         btnSubtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,9 +53,11 @@ public class RegisterProductActivity extends AppCompatActivity {
                     Double price = Double.parseDouble(etndPrice.getText().toString());
                     Double totalPrice = price * subtract;
                     String ProductTotal = "Total (produto x" + subtract.toString() + "): R$ " +
-                            totalPrice.toString();
+                            decimalFormat.format(totalPrice);
                     etnAmount.setText(subtract.toString());
-                    tvProductTotal.setText(ProductTotal);
+                    if (totalPrice > 0){
+                        tvProductTotal.setText(ProductTotal);
+                    }
                 }
             }
         });
@@ -60,7 +69,7 @@ public class RegisterProductActivity extends AppCompatActivity {
                 Integer amount = Integer.parseInt(etnAmount.getText().toString());
                 Double totalPrice = price * amount;
                 String ProductTotal = "Total (produto x" + amount.toString() + "): R$ " +
-                        totalPrice.toString();
+                        decimalFormat.format(totalPrice);
                 if (totalPrice > 0){
                     tvProductTotal.setText(ProductTotal);
                 }
