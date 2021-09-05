@@ -2,6 +2,7 @@ package com.dispmoveis.compsupermercadosmovel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ public class RegisterProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_product);
 
         EditText etndPrice = findViewById(R.id.etndPrice);
+        etndPrice.setText("0.00");
         EditText etnAmount = findViewById(R.id.etnAmount);
         etnAmount.setText("1");
 
@@ -28,7 +30,12 @@ public class RegisterProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Integer add = Integer.parseInt(etnAmount.getText().toString()) + 1;
+                Double price = Double.parseDouble(etndPrice.getText().toString());
+                Double totalPrice = price * add;
+                String ProductTotal = "Total (produto x" + add.toString() + "): R$ " +
+                        totalPrice.toString();
                 etnAmount.setText(add.toString());
+                tvProductTotal.setText(ProductTotal);
             }
         });
         btnSubtract.setOnClickListener(new View.OnClickListener() {
@@ -36,7 +43,26 @@ public class RegisterProductActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Integer subtract = Integer.parseInt(etnAmount.getText().toString()) - 1;
                 if (subtract > 0) {
+                    Double price = Double.parseDouble(etndPrice.getText().toString());
+                    Double totalPrice = price * subtract;
+                    String ProductTotal = "Total (produto x" + subtract.toString() + "): R$ " +
+                            totalPrice.toString();
                     etnAmount.setText(subtract.toString());
+                    tvProductTotal.setText(ProductTotal);
+                }
+            }
+        });
+
+        etndPrice.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Double price = Double.parseDouble(etndPrice.getText().toString());
+                Integer amount = Integer.parseInt(etnAmount.getText().toString());
+                Double totalPrice = price * amount;
+                String ProductTotal = "Total (produto x" + amount.toString() + "): R$ " +
+                        totalPrice.toString();
+                if (totalPrice > 0){
+                    tvProductTotal.setText(ProductTotal);
                 }
             }
         });
