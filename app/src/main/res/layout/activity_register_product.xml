@@ -58,7 +58,7 @@
         android:text="Produto:"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal" />
+        app:layout_constraintTop_toBottomOf="@+id/etndPrice" />
 
     <TextView
         android:id="@+id/textView3"
@@ -112,7 +112,7 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/etnAmount" />
 
     <TextView
         android:id="@+id/tvCartTotal"
@@ -147,7 +147,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvCartTotal" />
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/etnAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -157,6 +157,7 @@
         android:layout_marginRight="8dp"
         android:width="50dp"
         android:ems="10"
+        android:gravity="center_horizontal"
         android:inputType="number"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/btnAdd"
@@ -164,7 +165,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal"
+        android:id="@+id/etndPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -190,7 +191,7 @@
         android:layout_marginTop="8dp"
         android:text="R$"
         android:textSize="34sp"
-        app:layout_constraintEnd_toStartOf="@+id/editTextNumberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/etndPrice"
         app:layout_constraintHorizontal_bias="0.964"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
