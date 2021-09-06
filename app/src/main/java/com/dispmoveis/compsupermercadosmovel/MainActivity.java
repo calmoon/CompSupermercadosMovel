@@ -13,15 +13,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        FloatingActionButton fabDoCart = findViewById(R.id.fabDoCart);
-        fabDoCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, RegisterProductActivity.class);
-                startActivity(i);
-            }
-        });
+        if(Config.getLogin(MainActivity.this).isEmpty()) {
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
+        else {
+            Intent i = new Intent(MainActivity.this, GetDataActivity.class);
+            startActivity(i);
+            finish();
+        }
     }
 }
