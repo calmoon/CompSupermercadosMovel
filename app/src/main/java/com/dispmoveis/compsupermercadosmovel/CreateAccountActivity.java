@@ -7,16 +7,17 @@ import android.view.View;
 
 import android.widget.Toast;
 
-import com.dispmoveis.compsupermercadosmovel.databinding.ActivityRegisterBinding;
+import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCreateAccountBinding;
 
-public class RegisterActivity extends AppCompatActivity {
 
-    private ActivityRegisterBinding binding;
+public class CreateAccountActivity extends AppCompatActivity {
+
+    private ActivityCreateAccountBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        binding = ActivityCreateAccountBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
         
@@ -25,28 +26,28 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String newLogin = binding.editSignupUser.getText().toString();
                 if(newLogin.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Campo de login não preenchido", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateAccountActivity.this, "Campo de login não preenchido", Toast.LENGTH_LONG).show();
                     return;
                 }
                 
                 final String newPassword = binding.editSignupPass.getText().toString();
                 if(newPassword.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Campo de senha não preenchido", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateAccountActivity.this, "Campo de senha não preenchido", Toast.LENGTH_LONG).show();
                     return;
                 }
                 
                 String newPasswordCheck = binding.editPasswordCheck.getText().toString();
                 if(newPasswordCheck.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Campo de checagem de senha não preenchido", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateAccountActivity.this, "Campo de checagem de senha não preenchido", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 if(!newPassword.equals(newPasswordCheck)) {
-                    Toast.makeText(RegisterActivity.this, "Senha não confere", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateAccountActivity.this, "Senha não confere", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                Toast.makeText(RegisterActivity.this, "Novo usuario registrado com sucesso", Toast.LENGTH_LONG).show();
+                Toast.makeText(CreateAccountActivity.this, "Novo usuario registrado com sucesso", Toast.LENGTH_LONG).show();
                 finish();
             }
         });

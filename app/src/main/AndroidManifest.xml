@@ -11,7 +11,7 @@
         android:theme="@style/Theme.CompSupermercadosMovel">
         <activity android:name=".HomeActivity"></activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".CreateAccountActivity" />
         <activity android:name=".RegisterProductActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
