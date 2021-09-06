@@ -1,12 +1,19 @@
 package com.dispmoveis.compsupermercadosmovel;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 
@@ -33,49 +40,71 @@ public class RegisterProductActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Integer add = Integer.parseInt(etnAmount.getText().toString()) + 1;
-                etnAmount.setText(add.toString());
-                Double price = Double.parseDouble(etndPrice.getText().toString());
-                Integer amount = Integer.parseInt(etnAmount.getText().toString());
-                Double totalPrice = price * amount;
-                String ProductTotal = "Total (produto x" + add.toString() + "): R$ " +
-                        decimalFormat.format(totalPrice);
-                if (totalPrice > 0){
-                    tvProductTotal.setText(ProductTotal);
-                }
+                addToAmount(1);
+                updateTotals();
             }
         });
 
         btnSubtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Integer subtract = Integer.parseInt(etnAmount.getText().toString()) - 1;
-                if (subtract > 0) {
-                    etnAmount.setText(subtract.toString());
-                    Double price = Double.parseDouble(etndPrice.getText().toString());
-                    Integer amount = Integer.parseInt(etnAmount.getText().toString());
-                    Double totalPrice = price * amount;
-                    String ProductTotal = "Total (produto x" + subtract.toString() + "): R$ " +
-                            decimalFormat.format(totalPrice);
-                    if (totalPrice > 0){
-                        tvProductTotal.setText(ProductTotal);
-                    }
-                }
+                addToAmount(-1);
+                updateTotals();
             }
         });
 
-        etndPrice.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        TextWatcher textWatcher = new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Double price = Double.parseDouble(etndPrice.getText().toString());
-                Integer amount = Integer.parseInt(etnAmount.getText().toString());
-                Double totalPrice = price * amount;
-                String ProductTotal = "Total (produto x" + amount.toString() + "): R$ " +
-                        decimalFormat.format(totalPrice);
-                if (totalPrice > 0){
-                    tvProductTotal.setText(ProductTotal);
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-        });
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateTotals();
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+
+        etndPrice.addTextChangedListener(textWatcher);
+        etnAmount.addTextChangedListener(textWatcher);
     }
+
+    private void updateTotals() {
+        TextView tvProductTotal = findViewById(R.id.tvProductTotal);
+        //TextView tvCartTotal = findViewById(R.id.tvCartTotal);
+        EditText etndPrice = findViewById(R.id.etndPrice);
+        EditText etnAmount = findViewById(R.id.etnAmount);
+
+        Double price;
+        try {
+            price = Double.parseDouble(etndPrice.getText().toString());
+        } catch (NumberFormatException e) {
+            price = 0.0;
+        }
+
+        Integer amount;
+        try {
+            amount = Integer.parseInt(etnAmount.getText().toString());
+        } catch (NumberFormatException e) {
+            amount = 0;
+        }
+
+        Double totalPrice = price * amount;
+
+        String productTotal = "Total (produto x" + amount.toString() + "): R$ " +
+                decimalFormat.format(totalPrice);
+        tvProductTotal.setText(productTotal);
+
+        //tvCartTotal.setText(cartTotal);
+    }
+
+    private void addToAmount(Integer num) {
+        EditText etnAmount = findViewById(R.id.etnAmount);
+        Integer result = Integer.parseInt(etnAmount.getText().toString()) + num;
+        if (result > 0) {
+            etnAmount.setText(result.toString());
+        }
+    }
+
 }
