@@ -4,37 +4,38 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.Toast;
 
+import com.dispmoveis.compsupermercadosmovel.databinding.ActivityRegisterBinding;
+
 public class RegisterActivity extends AppCompatActivity {
+
+    private ActivityRegisterBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-
-        Button btnRegister =  findViewById(R.id.button_create_account);
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        
+        binding.buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText etNewLogin =  findViewById(R.id.edit_signup_user);
-                final String newLogin = etNewLogin.getText().toString();
+                final String newLogin = binding.editSignupUser.getText().toString();
                 if(newLogin.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Campo de login não preenchido", Toast.LENGTH_LONG).show();
                     return;
                 }
-
-                EditText etNewPassword =  findViewById(R.id.edit_signup_pass);
-                final String newPassword = etNewPassword.getText().toString();
+                
+                final String newPassword = binding.editSignupPass.getText().toString();
                 if(newPassword.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Campo de senha não preenchido", Toast.LENGTH_LONG).show();
                     return;
                 }
-
-                EditText etNewPasswordCheck =  findViewById(R.id.edit_password_check);
-                String newPasswordCheck = etNewPasswordCheck.getText().toString();
+                
+                String newPasswordCheck = binding.editPasswordCheck.getText().toString();
                 if(newPasswordCheck.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Campo de checagem de senha não preenchido", Toast.LENGTH_LONG).show();
                     return;

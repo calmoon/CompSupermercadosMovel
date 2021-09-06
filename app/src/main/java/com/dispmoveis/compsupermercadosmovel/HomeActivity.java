@@ -2,7 +2,6 @@ package com.dispmoveis.compsupermercadosmovel;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,27 +9,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.dispmoveis.compsupermercadosmovel.databinding.ActivityHomeBinding;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private ActivityHomeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-
-        Toolbar toolbar = findViewById(R.id.toolbar_home);
-        setSupportActionBar(toolbar);
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        
+        setSupportActionBar(binding.toolbarHome);
 
         String login = Config.getLogin(HomeActivity.this);
+        binding.textWebData.setText("Olá " + login);
 
-        TextView tvWebData = findViewById(R.id.tvWebData);
-        tvWebData.setText("Olá " + login);
-
-        FloatingActionButton fabDoCart = findViewById(R.id.fabDoCart);
-        fabDoCart.setOnClickListener(new View.OnClickListener() {
+        binding.buttonCreateCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(HomeActivity.this, RegisterProductActivity.class);

@@ -7,7 +7,7 @@
     tools:context=".HomeActivity">
 
     <TextView
-        android:id="@+id/tvWebData"
+        android:id="@+id/text_web_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabDoCart"
+        android:id="@+id/button_create_cart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

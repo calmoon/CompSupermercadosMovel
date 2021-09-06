@@ -6,33 +6,27 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+
+import com.dispmoveis.compsupermercadosmovel.databinding.ActivityRegisterProductBinding;
 
 import java.text.DecimalFormat;
 
 public class RegisterProductActivity extends AppCompatActivity {
 
+    private ActivityRegisterProductBinding binding;
     static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_product);
+        binding = ActivityRegisterProductBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-        EditText etndPrice = findViewById(R.id.edit_product_price);
-        etndPrice.setText("0.00");
-        EditText etnAmount = findViewById(R.id.edit_product_amount);
-        etnAmount.setText("1");
+        binding.editProductPrice.setText("0.00");
+        binding.editProductAmount.setText("1");
 
-        Button btnAdd = findViewById(R.id.button_add);
-        Button btnSubtract = findViewById(R.id.button_subtract);
-
-        TextView tvProductTotal = findViewById(R.id.text_product_total);
-        TextView tvCartTotal = findViewById(R.id.text_cart_total);
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        binding.buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addToAmount(1);
@@ -40,7 +34,7 @@ public class RegisterProductActivity extends AppCompatActivity {
             }
         });
 
-        btnSubtract.setOnClickListener(new View.OnClickListener() {
+        binding.buttonSubtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addToAmount(-1);
@@ -61,26 +55,21 @@ public class RegisterProductActivity extends AppCompatActivity {
             }
         };
 
-        etndPrice.addTextChangedListener(textWatcher);
-        etnAmount.addTextChangedListener(textWatcher);
+        binding.editProductPrice.addTextChangedListener(textWatcher);
+        binding.editProductAmount.addTextChangedListener(textWatcher);
     }
 
     private void updateTotals() {
-        TextView tvProductTotal = findViewById(R.id.text_product_total);
-        //TextView tvCartTotal = findViewById(R.id.tvCartTotal);
-        EditText etndPrice = findViewById(R.id.edit_product_price);
-        EditText etnAmount = findViewById(R.id.edit_product_amount);
-
         Double price;
         try {
-            price = Double.parseDouble(etndPrice.getText().toString());
+            price = Double.parseDouble(binding.editProductPrice.getText().toString());
         } catch (NumberFormatException e) {
             price = 0.0;
         }
 
         Integer amount;
         try {
-            amount = Integer.parseInt(etnAmount.getText().toString());
+            amount = Integer.parseInt(binding.editProductAmount.getText().toString());
         } catch (NumberFormatException e) {
             amount = 0;
         }
@@ -89,16 +78,16 @@ public class RegisterProductActivity extends AppCompatActivity {
 
         String productTotal = "Total (produto x" + amount.toString() + "): R$ " +
                 decimalFormat.format(totalPrice);
-        tvProductTotal.setText(productTotal);
+        binding.textProductTotal.setText(productTotal);
 
-        //tvCartTotal.setText(cartTotal);
+        //String cartTotal = ""
+        //binding.textCartTotal.setText(cartTotal);
     }
 
     private void addToAmount(Integer num) {
-        EditText etnAmount = findViewById(R.id.edit_product_amount);
-        Integer result = Integer.parseInt(etnAmount.getText().toString()) + num;
+        Integer result = Integer.parseInt(binding.editProductAmount.getText().toString()) + num;
         if (result > 0) {
-            etnAmount.setText(result.toString());
+            binding.editProductAmount.setText(result.toString());
         }
     }
 
