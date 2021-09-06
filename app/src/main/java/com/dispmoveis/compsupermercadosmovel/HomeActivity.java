@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class HomeActivity extends AppCompatActivity {
 
     @Override
@@ -27,6 +29,15 @@ public class HomeActivity extends AppCompatActivity {
 
         TextView tvWebData = findViewById(R.id.tvWebData);
         tvWebData.setText("Olá " + login);
+
+        FloatingActionButton fabDoCart = findViewById(R.id.fabDoCart);
+        fabDoCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HomeActivity.this, RegisterProductActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
