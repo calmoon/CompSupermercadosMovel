@@ -34,11 +34,12 @@ public class RegisterProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Integer add = Integer.parseInt(etnAmount.getText().toString()) + 1;
+                etnAmount.setText(add.toString());
                 Double price = Double.parseDouble(etndPrice.getText().toString());
-                Double totalPrice = price * add;
+                Integer amount = Integer.parseInt(etnAmount.getText().toString());
+                Double totalPrice = price * amount;
                 String ProductTotal = "Total (produto x" + add.toString() + "): R$ " +
                         decimalFormat.format(totalPrice);
-                etnAmount.setText(add.toString());
                 if (totalPrice > 0){
                     tvProductTotal.setText(ProductTotal);
                 }
@@ -50,11 +51,12 @@ public class RegisterProductActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Integer subtract = Integer.parseInt(etnAmount.getText().toString()) - 1;
                 if (subtract > 0) {
+                    etnAmount.setText(subtract.toString());
                     Double price = Double.parseDouble(etndPrice.getText().toString());
-                    Double totalPrice = price * subtract;
+                    Integer amount = Integer.parseInt(etnAmount.getText().toString());
+                    Double totalPrice = price * amount;
                     String ProductTotal = "Total (produto x" + subtract.toString() + "): R$ " +
                             decimalFormat.format(totalPrice);
-                    etnAmount.setText(subtract.toString());
                     if (totalPrice > 0){
                         tvProductTotal.setText(ProductTotal);
                     }
