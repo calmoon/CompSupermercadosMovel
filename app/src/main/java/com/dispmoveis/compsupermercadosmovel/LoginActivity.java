@@ -16,14 +16,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button btnLogin = findViewById(R.id.btnLogin);
+        Button btnLogin = findViewById(R.id.button_signin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText etLogin = findViewById(R.id.etLogin);
+                EditText etLogin = findViewById(R.id.edit_username);
                 final String login = etLogin.getText().toString();
 
-                EditText etPassword = findViewById(R.id.etPassword);
+                EditText etPassword = findViewById(R.id.edit_password);
                 final String password = etPassword.getText().toString();
 
                 Config.setLogin(LoginActivity.this, login);
@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button btnRegisterNewUser = findViewById(R.id.btnRegisterNewUser);
+        Button btnRegisterNewUser = findViewById(R.id.button_signup);
         btnRegisterNewUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

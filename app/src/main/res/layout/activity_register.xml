@@ -7,48 +7,48 @@
     tools:context=".RegisterActivity">
 
     <EditText
-        android:id="@+id/etNewLogin"
+        android:id="@+id/edit_signup_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:ems="10"
-        android:hint="Login"
+        android:hint="E-mail"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/etNewPassword"
+        android:id="@+id/edit_signup_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="Senha"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNewLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_signup_user" />
 
     <EditText
-        android:id="@+id/etNewPasswordCheck"
+        android:id="@+id/edit_password_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Password Novamente"
+        android:hint="Senha (repita)"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNewPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_signup_pass" />
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/button_create_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Registrar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNewPasswordCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_password_check" />
 </androidx.constraintlayout.widget.ConstraintLayout>

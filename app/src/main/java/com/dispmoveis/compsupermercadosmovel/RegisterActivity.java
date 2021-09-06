@@ -15,25 +15,25 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        Button btnRegister =  findViewById(R.id.btnRegister);
+        Button btnRegister =  findViewById(R.id.button_create_account);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText etNewLogin =  findViewById(R.id.etNewLogin);
+                EditText etNewLogin =  findViewById(R.id.edit_signup_user);
                 final String newLogin = etNewLogin.getText().toString();
                 if(newLogin.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Campo de login não preenchido", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                EditText etNewPassword =  findViewById(R.id.etNewPassword);
+                EditText etNewPassword =  findViewById(R.id.edit_signup_pass);
                 final String newPassword = etNewPassword.getText().toString();
                 if(newPassword.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Campo de senha não preenchido", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                EditText etNewPasswordCheck =  findViewById(R.id.etNewPasswordCheck);
+                EditText etNewPasswordCheck =  findViewById(R.id.edit_password_check);
                 String newPasswordCheck = etNewPasswordCheck.getText().toString();
                 if(newPasswordCheck.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Campo de checagem de senha não preenchido", Toast.LENGTH_LONG).show();
