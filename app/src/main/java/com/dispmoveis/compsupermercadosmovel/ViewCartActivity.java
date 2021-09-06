@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCreateAccountBinding;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityViewCartBinding;
 
 public class ViewCartActivity extends AppCompatActivity {
