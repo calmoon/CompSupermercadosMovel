@@ -15,11 +15,11 @@ import java.util.List;
 public class CartAdapter extends RecyclerView.Adapter {
 
     ViewCartActivity viewCartActivity;
-    List<CartItem> cartItems;
+    List<CartItemData> cartItemData;
 
-    public CartAdapter(ViewCartActivity viewCartActivity, List<CartItem> items) {
+    public CartAdapter(ViewCartActivity viewCartActivity, List<CartItemData> items) {
         this.viewCartActivity = viewCartActivity;
-        this.cartItems = items;
+        this.cartItemData = items;
     }
 
     @NonNull
@@ -32,10 +32,11 @@ public class CartAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        CartItem item = cartItems.get(position);
+        CartItemData item = cartItemData.get(position);
 
         View v = holder.itemView;
         CartItemBinding binding = CartItemBinding.inflate( ((Activity) v.getContext()).getWindow().getLayoutInflater() );
+        //((Activity) v.getContext()).setContentView(binding.getRoot());
 
         binding.imageCartProduct.setImageURI(item.productImageUri);
         binding.textCartProductName.setText(item.productName);
@@ -45,7 +46,7 @@ public class CartAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return cartItems.size();
+        return cartItemData.size();
     }
 
 }

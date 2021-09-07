@@ -1,10 +1,8 @@
 package com.dispmoveis.compsupermercadosmovel;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -22,8 +20,8 @@ public class ViewCartActivity extends AppCompatActivity {
 
     private ActivityViewCartBinding binding;
 
-    List<CartItem> cartItems = new ArrayList<>();
-    CartAdapter cartAdapter = new CartAdapter(this, cartItems);;
+    List<CartItemData> cartItemData = new ArrayList<>();
+    CartAdapter cartAdapter = new CartAdapter(this, cartItemData);;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +63,10 @@ public class ViewCartActivity extends AppCompatActivity {
             double productPrice = data.getDoubleExtra("productPrice", 0);
             Integer productQty = data.getIntExtra("productQty", 1);
 
-            CartItem newItem = new CartItem(productImageUri, productName, productPrice, productQty);
-            cartItems.add(newItem);
+            CartItemData newItem = new CartItemData(productImageUri, productName, productPrice, productQty);
+            cartItemData.add(newItem);
 
-            cartAdapter.notifyItemInserted(cartItems.size()-1);
+            cartAdapter.notifyItemInserted(cartItemData.size()-1);
         }
     }
 

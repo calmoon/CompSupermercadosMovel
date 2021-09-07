@@ -26,9 +26,9 @@ public class HomeActivity extends AppCompatActivity {
 
     static int NEW_ITEM_REQUEST = 1;
 
-    List<Cart> carts = new ArrayList<>();
+    List<CartHistoryItemData> cartHistoryItemData = new ArrayList<>();
 
-    HomeAdapter homeAdapter;
+    CartHistoryAdapter CartHistoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +50,14 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        homeAdapter = new HomeAdapter(this, carts);
+        CartHistoryAdapter = new CartHistoryAdapter(this, cartHistoryItemData);
 
         binding.recyclerCarts.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerCarts.setLayoutManager(layoutManager);
         
-        binding.recyclerCarts.setAdapter(homeAdapter);
+        binding.recyclerCarts.setAdapter(CartHistoryAdapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
                 binding.recyclerCarts.getContext(), DividerItemDecoration.VERTICAL);
@@ -92,15 +92,15 @@ public class HomeActivity extends AppCompatActivity {
                 String date = data.getStringExtra("date");
                 String quantity = data.getStringExtra("quantity");
 
-                Cart newCart = new Cart();
-                newCart.title = title;
-                newCart.total = total;
-                newCart.date = date;
-                newCart.quantity = quantity;
+                CartHistoryItemData newCartHistoryItemData = new CartHistoryItemData();
+                newCartHistoryItemData.cartTitle = title;
+                newCartHistoryItemData.cartTotal = total;
+                newCartHistoryItemData.date = date;
+                newCartHistoryItemData.qtyOfItems = quantity;
 
-                carts.add(newCart);
+                cartHistoryItemData.add(newCartHistoryItemData);
 
-                homeAdapter.notifyItemInserted(carts.size()-1);
+                CartHistoryAdapter.notifyItemInserted(cartHistoryItemData.size()-1);
             }
         }
     }
