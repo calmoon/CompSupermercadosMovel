@@ -24,20 +24,20 @@ public class RegisterProductActivity extends AppCompatActivity {
         setContentView(view);
 
         binding.editProductPrice.setText("0.00");
-        binding.editProductAmount.setText("1");
+        binding.editProductQty.setText("1");
 
-        binding.buttonAdd.setOnClickListener(new View.OnClickListener() {
+        binding.buttonProductQtyAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToAmount(1);
+                addToQuantity(1);
                 updateTotals();
             }
         });
 
-        binding.buttonSubtract.setOnClickListener(new View.OnClickListener() {
+        binding.buttonProductQtySub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToAmount(-1);
+                addToQuantity(-1);
                 updateTotals();
             }
         });
@@ -56,7 +56,7 @@ public class RegisterProductActivity extends AppCompatActivity {
         };
 
         binding.editProductPrice.addTextChangedListener(textWatcher);
-        binding.editProductAmount.addTextChangedListener(textWatcher);
+        binding.editProductQty.addTextChangedListener(textWatcher);
     }
 
     private void updateTotals() {
@@ -69,7 +69,7 @@ public class RegisterProductActivity extends AppCompatActivity {
 
         Integer amount;
         try {
-            amount = Integer.parseInt(binding.editProductAmount.getText().toString());
+            amount = Integer.parseInt(binding.editProductQty.getText().toString());
         } catch (NumberFormatException e) {
             amount = 0;
         }
@@ -84,10 +84,10 @@ public class RegisterProductActivity extends AppCompatActivity {
         //binding.textCartTotal.setText(cartTotal);
     }
 
-    private void addToAmount(Integer num) {
-        Integer result = Integer.parseInt(binding.editProductAmount.getText().toString()) + num;
+    private void addToQuantity(Integer num) {
+        Integer result = Integer.parseInt(binding.editProductQty.getText().toString()) + num;
         if (result > 0) {
-            binding.editProductAmount.setText(result.toString());
+            binding.editProductQty.setText(result.toString());
         }
     }
 
