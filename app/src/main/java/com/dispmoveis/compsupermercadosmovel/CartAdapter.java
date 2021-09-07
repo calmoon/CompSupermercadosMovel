@@ -1,8 +1,6 @@
 package com.dispmoveis.compsupermercadosmovel;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,39 +12,37 @@ import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter {
 
-    ViewCartActivity viewCartActivity;
-    List<CartItemData> cartItemData;
+    private CartItemBinding binding;
 
-    public CartAdapter(ViewCartActivity viewCartActivity, List<CartItemData> items) {
+    ViewCartActivity viewCartActivity;
+    List<CartItemData> cartItems;
+
+    public CartAdapter(ViewCartActivity viewCartActivity, List<CartItemData> cartItems) {
         this.viewCartActivity = viewCartActivity;
-        this.cartItemData = items;
+        this.cartItems = cartItems;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(viewCartActivity);
-        View v = inflater.inflate(R.layout.cart_item, parent, false);
-        return new CustomViewHolder(v);
+        binding = CartItemBinding
+                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new CustomViewHolder(binding.getRoot());
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        CartItemData item = cartItemData.get(position);
+        CartItemData itemData = cartItems.get(position);
 
-        View v = holder.itemView;
-        CartItemBinding binding = CartItemBinding.inflate( ((Activity) v.getContext()).getWindow().getLayoutInflater() );
-        //((Activity) v.getContext()).setContentView(binding.getRoot());
-
-        binding.imageCartProduct.setImageURI(item.productImageUri);
-        binding.textCartProductName.setText(item.productName);
-        binding.textCartProductPrice.setText("R$ " + item.productPrice.toString());
-        binding.editCartQty.setText(item.productQty.toString());
+        binding.imageCartProduct.setImageURI(itemData.productImageUri);
+        binding.textCartProductName.setText(itemData.productName);
+        binding.textCartProductPrice.setText("R$ " + itemData.productPrice.toString());
+        binding.editCartQty.setText(itemData.productQty.toString());
     }
 
     @Override
     public int getItemCount() {
-        return cartItemData.size();
+        return cartItems.size();
     }
 
 }
