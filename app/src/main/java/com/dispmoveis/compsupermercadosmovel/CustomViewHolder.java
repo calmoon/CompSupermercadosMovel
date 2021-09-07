@@ -4,8 +4,8 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ViewHolder extends RecyclerView.ViewHolder {
-    public ViewHolder(View view) {
+public class CustomViewHolder extends RecyclerView.ViewHolder {
+    public CustomViewHolder(View view) {
         super(view);
     }
 }
