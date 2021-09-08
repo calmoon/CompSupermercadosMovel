@@ -13,8 +13,9 @@ import java.text.DecimalFormat;
 
 public class RegisterProductActivity extends AppCompatActivity {
 
-    private ActivityRegisterProductBinding binding;
     static DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
+    private ActivityRegisterProductBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

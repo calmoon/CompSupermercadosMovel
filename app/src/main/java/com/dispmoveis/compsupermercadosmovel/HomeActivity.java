@@ -22,13 +22,11 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private ActivityHomeBinding binding;
-
     static int NEW_ITEM_REQUEST = 1;
 
-    List<CartHistoryItemData> cartHistoryItems = new ArrayList<>();
-
-    CartHistoryAdapter CartHistoryAdapter;
+    private ActivityHomeBinding binding;
+    private List<CartHistoryItemData> cartHistoryItems = new ArrayList<>();
+    private CartHistoryAdapter CartHistoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

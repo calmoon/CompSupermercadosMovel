@@ -13,8 +13,7 @@ import java.util.List;
 public class CartHistoryAdapter extends RecyclerView.Adapter{
 
     private CartHistoryItemBinding binding;
-
-    List<CartHistoryItemData> cartHistoryItems;
+    private List<CartHistoryItemData> cartHistoryItems;
 
     public CartHistoryAdapter(List<CartHistoryItemData> cartHistoryItems){
         this.cartHistoryItems = cartHistoryItems;
