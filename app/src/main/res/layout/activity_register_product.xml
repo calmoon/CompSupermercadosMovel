@@ -6,21 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".RegisterProductActivity">
 
-    <TextView
-        android:id="@+id/text_preview_cart_total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:lineSpacingExtra="16sp"
-        android:text="No seu carrinho: R$ 0,00"
-        android:textSize="16sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/button_add_to_cart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_product_total" />
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar3"
         android:layout_width="0dp"
@@ -31,48 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/label_product_qty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Quantidade:"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/edit_product_qty"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_product_name"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <ImageButton
-        android:id="@+id/button_product_qty_sub"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@null"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_product_qty"
-        app:layout_constraintEnd_toStartOf="@+id/edit_product_qty"
-        app:layout_constraintTop_toTopOf="@+id/edit_product_qty"
-        app:tint="@color/colorAccent"
-        tools:src="@drawable/ic_minus" />
-
-    <Button
-        android:id="@+id/button_add_to_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="16dp"
-        android:text="+ Adicionar ao carrinho"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_preview_cart_total" />
 
     <ImageView
         android:id="@+id/image_product"
@@ -88,25 +31,6 @@
         app:layout_constraintVertical_chainStyle="packed"
         tools:srcCompat="@drawable/ic_launcher_background" />
 
-    <EditText
-        android:id="@+id/edit_product_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:ems="10"
-        android:hint="Digite o nome do produto..."
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/label_product_qty"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_product_name" />
-
     <TextView
         android:id="@+id/text_currency"
         android:layout_width="wrap_content"
@@ -121,18 +45,6 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/edit_product_price" />
-
-    <TextView
-        android:id="@+id/label_product_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Produto:"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/edit_product_name"
-        app:layout_constraintStart_toStartOf="@+id/edit_product_name"
-        app:layout_constraintTop_toBottomOf="@+id/edit_product_price"
-        app:layout_constraintVertical_chainStyle="packed" />
 
     <EditText
         android:id="@+id/edit_product_price"
@@ -153,35 +65,50 @@
         app:layout_constraintTop_toBottomOf="@+id/image_product"
         tools:text="0,00" />
 
-    <ImageButton
-        android:id="@+id/button_product_qty_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:background="@null"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_product_qty"
-        app:layout_constraintStart_toEndOf="@+id/edit_product_qty"
-        app:layout_constraintTop_toTopOf="@+id/edit_product_qty"
-        app:srcCompat="@drawable/ic_plus"
-        app:tint="@color/colorAccent" />
-
     <TextView
-        android:id="@+id/text_product_total"
+        android:id="@+id/label_product_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:lineSpacingExtra="16sp"
-        android:text="Total (produto x0): R$ 0,00"
-        android:textSize="16sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/text_preview_cart_total"
+        android:text="Produto:"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/edit_product_name"
+        app:layout_constraintStart_toStartOf="@+id/edit_product_name"
+        app:layout_constraintTop_toBottomOf="@+id/edit_product_price"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <EditText
+        android:id="@+id/edit_product_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:ems="10"
+        android:hint="Digite o nome do produto..."
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/label_product_qty"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_product_qty" />
+        app:layout_constraintTop_toBottomOf="@+id/label_product_name" />
+
+    <TextView
+        android:id="@+id/label_product_qty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Quantidade:"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/edit_product_qty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_product_name"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <EditText
         android:id="@+id/edit_product_qty"
@@ -200,5 +127,78 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label_product_qty" />
+
+    <ImageButton
+        android:id="@+id/button_product_qty_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:background="@null"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_product_qty"
+        app:layout_constraintStart_toEndOf="@+id/edit_product_qty"
+        app:layout_constraintTop_toTopOf="@+id/edit_product_qty"
+        app:srcCompat="@drawable/ic_plus"
+        app:tint="@color/colorAccent" />
+
+    <ImageButton
+        android:id="@+id/button_product_qty_sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@null"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_product_qty"
+        app:layout_constraintEnd_toStartOf="@+id/edit_product_qty"
+        app:layout_constraintTop_toTopOf="@+id/edit_product_qty"
+        app:tint="@color/colorAccent"
+        app:srcCompat="@drawable/ic_minus" />
+
+    <TextView
+        android:id="@+id/text_product_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:lineSpacingExtra="16sp"
+        android:text="Total (produto x1): R$ 0,00"
+        android:textSize="16sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/text_preview_cart_total"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_product_qty" />
+
+    <TextView
+        android:id="@+id/text_preview_cart_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:lineSpacingExtra="16sp"
+        android:text="No seu carrinho: R$ 0,00"
+        android:textSize="16sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/button_add_to_cart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_product_total" />
+
+    <Button
+        android:id="@+id/button_add_to_cart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="+ Adicionar ao carrinho"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_preview_cart_total" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
