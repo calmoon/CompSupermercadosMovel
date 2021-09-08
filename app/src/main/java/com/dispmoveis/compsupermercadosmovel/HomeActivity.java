@@ -50,16 +50,16 @@ public class HomeActivity extends AppCompatActivity {
 
         CartHistoryAdapter = new CartHistoryAdapter(cartHistoryItems);
 
-        binding.recyclerCarts.setHasFixedSize(true);
+        binding.recyclerCartHistory.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.recyclerCarts.setLayoutManager(layoutManager);
+        binding.recyclerCartHistory.setLayoutManager(layoutManager);
         
-        binding.recyclerCarts.setAdapter(CartHistoryAdapter);
+        binding.recyclerCartHistory.setAdapter(CartHistoryAdapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                binding.recyclerCarts.getContext(), DividerItemDecoration.VERTICAL);
-        binding.recyclerCarts.addItemDecoration(dividerItemDecoration);
+                binding.recyclerCartHistory.getContext(), DividerItemDecoration.VERTICAL);
+        binding.recyclerCartHistory.addItemDecoration(dividerItemDecoration);
     }
 
     @Override

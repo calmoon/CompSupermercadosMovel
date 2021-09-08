@@ -30,9 +30,9 @@ public class ViewCartActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.recyclerCartItems.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerCartItems.setAdapter(cartAdapter);
-        binding.recyclerCartItems.setHasFixedSize(true);
+        binding.recyclerCart.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerCart.setAdapter(cartAdapter);
+        binding.recyclerCart.setHasFixedSize(true);
 
         binding.optionBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
