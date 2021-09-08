@@ -25,6 +25,7 @@ public class HomeActivity extends AppCompatActivity {
     static int NEW_ITEM_REQUEST = 1;
 
     private ActivityHomeBinding binding;
+
     private List<CartHistoryItemData> cartHistoryItems = new ArrayList<>();
     private CartHistoryAdapter CartHistoryAdapter;
 
@@ -79,7 +80,6 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -102,4 +102,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }

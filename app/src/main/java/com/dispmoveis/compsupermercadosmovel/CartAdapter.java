@@ -13,6 +13,7 @@ import java.util.List;
 public class CartAdapter extends RecyclerView.Adapter {
 
     private CartItemBinding binding;
+
     private List<CartItemData> cartItems;
 
     public CartAdapter(List<CartItemData> cartItems) {

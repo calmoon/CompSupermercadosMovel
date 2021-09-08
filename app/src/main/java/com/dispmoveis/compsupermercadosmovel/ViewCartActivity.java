@@ -20,8 +20,8 @@ public class ViewCartActivity extends AppCompatActivity {
 
     private ActivityViewCartBinding binding;
 
-    List<CartItemData> cartItems = new ArrayList<>();
-    CartAdapter cartAdapter = new CartAdapter(cartItems);;
+    private List<CartItemData> cartItems = new ArrayList<>();
+    private CartAdapter cartAdapter = new CartAdapter(cartItems);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,5 @@ public class ViewCartActivity extends AppCompatActivity {
             cartAdapter.notifyItemInserted(cartItems.size()-1);
         }
     }
-
-
 
 }
