@@ -29,14 +29,14 @@
         android:maxLines="1"
         android:text="Seu carrinho #0"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toTopOf="@+id/text_cart_total_items"
-        app:layout_constraintEnd_toStartOf="@+id/text_cart_total_price"
+        app:layout_constraintBottom_toTopOf="@+id/text_cart_item_qty"
+        app:layout_constraintEnd_toStartOf="@+id/text_cart_total"
         app:layout_constraintStart_toEndOf="@+id/image_cart"
         app:layout_constraintTop_toTopOf="@+id/image_cart"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/text_cart_total_items"
+        android:id="@+id/text_cart_item_qty"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -50,7 +50,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_cart_name" />
 
     <TextView
-        android:id="@+id/text_cart_total_price"
+        android:id="@+id/text_cart_total"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -95,9 +95,9 @@
         android:layout_height="wrap_content"
         android:text="Total:"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toTopOf="@+id/text_cart_total_price"
-        app:layout_constraintEnd_toEndOf="@+id/text_cart_total_price"
-        app:layout_constraintStart_toStartOf="@+id/text_cart_total_price"
+        app:layout_constraintBottom_toTopOf="@+id/text_cart_total"
+        app:layout_constraintEnd_toEndOf="@+id/text_cart_total"
+        app:layout_constraintStart_toStartOf="@+id/text_cart_total"
         app:layout_constraintTop_toTopOf="@+id/image_cart"
         app:layout_constraintVertical_chainStyle="packed" />
 </androidx.constraintlayout.widget.ConstraintLayout>

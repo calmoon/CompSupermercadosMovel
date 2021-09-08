@@ -34,7 +34,7 @@ public class CartAdapter extends RecyclerView.Adapter {
         binding.imageCartProduct.setImageURI(itemData.productImageUri);
         binding.textCartProductName.setText(itemData.productName);
         binding.textCartProductPrice.setText("R$ " + itemData.productPrice.toString());
-        binding.editCartQty.setText(itemData.productQty.toString());
+        binding.editCartProductQty.setText(itemData.productQty.toString());
     }
 
     @Override

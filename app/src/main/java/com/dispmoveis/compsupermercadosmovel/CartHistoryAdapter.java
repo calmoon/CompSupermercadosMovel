@@ -32,10 +32,10 @@ public class CartHistoryAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         CartHistoryItemData itemData = this.cartHistoryItems.get(position);
 
-        binding.textTitle.setText(itemData.cartTitle);
-        binding.textTotal.setText(itemData.cartTotal);
-        binding.textQuantity.setText(itemData.qtyOfItems);
-        binding.textDate.setText(itemData.date);
+        binding.textCartName.setText(itemData.cartTitle);
+        binding.textCartTotal.setText(itemData.cartTotal);
+        binding.textCartItemQty.setText(itemData.qtyOfItems);
+        binding.textCartLastModified.setText(itemData.date);
     }
 
     @Override
