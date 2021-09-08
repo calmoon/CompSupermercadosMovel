@@ -14,11 +14,9 @@ public class CartAdapter extends RecyclerView.Adapter {
 
     private CartItemBinding binding;
 
-    ViewCartActivity viewCartActivity;
     List<CartItemData> cartItems;
 
-    public CartAdapter(ViewCartActivity viewCartActivity, List<CartItemData> cartItems) {
-        this.viewCartActivity = viewCartActivity;
+    public CartAdapter(List<CartItemData> cartItems) {
         this.cartItems = cartItems;
     }
 

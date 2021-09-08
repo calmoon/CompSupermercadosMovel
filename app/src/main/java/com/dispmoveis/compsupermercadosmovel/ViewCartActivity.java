@@ -20,8 +20,8 @@ public class ViewCartActivity extends AppCompatActivity {
 
     private ActivityViewCartBinding binding;
 
-    List<CartItemData> cartItemData = new ArrayList<>();
-    CartAdapter cartAdapter = new CartAdapter(this, cartItemData);;
+    List<CartItemData> cartItems = new ArrayList<>();
+    CartAdapter cartAdapter = new CartAdapter(cartItems);;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +64,9 @@ public class ViewCartActivity extends AppCompatActivity {
             Integer productQty = data.getIntExtra("productQty", 1);
 
             CartItemData newItem = new CartItemData(productImageUri, productName, productPrice, productQty);
-            cartItemData.add(newItem);
+            cartItems.add(newItem);
 
-            cartAdapter.notifyItemInserted(cartItemData.size()-1);
+            cartAdapter.notifyItemInserted(cartItems.size()-1);
         }
     }
 

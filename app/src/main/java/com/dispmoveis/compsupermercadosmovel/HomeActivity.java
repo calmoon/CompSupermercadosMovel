@@ -26,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
 
     static int NEW_ITEM_REQUEST = 1;
 
-    List<CartHistoryItemData> cartHistoryItemData = new ArrayList<>();
+    List<CartHistoryItemData> cartHistoryItems = new ArrayList<>();
 
     CartHistoryAdapter CartHistoryAdapter;
 
@@ -50,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        CartHistoryAdapter = new CartHistoryAdapter(this, cartHistoryItemData);
+        CartHistoryAdapter = new CartHistoryAdapter(cartHistoryItems);
 
         binding.recyclerCarts.setHasFixedSize(true);
 
@@ -98,9 +98,9 @@ public class HomeActivity extends AppCompatActivity {
                 newCartHistoryItemData.date = date;
                 newCartHistoryItemData.qtyOfItems = quantity;
 
-                cartHistoryItemData.add(newCartHistoryItemData);
+                cartHistoryItems.add(newCartHistoryItemData);
 
-                CartHistoryAdapter.notifyItemInserted(cartHistoryItemData.size()-1);
+                CartHistoryAdapter.notifyItemInserted(cartHistoryItems.size()-1);
             }
         }
     }

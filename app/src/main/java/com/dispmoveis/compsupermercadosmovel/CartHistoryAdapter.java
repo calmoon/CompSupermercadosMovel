@@ -14,11 +14,9 @@ public class CartHistoryAdapter extends RecyclerView.Adapter{
 
     private CartHistoryItemBinding binding;
 
-    HomeActivity homeActivity;
     List<CartHistoryItemData> cartHistoryItems;
 
-    public CartHistoryAdapter(HomeActivity homeActivity, List<CartHistoryItemData> cartHistoryItems){
-        this.homeActivity = homeActivity;
+    public CartHistoryAdapter(List<CartHistoryItemData> cartHistoryItems){
         this.cartHistoryItems = cartHistoryItems;
     }
 
