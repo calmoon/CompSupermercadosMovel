@@ -27,7 +27,7 @@
         android:layout_marginRight="16dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="Nome do produtoasdadasdads"
+        android:text="Nome do produto"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toTopOf="@+id/text_cart_product_price"
         app:layout_constraintEnd_toStartOf="@+id/edit_cart_product_qty"
