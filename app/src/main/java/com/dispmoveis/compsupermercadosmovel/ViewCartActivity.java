@@ -2,11 +2,12 @@ package com.dispmoveis.compsupermercadosmovel;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -41,12 +42,29 @@ public class ViewCartActivity extends AppCompatActivity {
         setContentView(view);
 
         String cartName = "Seu carrinho #" + getIntent().getStringExtra("cartHistoryItemsSize");
+        binding.editCartName.setText(cartName);
 
-        binding.editTextTextPersonName.setText(cartName);
-        binding.textTotal.setText("0.00");
+        binding.textTotal.setText("Total:\nR$ 0.00");
+
         binding.recyclerCart.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerCart.setAdapter(cartAdapter);
         binding.recyclerCart.setHasFixedSize(true);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                binding.recyclerCart.getContext(), DividerItemDecoration.VERTICAL);
+        binding.recyclerCart.addItemDecoration(dividerItemDecoration);
+
+        binding.recyclerCart.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0){
+                    binding.buttonAddProduct.hide();
+                } else{
+                    binding.buttonAddProduct.show();
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
         binding.optionBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,20 +77,32 @@ public class ViewCartActivity extends AppCompatActivity {
         binding.optionCatalog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(ViewCartActivity.this, RegisterProductActivity.class);
+                i.putExtra("total", total);
+                startActivityForResult(i, NEW_ITEM_REQUEST);
             }
         });
 
-        binding.button.setOnClickListener(new View.OnClickListener() {
+        binding.buttonSaveCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
-                Integer cardSize = cartItems.size() + 1;
+                Integer cardSize = cartItems.size();
                 String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                i.putExtra("cardName", binding.editTextTextPersonName.getText().toString());
+                i.putExtra("cardName", binding.editCartName.getText().toString());
                 i.putExtra("cardTotal", decimalFormat.format(total));
                 i.putExtra("cardSize", cardSize + " produtos");
                 i.putExtra("cardDate", "Última modificação: " + date);
                 setResult(Activity.RESULT_OK, i);
+                finish();
+            }
+        });
+
+        binding.buttonCancelCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                setResult(Activity.RESULT_CANCELED, i);
                 finish();
             }
         });
@@ -97,7 +127,7 @@ public class ViewCartActivity extends AppCompatActivity {
                 Double total = data.getDoubleExtra("total", 0);
 
                 this.total = total;
-                binding.textTotal.setText(decimalFormat.format(total));
+                binding.textTotal.setText("Total:\nR$ " + decimalFormat.format(total));
 
                 CartItemData newItem = new CartItemData(productName, productPrice, productQty);
                 cartItems.add(newItem);

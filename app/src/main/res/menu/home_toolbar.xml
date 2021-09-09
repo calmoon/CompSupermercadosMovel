@@ -4,5 +4,6 @@
 
     <item
         android:id="@+id/menuitem_logout"
-        android:title="Sair" />
+        android:title="Fazer logout"/>
+
 </menu>

@@ -24,71 +24,7 @@ public class RegisterProductActivity extends AppCompatActivity {
     private String productName;
     private Integer productQty;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityRegisterProductBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
-
-        total = getIntent().getDoubleExtra("total", 0.0);
-        String cartTotal = "No seu carrinho: R$ " + decimalFormat.format(total);
-
-        binding.editProductPrice.setText("0.00");
-        binding.editProductQty.setText("1");
-        binding.textPreviewCartTotal.setText(cartTotal);
-
-        binding.buttonProductQtyAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addToQuantity(1);
-                updateTotals();
-            }
-        });
-
-        binding.buttonProductQtySub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addToQuantity(-1);
-                updateTotals();
-            }
-        });
-
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateTotals();
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        };
-
-        binding.editProductPrice.addTextChangedListener(textWatcher);
-        binding.editProductQty.addTextChangedListener(textWatcher);
-
-        binding.buttonAddToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (VerifyFildsEmpty()){
-                    return;
-                }
-                Intent i = new Intent();
-                i.putExtra("productName", productName);
-                i.putExtra("productPrice", productPrice);
-                i.putExtra("productQty", productQty);
-                i.putExtra("total", total);
-                setResult(Activity.RESULT_OK, i);
-                finish();
-            }
-        });
-    }
-
-    private boolean VerifyFildsEmpty() {
+    private boolean checkEmptyFields() {
         productName = binding.editProductName.getText().toString();
         if (productName.isEmpty()) {
             return true;
@@ -129,6 +65,79 @@ public class RegisterProductActivity extends AppCompatActivity {
         if (result > 0) {
             binding.editProductQty.setText(result.toString());
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityRegisterProductBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
+        total = getIntent().getDoubleExtra("total", 0.0);
+        String cartTotal = "No seu carrinho: R$ " + decimalFormat.format(total);
+        binding.textPreviewCartTotal.setText(cartTotal);
+
+        binding.editProductPrice.setText("0.00");
+
+        binding.editProductQty.setText("1");
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateTotals();
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+
+        binding.editProductPrice.addTextChangedListener(textWatcher);
+        binding.editProductQty.addTextChangedListener(textWatcher);
+
+        binding.buttonProductQtyAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addToQuantity(1);
+                updateTotals();
+            }
+        });
+
+        binding.buttonProductQtySub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addToQuantity(-1);
+                updateTotals();
+            }
+        });
+
+        binding.buttonAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkEmptyFields()){
+                    return;
+                }
+                Intent i = new Intent();
+                i.putExtra("productName", productName);
+                i.putExtra("productPrice", productPrice);
+                i.putExtra("productQty", productQty);
+                i.putExtra("total", total);
+                setResult(Activity.RESULT_OK, i);
+                finish();
+            }
+        });
+
+        binding.buttonCancelProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                setResult(Activity.RESULT_CANCELED, i);
+                finish();
+            }
+        });
     }
 
 }

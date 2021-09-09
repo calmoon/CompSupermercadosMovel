@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.dispmoveis.compsupermercadosmovel.databinding.ActivityHomeBinding;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivitySupermarketBinding;
 
 public class SupermarketActivity extends AppCompatActivity {
@@ -21,11 +20,20 @@ public class SupermarketActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.button2.setOnClickListener(new View.OnClickListener() {
+        binding.buttonSaveSupermarket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
                 setResult(Activity.RESULT_OK, i);
+                finish();
+            }
+        });
+
+        binding.buttonCancelSupermarket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                setResult(Activity.RESULT_CANCELED, i);
                 finish();
             }
         });
