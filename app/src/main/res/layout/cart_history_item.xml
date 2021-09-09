@@ -25,6 +25,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
+        android:height="50dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Seu carrinho #0"
