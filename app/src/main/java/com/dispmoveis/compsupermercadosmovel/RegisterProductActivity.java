@@ -2,6 +2,8 @@ package com.dispmoveis.compsupermercadosmovel;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +19,12 @@ public class RegisterProductActivity extends AppCompatActivity {
 
     private ActivityRegisterProductBinding binding;
 
+    private Double total;
+    private Double productPrice;
+    private String productName;
+    private Integer productQty;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,8 +32,12 @@ public class RegisterProductActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        total = getIntent().getDoubleExtra("total", 0.0);
+        String cartTotal = "No seu carrinho: R$ " + decimalFormat.format(total);
+
         binding.editProductPrice.setText("0.00");
         binding.editProductQty.setText("1");
+        binding.textPreviewCartTotal.setText(cartTotal);
 
         binding.buttonProductQtyAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +70,34 @@ public class RegisterProductActivity extends AppCompatActivity {
 
         binding.editProductPrice.addTextChangedListener(textWatcher);
         binding.editProductQty.addTextChangedListener(textWatcher);
+
+        binding.buttonAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (VerifyFildsEmpty()){
+                    return;
+                }
+                Intent i = new Intent();
+                i.putExtra("productName", productName);
+                i.putExtra("productPrice", productPrice);
+                i.putExtra("productQty", productQty);
+                i.putExtra("total", total);
+                setResult(Activity.RESULT_OK, i);
+                finish();
+            }
+        });
+    }
+
+    private boolean VerifyFildsEmpty() {
+        productName = binding.editProductName.getText().toString();
+        if (productName.isEmpty()) {
+            return true;
+        }
+        if (productPrice == 0) {
+            return true;
+        }
+        total = productPrice + total;
+        return false;
     }
 
     private void updateTotals() {
@@ -67,22 +107,21 @@ public class RegisterProductActivity extends AppCompatActivity {
         } catch (NumberFormatException e) {
             price = 0.0;
         }
-
-        Integer amount;
         try {
-            amount = Integer.parseInt(binding.editProductQty.getText().toString());
+            productQty = Integer.parseInt(binding.editProductQty.getText().toString());
         } catch (NumberFormatException e) {
-            amount = 0;
+            productQty = 0;
         }
 
-        Double totalPrice = price * amount;
+        productPrice = price * productQty;
+        Double totalF = productPrice + total;
 
-        String productTotal = "Total (produto x" + amount.toString() + "): R$ " +
-                decimalFormat.format(totalPrice);
+        String productTotal = "Total (produto x" + productQty.toString() + "): R$ " +
+                decimalFormat.format(productPrice);
         binding.textProductTotal.setText(productTotal);
 
-        //String cartTotal = ""
-        //binding.textCartTotal.setText(cartTotal);
+        String cartTotal = "No seu carrinho: R$ " + decimalFormat.format(totalF);
+        binding.textPreviewCartTotal.setText(cartTotal);
     }
 
     private void addToQuantity(Integer num) {
