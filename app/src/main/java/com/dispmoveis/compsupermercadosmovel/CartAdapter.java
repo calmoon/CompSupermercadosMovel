@@ -8,9 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.CartItemBinding;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter {
+
+    static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     private CartItemBinding binding;
 
@@ -32,10 +35,13 @@ public class CartAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         CartItemData itemData = cartItems.get(position);
 
-        binding.imageCartProduct.setImageURI(itemData.productImageUri);
+        String productPrice = "R$ " + decimalFormat.format(itemData.productPrice);
+        String productQty = itemData.productQty.toString();
+
+        //binding.imageCartProduct.setImageURI(itemData.productImageUri);
         binding.textCartProductName.setText(itemData.productName);
-        binding.textCartProductPrice.setText("R$ " + itemData.productPrice.toString());
-        binding.editCartProductQty.setText(itemData.productQty.toString());
+        binding.textCartProductPrice.setText(productPrice);
+        binding.editCartProductQty.setText(productQty);
     }
 
     @Override
