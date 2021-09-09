@@ -3,12 +3,18 @@ package com.dispmoveis.compsupermercadosmovel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +28,8 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    static int NEW_ITEM_REQUEST = 1;
+    static  int NEW_SUPERMARKET_REQUEST = 1;
+    static int NEW_ITEM_REQUEST = 2;
 
     private ActivityHomeBinding binding;
 
@@ -44,8 +51,8 @@ public class HomeActivity extends AppCompatActivity {
         binding.buttonCreateCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(HomeActivity.this, RegisterProductActivity.class);
-                startActivity(i);
+                Intent i = new Intent(HomeActivity.this, SupermarketActivity.class);
+                startActivityForResult(i, NEW_SUPERMARKET_REQUEST);
             }
         });
 
@@ -83,18 +90,24 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NEW_ITEM_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                String title = data.getStringExtra("title");
-                String total = data.getStringExtra("description");
-                String date = data.getStringExtra("date");
-                String quantity = data.getStringExtra("quantity");
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == NEW_SUPERMARKET_REQUEST) {
+                Intent i = new Intent(HomeActivity.this, ViewCartActivity.class);
+                Integer cartHistoryItemsSize = cartHistoryItems.size();
+                i.putExtra("cartHistoryItemsSize", cartHistoryItemsSize.toString());
+                startActivityForResult(i, NEW_ITEM_REQUEST);
+            }
+            if (requestCode == NEW_ITEM_REQUEST) {
+                String cardName = data.getStringExtra("cardName");
+                String cardTotal = data.getStringExtra("cardTotal");
+                String cardSize = data.getStringExtra("cardSize");
+                String cardDate = data.getStringExtra("cardDate");
 
                 CartHistoryItemData newCartHistoryItemData = new CartHistoryItemData();
-                newCartHistoryItemData.cartTitle = title;
-                newCartHistoryItemData.cartTotal = total;
-                newCartHistoryItemData.date = date;
-                newCartHistoryItemData.qtyOfItems = quantity;
+                newCartHistoryItemData.cartTitle = cardName;
+                newCartHistoryItemData.cartTotal = cardTotal;
+                newCartHistoryItemData.qtyOfItems = cardSize;
+                newCartHistoryItemData.date = cardDate;
 
                 cartHistoryItems.add(newCartHistoryItemData);
 
@@ -102,6 +115,4 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }
