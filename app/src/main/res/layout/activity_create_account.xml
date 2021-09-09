@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".CreateAccountActivity">
 
+    <ImageButton
+        android:id="@+id/button_cancel_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_cart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_cart"
+        app:srcCompat="@drawable/ic_close"
+        app:tint="#000000" />
+
     <EditText
         android:id="@+id/edit_signup_user"
         android:layout_width="0dp"

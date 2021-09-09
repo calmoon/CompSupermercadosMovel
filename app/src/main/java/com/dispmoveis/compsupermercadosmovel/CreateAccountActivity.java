@@ -2,6 +2,8 @@ package com.dispmoveis.compsupermercadosmovel;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -48,6 +50,15 @@ public class CreateAccountActivity extends AppCompatActivity {
                 }
 
                 Toast.makeText(CreateAccountActivity.this, "Novo usuario registrado com sucesso", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+
+        binding.buttonCancelAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                setResult(Activity.RESULT_CANCELED, i);
                 finish();
             }
         });

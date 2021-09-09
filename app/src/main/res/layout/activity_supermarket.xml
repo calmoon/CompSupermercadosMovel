@@ -30,6 +30,7 @@
         android:layout_marginRight="24dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
+        android:gravity="center"
         android:hint="Digite o nome do supermercado..."
         android:inputType="text"
         android:minHeight="48dp"
