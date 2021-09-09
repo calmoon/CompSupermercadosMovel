@@ -9,8 +9,8 @@ public class CartItemData {
     public Double productPrice;
     public Integer productQty;
 
-    public CartItemData(Uri productImageUri, String productName, Double productPrice, Integer productQty) {
-        this.productImageUri = productImageUri;
+    public CartItemData(String productName, Double productPrice, Integer productQty) {
+        //this.productImageUri = productImageUri;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productQty = productQty;
