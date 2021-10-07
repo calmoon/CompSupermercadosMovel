@@ -6,6 +6,7 @@
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/drawable/back.xml" value="0.3310810810810811" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/drawable/ic_trash.xml" value="0.3310810810810811" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_create_account.xml" value="0.33" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_create_cart.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_home.xml" value="0.33" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_main.xml" value="0.27291666666666664" />
@@ -14,6 +15,7 @@
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_view_cart.xml" value="0.33" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/cart_history_item.xml" value="0.5" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/cart_item.xml" value="0.33" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/previous_carts_item.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/menu/home_toolbar.xml" value="0.3171171171171171" />
       </map>
     </option>

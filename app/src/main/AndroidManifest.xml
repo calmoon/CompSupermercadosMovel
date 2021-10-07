@@ -20,8 +20,8 @@
         <activity
             android:name=".SupermarketActivity"
             android:exported="true" />
-        <activity android:name=".ViewCartActivity" />
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".CartActivity" />
+        <activity android:name=".PreviousCartsActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".RegisterProductActivity" />

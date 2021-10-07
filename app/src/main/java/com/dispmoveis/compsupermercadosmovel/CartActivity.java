@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 
-import com.dispmoveis.compsupermercadosmovel.databinding.ActivityViewCartBinding;
+import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ViewCartActivity extends AppCompatActivity {
+public class CartActivity extends AppCompatActivity {
 
     static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     static int NEW_BARCODE_REQUEST = 1;
     static int NEW_ITEM_REQUEST = 2;
 
-    private ActivityViewCartBinding binding;
+    private ActivityCartBinding binding;
 
     private List<CartItemData> cartItems = new ArrayList<>();
     private CartAdapter cartAdapter = new CartAdapter(cartItems);
@@ -37,7 +37,7 @@ public class ViewCartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityViewCartBinding.inflate(getLayoutInflater());
+        binding = ActivityCartBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
 
@@ -77,7 +77,7 @@ public class ViewCartActivity extends AppCompatActivity {
         binding.optionCatalog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(ViewCartActivity.this, RegisterProductActivity.class);
+                Intent i = new Intent(CartActivity.this, RegisterProductActivity.class);
                 i.putExtra("total", total);
                 startActivityForResult(i, NEW_ITEM_REQUEST);
             }
@@ -114,7 +114,7 @@ public class ViewCartActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == NEW_BARCODE_REQUEST) {
-                Intent i = new Intent(ViewCartActivity.this, RegisterProductActivity.class);
+                Intent i = new Intent(CartActivity.this, RegisterProductActivity.class);
                 i.putExtra("total", total);
                 startActivityForResult(i, NEW_ITEM_REQUEST);
             }

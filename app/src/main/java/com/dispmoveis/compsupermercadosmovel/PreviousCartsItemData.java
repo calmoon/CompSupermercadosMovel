@@ -1,6 +1,6 @@
 package com.dispmoveis.compsupermercadosmovel;
 
-public class CartHistoryItemData {
+public class PreviousCartsItemData {
 
     public String cartTitle;
     public String cartTotal;

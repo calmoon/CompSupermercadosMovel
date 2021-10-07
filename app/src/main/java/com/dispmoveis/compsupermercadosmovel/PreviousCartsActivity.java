@@ -3,48 +3,41 @@ package com.dispmoveis.compsupermercadosmovel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.dispmoveis.compsupermercadosmovel.databinding.ActivityHomeBinding;
+import com.dispmoveis.compsupermercadosmovel.databinding.ActivityPreviousCartsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class PreviousCartsActivity extends AppCompatActivity {
 
     static  int NEW_SUPERMARKET_REQUEST = 1;
     static int NEW_ITEM_REQUEST = 2;
 
-    private ActivityHomeBinding binding;
+    private ActivityPreviousCartsBinding binding;
 
-    private List<CartHistoryItemData> cartHistoryItems = new ArrayList<>();
-    private CartHistoryAdapter CartHistoryAdapter = new CartHistoryAdapter(cartHistoryItems);
+    private List<PreviousCartsItemData> cartHistoryItems = new ArrayList<>();
+    private PreviousCartsAdapter CartHistoryAdapter = new PreviousCartsAdapter(cartHistoryItems);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        binding = ActivityPreviousCartsBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
 
-        //String login = Config.getLogin(HomeActivity.this);
+        //String login = Config.getLogin(PreviousCartsActivity.this);
         //binding.textWebData.setText("Olá " + login);
 
         binding.toolbarHome.setTitle("Seus carrinhos");
@@ -73,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.buttonCreateCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(HomeActivity.this, SupermarketActivity.class);
+                Intent i = new Intent(PreviousCartsActivity.this, SupermarketActivity.class);
                 startActivityForResult(i, NEW_SUPERMARKET_REQUEST);
             }
         });
@@ -91,9 +84,9 @@ public class HomeActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
-        Config.setLogin(HomeActivity.this, "");
-        Config.setPassword(HomeActivity.this, "");
-        Intent i = new Intent(HomeActivity.this, LoginActivity.class);
+        Config.setLogin(PreviousCartsActivity.this, "");
+        Config.setPassword(PreviousCartsActivity.this, "");
+        Intent i = new Intent(PreviousCartsActivity.this, LoginActivity.class);
         startActivity(i);
         return true;
     }
@@ -103,7 +96,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == NEW_SUPERMARKET_REQUEST) {
-                Intent i = new Intent(HomeActivity.this, ViewCartActivity.class);
+                Intent i = new Intent(PreviousCartsActivity.this, CartActivity.class);
                 Integer cartHistoryItemsSize = cartHistoryItems.size() + 1;
                 i.putExtra("cartHistoryItemsSize", cartHistoryItemsSize.toString());
                 startActivityForResult(i, NEW_ITEM_REQUEST);
@@ -114,7 +107,7 @@ public class HomeActivity extends AppCompatActivity {
                 String cardSize = data.getStringExtra("cardSize");
                 String cardDate = data.getStringExtra("cardDate");
 
-                CartHistoryItemData newCartHistoryItemData = new CartHistoryItemData();
+                PreviousCartsItemData newCartHistoryItemData = new PreviousCartsItemData();
                 newCartHistoryItemData.cartTitle = cardName;
                 newCartHistoryItemData.cartTotal = "R$ " + cardTotal;
                 newCartHistoryItemData.qtyOfItems = cardSize;
