@@ -7,8 +7,7 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CompSupermercadosMovel">
+        <activity
+            android:name=".ProductSearchActivity"
+            android:exported="true" />
         <activity
             android:name=".SupermarketActivity"
             android:exported="true" />
