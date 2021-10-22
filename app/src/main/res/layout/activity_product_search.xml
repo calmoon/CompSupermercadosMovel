@@ -54,7 +54,6 @@
         android:layout_marginRight="16dp"
         android:gravity="center|left"
         android:hint="Pesquisar..."
-        android:hintTextColor="#283593"
         android:maxLines="1"
         android:minHeight="48dp"
         android:scrollHorizontally="true"
