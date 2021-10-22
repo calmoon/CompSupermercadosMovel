@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dispmoveis.compsupermercadosmovel.databinding.CartItemBinding;
+import com.dispmoveis.compsupermercadosmovel.databinding.AdapterCartBinding;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -15,7 +15,7 @@ public class CartAdapter extends RecyclerView.Adapter {
 
     static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-    private CartItemBinding binding;
+    private AdapterCartBinding binding;
 
     private List<CartItemData> cartItems;
 
@@ -26,7 +26,7 @@ public class CartAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        binding = CartItemBinding
+        binding = AdapterCartBinding
                 .inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new CustomViewHolder(binding.getRoot());
     }

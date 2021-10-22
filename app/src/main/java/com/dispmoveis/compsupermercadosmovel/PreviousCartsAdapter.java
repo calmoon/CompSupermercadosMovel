@@ -6,13 +6,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dispmoveis.compsupermercadosmovel.databinding.PreviousCartsItemBinding;
+import com.dispmoveis.compsupermercadosmovel.databinding.AdapterPreviousCartsBinding;
 
 import java.util.List;
 
 public class PreviousCartsAdapter extends RecyclerView.Adapter{
 
-    private PreviousCartsItemBinding binding;
+    private AdapterPreviousCartsBinding binding;
 
     private List<PreviousCartsItemData> cartHistoryItems;
 
@@ -23,7 +23,7 @@ public class PreviousCartsAdapter extends RecyclerView.Adapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        binding = PreviousCartsItemBinding
+        binding = AdapterPreviousCartsBinding
                 .inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new CustomViewHolder(binding.getRoot());
     }
