@@ -11,6 +11,15 @@ import android.widget.Toast;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCreateAccountBinding;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -49,8 +58,54 @@ public class CreateAccountActivity extends AppCompatActivity {
                     return;
                 }
 
-                Toast.makeText(CreateAccountActivity.this, "Novo usuario registrado com sucesso", Toast.LENGTH_LONG).show();
-                finish();
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                executorService.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        HttpRequest httpRequest = new HttpRequest(Config.SERVER_URL_BASE + "server_insert.php", "POST", "UTF-8");
+                        httpRequest.addParam("table", "usuario");
+                        httpRequest.addParam("email", newLogin);
+                        httpRequest.addParam("senha", newPassword);
+
+                        try {
+                            InputStream is = httpRequest.execute();
+                            String result = Util.inputStream2String(is, "UTF-8");
+                            httpRequest.finish();
+
+                            JSONObject jsonObject = new JSONObject(result);
+                            final int result_code = jsonObject.getInt("result_code");
+                            if(result_code == 1) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(CreateAccountActivity.this, "Novo usuario registrado com sucesso", Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }
+                                });
+                            }
+                            else if (result_code == 0){
+                                final String error = jsonObject.getString("result");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(CreateAccountActivity.this, error, Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                            else {
+                                final String error = jsonObject.getString("result");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(CreateAccountActivity.this, error, Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        } catch (IOException | JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         });
 
