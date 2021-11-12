@@ -20,9 +20,7 @@
         <activity
             android:name=".ProductSearchActivity"
             android:exported="true" />
-        <activity
-            android:name=".SupermarketActivity"
-            android:exported="true" />
+        <activity android:name=".SupermarketActivity"/>
         <activity android:name=".CartActivity" />
         <activity android:name=".PreviousCartsActivity" />
         <activity android:name=".LoginActivity" />
