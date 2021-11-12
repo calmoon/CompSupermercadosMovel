@@ -1,5 +1,6 @@
 package com.dispmoveis.compsupermercadosmovel.ui.cart;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -9,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Toast;
 
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -34,6 +37,16 @@ public class CartActivity extends AppCompatActivity {
     private CartAdapter cartAdapter = new CartAdapter(cartItems);
 
     private Double total = 0.0;
+
+    // Register the launcher and result handler
+    private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
+            result -> {
+                if(result.getContents() == null) {
+                    Toast.makeText(CartActivity.this, "Cancelled", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(CartActivity.this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +80,16 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
+        // Register the launcher and result handler
+
         binding.optionBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(i, NEW_BARCODE_REQUEST);
+                ScanOptions options = new ScanOptions();
+                options.setDesiredBarcodeFormats(ScanOptions.EAN_13);
+                options.setPrompt("Scanning");
+                options.setOrientationLocked(false);
+                barcodeLauncher.launch(options);
             }
         });
 
