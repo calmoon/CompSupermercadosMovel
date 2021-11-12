@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.ui.cart;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterCartBinding;
 
 import java.text.DecimalFormat;

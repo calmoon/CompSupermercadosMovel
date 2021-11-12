@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;

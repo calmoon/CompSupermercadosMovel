@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SupermarketActivity">
+    tools:context=".ui.supermarket.SupermarketActivity">
 
     <ImageButton
         android:id="@+id/button_cancel_supermarket"

@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.ui.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +11,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+
+import com.dispmoveis.compsupermercadosmovel.ui.login.LoginActivity;
+import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.model;
 
 import android.view.View;
 

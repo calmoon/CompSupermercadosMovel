@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.ui.supermarket;
 
 import androidx.appcompat.app.AppCompatActivity;
 

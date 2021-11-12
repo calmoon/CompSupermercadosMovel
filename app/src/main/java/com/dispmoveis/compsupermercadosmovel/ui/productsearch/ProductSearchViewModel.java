@@ -1,6 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
-
-import android.util.Log;
+package com.dispmoveis.compsupermercadosmovel.ui.productsearch;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -8,12 +6,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
+import com.dispmoveis.compsupermercadosmovel.util.Util;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;

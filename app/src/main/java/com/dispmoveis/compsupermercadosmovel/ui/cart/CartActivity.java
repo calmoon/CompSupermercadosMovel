@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.ui.cart;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 
+import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
 
 import java.text.DecimalFormat;

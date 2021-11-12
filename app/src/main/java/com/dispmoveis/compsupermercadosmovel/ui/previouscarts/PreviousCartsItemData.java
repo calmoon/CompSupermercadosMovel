@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.ui.previouscarts;
 
 public class PreviousCartsItemData {
 

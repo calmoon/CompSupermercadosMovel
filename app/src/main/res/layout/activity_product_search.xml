@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:background="@drawable/bg_product_search"
-    tools:context=".ProductSearchActivity">
+    tools:context=".ui.productsearch.ProductSearchActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_product_search"

@@ -18,15 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CompSupermercadosMovel">
         <activity
-            android:name=".ProductSearchActivity"
+            android:name=".ui.productsearch.ProductSearchActivity"
             android:exported="true" />
-        <activity android:name=".SupermarketActivity"/>
-        <activity android:name=".CartActivity" />
-        <activity android:name=".PreviousCartsActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".CreateAccountActivity" />
-        <activity android:name=".RegisterProductActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.supermarket.SupermarketActivity"/>
+        <activity android:name=".ui.cart.CartActivity" />
+        <activity android:name=".ui.previouscarts.PreviousCartsActivity" />
+        <activity android:name=".ui.login.LoginActivity" />
+        <activity android:name=".ui.createaccount.CreateAccountActivity" />
+        <activity android:name=".ui.registerproduct.RegisterProductActivity" />
+        <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

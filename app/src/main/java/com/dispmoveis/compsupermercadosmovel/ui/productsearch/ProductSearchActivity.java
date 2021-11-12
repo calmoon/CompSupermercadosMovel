@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.ui.productsearch;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 
+import com.dispmoveis.compsupermercadosmovel.R;
+import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityProductSearchBinding;
+import com.dispmoveis.compsupermercadosmovel.util.Util;
 
 import java.util.List;
 

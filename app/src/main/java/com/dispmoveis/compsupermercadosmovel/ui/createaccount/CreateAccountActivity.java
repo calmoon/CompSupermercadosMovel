@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.ui.createaccount;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,13 +10,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCreateAccountBinding;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
+import com.dispmoveis.compsupermercadosmovel.util.HttpRequest;
+import com.dispmoveis.compsupermercadosmovel.util.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

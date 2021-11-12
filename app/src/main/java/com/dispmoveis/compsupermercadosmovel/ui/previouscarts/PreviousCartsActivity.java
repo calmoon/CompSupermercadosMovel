@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel;
+package com.dispmoveis.compsupermercadosmovel.ui.previouscarts;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.dispmoveis.compsupermercadosmovel.R;
+import com.dispmoveis.compsupermercadosmovel.ui.supermarket.SupermarketActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityPreviousCartsBinding;
+import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
+import com.dispmoveis.compsupermercadosmovel.ui.login.LoginActivity;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
 
 import java.util.ArrayList;
 import java.util.List;
