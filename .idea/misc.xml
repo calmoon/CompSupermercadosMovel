@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/drawable/back.xml" value="0.3310810810810811" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/drawable/bg_adapter_product_search.xml" value="0.25" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/drawable/bg_product_search.xml" value="0.25" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/drawable/ic_trash.xml" value="0.3310810810810811" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_cart.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_create_account.xml" value="0.33" />
@@ -11,14 +13,20 @@
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_home.xml" value="0.33" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_main.xml" value="0.27291666666666664" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_previous_carts.xml" value="0.23603603603603604" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_product_search.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_register_product.xml" value="0.33" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_supermarket.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/activity_view_cart.xml" value="0.33" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/adapter_cart.xml" value="0.18963963963963965" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/adapter_previous_carts.xml" value="0.18963963963963965" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/adapter_product_search.xml" value="0.33" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/cart_history_item.xml" value="0.5" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/cart_item.xml" value="0.33" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/layout/previous_carts_item.xml" value="0.3171171171171171" />
         <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/menu/home_toolbar.xml" value="0.3171171171171171" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/menu/toolbar_previous_carts.xml" value="0.23603603603603604" />
+        <entry key="..\:/Users/JoaoVitor/AndroidStudioProjects/CompSupermercadosMovel/app/src/main/res/menu/toolbar_product_search.xml" value="0.23603603603603604" />
       </map>
     </option>
   </component>

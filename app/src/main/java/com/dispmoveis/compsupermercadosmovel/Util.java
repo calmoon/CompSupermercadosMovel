@@ -12,8 +12,26 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Util {
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+    }
+
     public static int calculateNoOfColumns(Context context, float columnWidthDp) { // For example columnWidthdp=180
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float screenWidthDp = displayMetrics.widthPixels;
