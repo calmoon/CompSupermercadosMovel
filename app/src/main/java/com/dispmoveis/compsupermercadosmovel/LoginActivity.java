@@ -9,6 +9,14 @@ import android.widget.Toast;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityLoginBinding;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
@@ -26,13 +34,44 @@ public class LoginActivity extends AppCompatActivity {
                 final String login = binding.editUsername.getText().toString();
                 final String password = binding.editPassword.getText().toString();
 
-                Config.setLogin(LoginActivity.this, login);
-                Config.setPassword(LoginActivity.this, password);
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                executorService.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        HttpRequest httpRequest = new HttpRequest(Config.SERVER_URL_BASE +
+                                "server_select.php?queryType=verifyLogin", "POST", "UTF-8");
+                        httpRequest.setBasicAuth(login, password);
 
-                Toast.makeText(LoginActivity.this, "Login realizado com sucesso", Toast.LENGTH_LONG).show();
+                        try {
+                            InputStream is = httpRequest.execute();
+                            String result = Util.inputStream2String(is, "UTF-8");
+                            httpRequest.finish();
 
-                Intent i = new Intent(LoginActivity.this, PreviousCartsActivity.class);
-                startActivity(i);
+                            JSONObject jsonObject = new JSONObject(result);
+                            final int resultCode = jsonObject.getInt("result_code");
+                            if (resultCode == 1) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Config.setLogin(LoginActivity.this, login);
+                                        Config.setPassword(LoginActivity.this, password);
+                                        Toast.makeText(LoginActivity.this, "Login realizado com sucesso", Toast.LENGTH_LONG).show();
+                                        Intent i = new Intent(LoginActivity.this, PreviousCartsActivity.class);
+                                        startActivity(i);
+                                    }
+                                });
+                            }
+                            else if (resultCode == 0) {
+                                Toast.makeText(LoginActivity.this, "Login ou senha incorretos", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(LoginActivity.this, "Erro ao realizar login", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (IOException | JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         });
         
