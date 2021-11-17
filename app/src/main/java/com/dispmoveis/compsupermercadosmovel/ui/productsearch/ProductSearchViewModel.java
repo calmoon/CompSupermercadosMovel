@@ -1,5 +1,8 @@
 package com.dispmoveis.compsupermercadosmovel.ui.productsearch;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,8 +10,17 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
+import com.dispmoveis.compsupermercadosmovel.util.HttpRequest;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -18,8 +30,9 @@ public class ProductSearchViewModel extends ViewModel {
     static public class ProductSearchViewModelFactory implements ViewModelProvider.Factory {
 
         String supermarketId;
-        public ProductSearchViewModelFactory(String pid) {
-            this.supermarketId = pid;
+
+        public ProductSearchViewModelFactory(String supermarketId) {
+            this.supermarketId = supermarketId;
         }
 
         @NonNull
@@ -28,7 +41,7 @@ public class ProductSearchViewModel extends ViewModel {
             //TODO: usar o return comentado quando quando não for mais necessário
             //      executar a activity de forma isolada
             //return (T) new ProductSearchViewModel(supermarketId);
-            return (T) new ProductSearchViewModel("0");
+            return (T) new ProductSearchViewModel("1");
         }
 
     }
@@ -43,6 +56,7 @@ public class ProductSearchViewModel extends ViewModel {
     //TODO: remover esse construtor quando não for mais necessário
     //      executar a activity de forma isolada
     public ProductSearchViewModel() {
+        this.supermarketId = "1";
     }
 
     public LiveData<List<SupermarketItem>> getSupermarketItems() {
@@ -53,53 +67,18 @@ public class ProductSearchViewModel extends ViewModel {
         return mutableSupermarketItems;
     }
 
-
-    //TODO: usar o código comentado para obter do servidor a lista de produtos
     public void loadSupermarketItems() {
+
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                List<SupermarketItem> requestedSupermarketItems = new ArrayList<>();
-
-                requestedSupermarketItems.add(new SupermarketItem(
-                        "1",
-                        "Leite condensado Nestlé Moça lata 395g",
-                        "6,00",
-                        Util.getBitmapFromURL("https://docemalu.vteximg.com.br/arquivos/ids/188006-1000-1000/27012-1.jpg?v=637440056389270000")
-                ));
-
-                requestedSupermarketItems.add(new SupermarketItem(
-                        "2",
-                        "Sobremesa Nestlé Moça de Passar Avelã pote 215g",
-                        "12,65",
-                        Util.getBitmapFromURL("https://www.nestle.com.br/images/default-source/produtos/moca-de-passar-avela.png?sfvrsn=9b164465_6")
-                       ));
-
-                requestedSupermarketItems.add(new SupermarketItem(
-                        "3",
-                        "Sobremesa Nestlé Moça de Colher lata 395g ",
-                        "10,99",
-                        Util.getBitmapFromURL("https://atacadistasuperadega.vteximg.com.br/arquivos/ids/203488-1000-1000/LEITE_CONDENSADO_MOCA_DE_COLHER_395G.jpg?v=637521246299870000")
-                       ));
-
-                mutableSupermarketItems.postValue(requestedSupermarketItems);
-            }
-        });
-
-        /*
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-
-                List<SupermarketItem> requestedSupermarketItems = new ArrayList<>();
 
                 HttpRequest httpRequest = new HttpRequest(
-                        // TODO: colocar a url da api no config
-                        "Config.APP_URL" + "server_select.php",
+                        Config.SERVER_URL_BASE + "server_select.php",
                         "GET",
                         "UTF-8"
                 );
-                httpRequest.addParam("queryType", "supermarketProductList");
+                httpRequest.addParam("queryType", "supermarketItems");
                 httpRequest.addParam("id", supermarketId);
 
                 try {
@@ -108,12 +87,33 @@ public class ProductSearchViewModel extends ViewModel {
                     JSONObject responseJSON = new JSONObject(resultString);
                     httpRequest.finish();
 
-                    if (responseJSON.getInt("result_code") == 1) {
-                        JSONArray productJSONList = responseJSON.getJSONArray("result");
+                    int resultCode = responseJSON.getInt("result_code");
 
-                        for (int i = 0; i < productJSONList.length(); i++) {
-                            //TODO: parsear resposta JSON
-                            //requestedSupermarketItems.add( new SupermarketItem(id, name, price, image) );
+                    if (resultCode == 0 || resultCode == -1) {
+                        // TODO: tratar caso dar erro ou ter nenhum resultado
+                    }
+
+                    else if (resultCode == 1) {
+                        JSONArray supermarketItemsJSON = responseJSON.getJSONArray("result");
+
+                        List<SupermarketItem> requestedSupermarketItems = new ArrayList<>();
+
+                        for (int i = 0; i < supermarketItemsJSON.length(); i++) {
+                            JSONObject itemJSON = supermarketItemsJSON.getJSONObject(i);
+
+                            String id = itemJSON.getString("id");
+                            String name = itemJSON.getString("nome");
+
+                            double priceVal = itemJSON.getDouble("preco_atual");
+                            String price = new DecimalFormat("#.##").format(priceVal);
+
+                            String imageBase64 = itemJSON.getString("imagem");
+                            imageBase64 = imageBase64.substring(imageBase64.indexOf(",") + 1);
+                            Bitmap image = Util.base642Bitmap(imageBase64);
+
+                            requestedSupermarketItems.add(
+                                    new SupermarketItem(id, name, price, image)
+                            );
                         }
 
                         mutableSupermarketItems.postValue(requestedSupermarketItems);
@@ -126,7 +126,6 @@ public class ProductSearchViewModel extends ViewModel {
 
             }
         });
-         */
     }
 
     void reloadProductList() {
