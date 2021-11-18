@@ -10,19 +10,33 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.dispmoveis.compsupermercadosmovel.ui.login.LoginActivity;
+import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
+import com.dispmoveis.compsupermercadosmovel.util.HttpRequest;
+import com.dispmoveis.compsupermercadosmovel.util.Util;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -38,6 +52,8 @@ public class CartActivity extends AppCompatActivity {
 
     private Double total = 0.0;
 
+    private String barcode;
+
     // Register the launcher and result handler
     private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
             result -> {
@@ -45,6 +61,50 @@ public class CartActivity extends AppCompatActivity {
                     Toast.makeText(CartActivity.this, "Cancelled", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(CartActivity.this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                    barcode = result.getContents();
+
+                    /*
+                    HashMap<String, String> getCommand = new HashMap<String, String>();
+                    getCommand.put("queryType", "productInfo");
+                    getCommand.put("cod_barras", barcode);
+                    JSONObject response = Config/Util.funçãoExecutorGET("server_select.php", getCommand);
+                    or
+                    JSONObject response = Config/Util.funçãoExecutor("GET", "server_select.php", getCommand);
+
+                    OR
+
+                    Config/Util.addParams("queryType", "productInfo");
+                    Config/Util.addParams("cod_barras", barcode);
+                    JSONObject response = Config/Util.funçãoExecutorGET("server_select.php", Config/Util.params);
+                    or
+                    JSONObject response = Config/Util.funçãoExecutor("GET", "server_select.php", Config/Util.params);
+                    Config/Util.clearParams();
+
+                    if (response == 1) {
+                        produto retornado do banco, tratar o response
+                    }
+                    else {
+                        getCommand.remove("queryType");
+                        or
+                        Config/Util.removeParams("queryType");
+                        JSONObject response = funçãoExecutorGET("server_select.php", getCommand);
+                        or
+                        JSONObject response = funçãoExecutor("GET", "server_select.php", getCommand);
+
+                        OR
+
+                        JSONObject response = funçãoExecutorGET("server_select.php", Config/Util.params);
+                        or
+                        JSONObject response = funçãoExecutor("GET", "server_select.php", Config/Util.params);
+                        Config/Util.clearParams();
+                        if (response == 1) {
+                            produto retornado da api, tratar o response
+                        }
+                        else {
+                            deu merda
+                        }
+                    }
+                     */
                 }
             });
 
