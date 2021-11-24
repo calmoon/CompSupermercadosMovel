@@ -1,19 +1,21 @@
 package com.dispmoveis.compsupermercadosmovel.ui.cart;
 
-import android.net.Uri;
+import android.graphics.Bitmap;
 
-public class CartItemData {
+import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
 
-    public Uri productImageUri;
-    public String productName;
-    public Double productPrice;
-    public Integer productQty;
+public class CartItemData extends SupermarketItem {
 
-    public CartItemData(String productName, Double productPrice, Integer productQty) {
-        //this.productImageUri = productImageUri;
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.productQty = productQty;
+    Integer quantity;
+
+    // TODO: imagem do produto
+    public CartItemData(String itemId, String productName, Double itemTotal, Integer itemQty, Bitmap productImage) {
+        super(itemId, productName, itemTotal, productImage);
+        //this.imageUrl = imageUrl
+        this.quantity = itemQty;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
 }

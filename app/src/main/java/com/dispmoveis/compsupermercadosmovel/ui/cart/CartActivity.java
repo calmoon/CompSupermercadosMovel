@@ -1,7 +1,7 @@
 package com.dispmoveis.compsupermercadosmovel.ui.cart;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.Nullable;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,102 +9,113 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.dispmoveis.compsupermercadosmovel.ui.login.LoginActivity;
-import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
-import com.dispmoveis.compsupermercadosmovel.util.Config;
-import com.dispmoveis.compsupermercadosmovel.util.HttpRequest;
+import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
+import cz.msebera.android.httpclient.Header;
 
 public class CartActivity extends AppCompatActivity {
 
+    public static String EXTRA_CURRENT_CART_TOTAL = "cartTotal";
+    public static String EXTRA_CURRENT_ITEM_ID = "supermarketItemId";
+
+    private Double total = 0.0;
+    private String supermarketId;
+
     static DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
-    static int NEW_BARCODE_REQUEST = 1;
-    static int NEW_ITEM_REQUEST = 2;
-
-    private ActivityCartBinding binding;
 
     private List<CartItemData> cartItems = new ArrayList<>();
     private CartAdapter cartAdapter = new CartAdapter(cartItems);
 
-    private Double total = 0.0;
+    private ActivityCartBinding binding;
 
-    private String barcode;
+    private final ActivityResultLauncher registerProductLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+
+                    String productName = data.getStringExtra( RegisterProductActivity.EXTRA_PRODUCT_NAME );
+                    String itemId = data.getStringExtra( RegisterProductActivity.EXTRA_ITEM_ID );
+                    Double itemPrice = data.getDoubleExtra( RegisterProductActivity.EXTRA_ITEM_PRICE, 0 );
+                    Integer itemQty = data.getIntExtra( RegisterProductActivity.EXTRA_ITEM_QTY, 1 );
+
+                    String imageUrl = data.getStringExtra( RegisterProductActivity.EXTRA_PRODUCT_IMAGE );
+                    Bitmap image = Util.getBitmapFromURL(imageUrl);
+
+                    this.total += itemPrice * itemQty;
+
+                    binding.textTotal.setText("Total:\nR$ " + decimalFormat.format(this.total));
+
+                    cartItems.add( new CartItemData(itemId, productName, itemPrice, itemQty, image) );
+                    cartAdapter.notifyItemInserted(cartItems.size()-1);
+                }
+            }
+        );
 
     // Register the launcher and result handler
     private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
             result -> {
-                if(result.getContents() == null) {
-                    Toast.makeText(CartActivity.this, "Cancelled", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(CartActivity.this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-                    barcode = result.getContents();
+                String barcode = result.getContents();
 
-                    /*
-                    HashMap<String, String> getCommand = new HashMap<String, String>();
-                    getCommand.put("queryType", "productInfo");
-                    getCommand.put("cod_barras", barcode);
-                    JSONObject response = Config/Util.funçãoExecutorGET("server_select.php", getCommand);
-                    or
-                    JSONObject response = Config/Util.funçãoExecutor("GET", "server_select.php", getCommand);
+                if(barcode == null) {
+                    Toast.makeText(CartActivity.this,
+                            "Falha ao escanear.",
+                            Toast.LENGTH_LONG).show();
+                }
 
-                    OR
+                else {
+                    Toast.makeText(CartActivity.this,
+                            "Escaneado: " + barcode,
+                            Toast.LENGTH_LONG).show();
 
-                    Config/Util.addParams("queryType", "productInfo");
-                    Config/Util.addParams("cod_barras", barcode);
-                    JSONObject response = Config/Util.funçãoExecutorGET("server_select.php", Config/Util.params);
-                    or
-                    JSONObject response = Config/Util.funçãoExecutor("GET", "server_select.php", Config/Util.params);
-                    Config/Util.clearParams();
+                    ServerClient.bluesoftProductInfo(barcode, supermarketId, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                int resultCode = response.getInt("result_code");
 
-                    if (response == 1) {
-                        produto retornado do banco, tratar o response
-                    }
-                    else {
-                        getCommand.remove("queryType");
-                        or
-                        Config/Util.removeParams("queryType");
-                        JSONObject response = funçãoExecutorGET("server_select.php", getCommand);
-                        or
-                        JSONObject response = funçãoExecutor("GET", "server_select.php", getCommand);
+                                if (resultCode == 1) {
+                                    String itemId = response.getJSONObject("result")
+                                            .getString("itemId");
+                                    Intent i = new Intent(CartActivity.this, RegisterProductActivity.class)
+                                            .putExtra(EXTRA_CURRENT_CART_TOTAL, total)
+                                            .putExtra(EXTRA_CURRENT_ITEM_ID, itemId);
+                                    registerProductLauncher.launch(i);
+                                }
 
-                        OR
-
-                        JSONObject response = funçãoExecutorGET("server_select.php", Config/Util.params);
-                        or
-                        JSONObject response = funçãoExecutor("GET", "server_select.php", Config/Util.params);
-                        Config/Util.clearParams();
-                        if (response == 1) {
-                            produto retornado da api, tratar o response
+                                else {
+                                    Toast.makeText(CartActivity.this,
+                                            "Falha no servidor ao escanear.",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                        else {
-                            deu merda
-                        }
-                    }
-                     */
+
+                        //TODO: onFailure
+                    });
+
                 }
             });
 
@@ -114,6 +125,11 @@ public class CartActivity extends AppCompatActivity {
         binding = ActivityCartBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        Intent i = getIntent();
+        // TODO: usar o código comentado quando se tornar cabível
+        //supermarketId = i.getStringExtra("supermarketId");
+        supermarketId = "1";
 
         String cartName = "Seu carrinho #" + getIntent().getStringExtra("cartHistoryItemsSize");
         binding.editCartName.setText(cartName);
@@ -132,46 +148,46 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if(dy > 0){
-                    binding.buttonAddProduct.hide();
+                    binding.buttonAddItem.hide();
                 } else{
-                    binding.buttonAddProduct.show();
+                    binding.buttonAddItem.show();
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
 
         // Register the launcher and result handler
-
-        binding.optionBarcode.setOnClickListener(new View.OnClickListener() {
+        binding.buttonOptionBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ScanOptions options = new ScanOptions();
-                options.setDesiredBarcodeFormats(ScanOptions.EAN_13);
-                options.setPrompt("Scanning");
-                options.setOrientationLocked(false);
+                ScanOptions options = new ScanOptions()
+                        .setDesiredBarcodeFormats(ScanOptions.EAN_13)
+                        .setPrompt("Aponte para um código de barras")
+                        .setOrientationLocked(false)
+                        .setBeepEnabled(false);
                 barcodeLauncher.launch(options);
             }
         });
 
-        binding.optionCatalog.setOnClickListener(new View.OnClickListener() {
+        binding.buttonOptionCatalog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(CartActivity.this, RegisterProductActivity.class);
-                i.putExtra("total", total);
-                startActivityForResult(i, NEW_ITEM_REQUEST);
+                Intent i = new Intent(CartActivity.this, RegisterProductActivity.class)
+                        .putExtra(EXTRA_CURRENT_CART_TOTAL, total);
+                registerProductLauncher.launch(i);
             }
         });
 
         binding.buttonSaveCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent();
                 Integer cardSize = cartItems.size();
                 String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                i.putExtra("cardName", binding.editCartName.getText().toString());
-                i.putExtra("cardTotal", decimalFormat.format(total));
-                i.putExtra("cardSize", cardSize + " produtos");
-                i.putExtra("cardDate", "Última modificação: " + date);
+                Intent i = new Intent()
+                        .putExtra("cardName", binding.editCartName.getText().toString())
+                        .putExtra("cardTotal", decimalFormat.format(total))
+                        .putExtra("cardSize", cardSize + " produtos")
+                        .putExtra("cardDate", "Última modificação: " + date);
                 setResult(Activity.RESULT_OK, i);
                 finish();
             }
@@ -180,41 +196,10 @@ public class CartActivity extends AppCompatActivity {
         binding.buttonCancelCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent();
-                setResult(Activity.RESULT_CANCELED, i);
+                setResult(Activity.RESULT_CANCELED, new Intent());
                 finish();
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-
-            if (requestCode == NEW_BARCODE_REQUEST) {
-                Intent i = new Intent(CartActivity.this, RegisterProductActivity.class);
-                i.putExtra("total", total);
-                startActivityForResult(i, NEW_ITEM_REQUEST);
-            }
-
-            if (requestCode == NEW_ITEM_REQUEST) {
-                //Uri productImageUri = data.getData();
-                String productName = data.getStringExtra("productName");
-                Double productPrice = data.getDoubleExtra("productPrice", 0);
-                Integer productQty = data.getIntExtra("productQty", 1);
-                Double total = data.getDoubleExtra("total", 0);
-
-                this.total = total;
-                binding.textTotal.setText("Total:\nR$ " + decimalFormat.format(total));
-
-                CartItemData newItem = new CartItemData(productName, productPrice, productQty);
-                cartItems.add(newItem);
-
-                cartAdapter.notifyItemInserted(cartItems.size()-1);
-            }
-
-        }
     }
 
 }

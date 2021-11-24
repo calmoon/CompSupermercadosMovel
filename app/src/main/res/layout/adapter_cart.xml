@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/image_cart_product"
+        android:id="@+id/image_product_cart"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="8dp"
@@ -18,7 +18,7 @@
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <TextView
-        android:id="@+id/text_cart_product_name"
+        android:id="@+id/text_product_name_cart"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -29,24 +29,24 @@
         android:maxLines="1"
         android:text="Nome do produto"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toTopOf="@+id/text_cart_product_total"
-        app:layout_constraintEnd_toStartOf="@+id/edit_cart_product_qty"
+        app:layout_constraintBottom_toTopOf="@+id/text_item_total_cart"
+        app:layout_constraintEnd_toStartOf="@+id/edit_item_qty_cart"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/image_cart_product"
-        app:layout_constraintTop_toTopOf="@+id/image_cart_product"
+        app:layout_constraintStart_toEndOf="@+id/image_product_cart"
+        app:layout_constraintTop_toTopOf="@+id/image_product_cart"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/text_cart_product_total"
+        android:id="@+id/text_item_total_cart"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="R$ 0,00"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toBottomOf="@+id/image_cart_product"
-        app:layout_constraintEnd_toEndOf="@+id/text_cart_product_name"
-        app:layout_constraintStart_toStartOf="@+id/text_cart_product_name"
-        app:layout_constraintTop_toBottomOf="@+id/text_cart_product_name" />
+        app:layout_constraintBottom_toBottomOf="@+id/image_product_cart"
+        app:layout_constraintEnd_toEndOf="@+id/text_product_name_cart"
+        app:layout_constraintStart_toStartOf="@+id/text_product_name_cart"
+        app:layout_constraintTop_toBottomOf="@+id/text_product_name_cart" />
 
     <ImageButton
         android:id="@+id/button_remove_from_cart"
@@ -59,7 +59,7 @@
         app:srcCompat="@drawable/ic_trash" />
 
     <EditText
-        android:id="@+id/edit_cart_product_qty"
+        android:id="@+id/edit_item_qty_cart"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="30dp"
         android:layout_height="0dp"
@@ -79,9 +79,9 @@
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:background="@null"
-        app:layout_constraintBottom_toTopOf="@+id/edit_cart_product_qty"
-        app:layout_constraintEnd_toEndOf="@+id/edit_cart_product_qty"
-        app:layout_constraintStart_toStartOf="@+id/edit_cart_product_qty"
+        app:layout_constraintBottom_toTopOf="@+id/edit_item_qty_cart"
+        app:layout_constraintEnd_toEndOf="@+id/edit_item_qty_cart"
+        app:layout_constraintStart_toStartOf="@+id/edit_item_qty_cart"
         app:srcCompat="@drawable/ic_plus"
         app:tint="?android:attr/colorForeground" />
 
@@ -90,9 +90,9 @@
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:background="@null"
-        app:layout_constraintEnd_toEndOf="@+id/edit_cart_product_qty"
-        app:layout_constraintStart_toStartOf="@+id/edit_cart_product_qty"
-        app:layout_constraintTop_toBottomOf="@+id/edit_cart_product_qty"
+        app:layout_constraintEnd_toEndOf="@+id/edit_item_qty_cart"
+        app:layout_constraintStart_toStartOf="@+id/edit_item_qty_cart"
+        app:layout_constraintTop_toBottomOf="@+id/edit_item_qty_cart"
         app:srcCompat="@drawable/ic_minus"
         app:tint="?android:attr/colorForeground" />
 

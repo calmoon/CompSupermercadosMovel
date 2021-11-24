@@ -34,15 +34,17 @@ public class CartAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        CartItemData itemData = cartItems.get(position);
+        CartItemData newCartItem = cartItems.get(position);
 
-        String productPrice = "R$ " + decimalFormat.format(itemData.productPrice);
-        String productQty = itemData.productQty.toString();
+        Double itemTotal = newCartItem.getPrice() * newCartItem.getQuantity();
 
-        //binding.imageCartProduct.setImageURI(itemData.productImageUri);
-        binding.textCartProductName.setText(itemData.productName);
-        binding.textCartProductPrice.setText(productPrice);
-        binding.editCartProductQty.setText(productQty);
+        String textItemTotal = "R$ " + decimalFormat.format(itemTotal);
+        String textItemQty = newCartItem.getQuantity().toString();
+
+        binding.imageProductCart.setImageBitmap( newCartItem.getProductImage() );
+        binding.textProductNameCart.setText( newCartItem.getProductName() );
+        binding.textItemTotalCart.setText( textItemTotal );
+        binding.editItemQtyCart.setText( textItemQty );
     }
 
     @Override
