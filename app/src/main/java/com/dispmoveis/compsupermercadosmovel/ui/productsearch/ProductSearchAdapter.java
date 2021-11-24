@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dispmoveis.compsupermercadosmovel.databinding.AdapterProductSearchBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
-import com.dispmoveis.compsupermercadosmovel.databinding.AdapterProductSearchBinding;
 
 import java.text.DecimalFormat;
 import java.util.List;

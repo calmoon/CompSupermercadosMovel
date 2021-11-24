@@ -1,7 +1,5 @@
 package com.dispmoveis.compsupermercadosmovel.ui.registerproduct;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +7,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityRegisterProductBinding;
-import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
-import com.dispmoveis.compsupermercadosmovel.util.Util;
+import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;

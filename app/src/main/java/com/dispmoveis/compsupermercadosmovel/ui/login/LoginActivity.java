@@ -1,17 +1,17 @@
 package com.dispmoveis.compsupermercadosmovel.ui.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.dispmoveis.compsupermercadosmovel.databinding.ActivityLoginBinding;
+import com.dispmoveis.compsupermercadosmovel.network.HttpRequest;
 import com.dispmoveis.compsupermercadosmovel.ui.createaccount.CreateAccountActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
-import com.dispmoveis.compsupermercadosmovel.databinding.ActivityLoginBinding;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
-import com.dispmoveis.compsupermercadosmovel.network.HttpRequest;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 
 import org.json.JSONException;

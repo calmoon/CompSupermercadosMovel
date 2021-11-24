@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterCartBinding;
+import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 
 import java.text.DecimalFormat;
 import java.util.List;

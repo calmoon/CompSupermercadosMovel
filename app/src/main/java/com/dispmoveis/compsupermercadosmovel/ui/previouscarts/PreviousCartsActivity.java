@@ -1,12 +1,5 @@
 package com.dispmoveis.compsupermercadosmovel.ui.previouscarts;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,11 +8,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.dispmoveis.compsupermercadosmovel.R;
-import com.dispmoveis.compsupermercadosmovel.ui.supermarket.SupermarketActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityPreviousCartsBinding;
 import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.login.LoginActivity;
+import com.dispmoveis.compsupermercadosmovel.ui.supermarket.SupermarketActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 
 import java.util.ArrayList;

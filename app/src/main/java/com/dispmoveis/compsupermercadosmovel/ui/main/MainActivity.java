@@ -1,9 +1,5 @@
 package com.dispmoveis.compsupermercadosmovel.ui.main;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,6 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.dispmoveis.compsupermercadosmovel.ui.login.LoginActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
