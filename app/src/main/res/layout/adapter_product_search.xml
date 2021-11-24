@@ -17,7 +17,7 @@
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <TextView
-        android:id="@+id/text_product_search_name"
+        android:id="@+id/text_product_name_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/image_product_search" />
 
     <TextView
-        android:id="@+id/text_product_search_price"
+        android:id="@+id/text_item_price_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -47,8 +47,8 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/text_product_search_name"
-        app:layout_constraintStart_toStartOf="@+id/text_product_search_name"
-        app:layout_constraintTop_toBottomOf="@+id/text_product_search_name" />
+        app:layout_constraintEnd_toEndOf="@+id/text_product_name_search"
+        app:layout_constraintStart_toStartOf="@+id/text_product_name_search"
+        app:layout_constraintTop_toBottomOf="@+id/text_product_name_search" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

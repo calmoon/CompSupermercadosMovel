@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 public class Config {
 
+    //public static String SERVER_URL_BASE = "http://10.0.2.2/";
     public static String SERVER_URL_BASE = "https://comparador-supermercados.herokuapp.com/";
 
     public static void setLogin(Context context, String login) {

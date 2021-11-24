@@ -4,36 +4,37 @@ import android.graphics.Bitmap;
 
 public class SupermarketItem {
 
-    private String id, name, price, priceDate, supermarketName;
-    private Bitmap image;
+    private String id, productName, priceDate, supermarketName;
+    private Double price;
+    private Bitmap productImage;
 
     // Usado na página de informações de um produto
-    public SupermarketItem(String id, String name, String price, String priceDate, String supermarketName, Bitmap image) {
+    public SupermarketItem(String id, String productName, Double price, String priceDate, String supermarketName, Bitmap productImage) {
         this.id = id;
-        this.name = name;
+        this.productName = productName;
         this.price = price;
         this.priceDate = priceDate;
         this.supermarketName = supermarketName;
-        this.image = image;
+        this.productImage = productImage;
     }
 
     // Usado em listagem de produtos
-    public SupermarketItem(String id, String name, String price, Bitmap image) {
+    public SupermarketItem(String id, String productName, Double price, Bitmap productImage) {
         this.id = id;
-        this.name = name;
+        this.productName = productName;
         this.price = price;
-        this.image = image;
+        this.productImage = productImage;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
-    public String getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -45,7 +46,7 @@ public class SupermarketItem {
         return supermarketName;
     }
 
-    public Bitmap getImage() {
-        return image;
+    public Bitmap getProductImage() {
+        return productImage;
     }
 }

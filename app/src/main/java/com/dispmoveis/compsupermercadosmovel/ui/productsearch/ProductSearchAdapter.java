@@ -12,6 +12,7 @@ import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterProductSearchBinding;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 
@@ -19,6 +20,8 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<SupermarketItem> supermarketItems;
+
+    static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     private AdapterProductSearchBinding binding;
 
@@ -39,9 +42,10 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         SupermarketItem item = supermarketItems.get(position);
 
-        binding.textProductSearchName.setText(item.getName());
-        binding.textProductSearchPrice.setText("R$ " + item.getPrice());
-        binding.imageProductSearch.setImageBitmap(item.getImage());
+        String textItemPrice = "R$ " + decimalFormat.format(item.getPrice());
+        binding.textItemPriceSearch.setText(textItemPrice);
+        binding.textProductNameSearch.setText(item.getProductName());
+        binding.imageProductSearch.setImageBitmap(item.getProductImage());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

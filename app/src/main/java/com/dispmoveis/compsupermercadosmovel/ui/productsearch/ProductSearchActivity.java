@@ -5,38 +5,26 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.dispmoveis.compsupermercadosmovel.R;
 import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityProductSearchBinding;
-import com.dispmoveis.compsupermercadosmovel.util.Config;
-import com.dispmoveis.compsupermercadosmovel.util.HttpRequest;
+import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
+
+import cz.msebera.android.httpclient.Header;
 
 public class ProductSearchActivity extends AppCompatActivity {
 
-    private String supermarketId;
-
-    private ProductSearchViewModel productSearchViewModel;
-
     private ActivityProductSearchBinding binding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +36,12 @@ public class ProductSearchActivity extends AppCompatActivity {
         //TODO: usar o código comentado quando quando não for mais
         //      necessário executar a activity de forma isolada
         /*
-        Intent i = getIntent();
-        this.supermarketId = i.getStringExtra("supermarketId");
+        String supermarketId = getIntent().getStringExtra("supermarketId");
+        loadSupermarketName(supermarketId);
         */
-        this.supermarketId = "1";
+        loadSupermarketName("1");
 
-        loadSupermarketName();
-
-        productSearchViewModel = new ViewModelProvider(this)
+        ProductSearchViewModel productSearchViewModel = new ViewModelProvider(this)
                 .get(ProductSearchViewModel.class);
 
         productSearchViewModel.getSupermarketItems().observe(this, new Observer<List<SupermarketItem>>() {
@@ -76,41 +62,29 @@ public class ProductSearchActivity extends AppCompatActivity {
         binding.recyclerProductSearch.setHasFixedSize(true);
     }
 
-    private void loadSupermarketName() {
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
+    private void loadSupermarketName(String supermarketId) {
+        ServerClient.select("supermarketInfo", supermarketId, new JsonHttpResponseHandler() {
+
             @Override
-            public void run() {
-
-                HttpRequest httpRequest = new HttpRequest(
-                        // TODO: colocar a url da api no config
-                        Config.SERVER_URL_BASE + "server_select.php",
-                        "GET",
-                        "UTF-8"
-                );
-                httpRequest.addParam("queryType", "supermarketInfo");
-                httpRequest.addParam("id", supermarketId);
-
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    InputStream inputStream = httpRequest.execute();
-                    String resultString = Util.inputStream2String(inputStream, "UTF-8");
-                    JSONObject responseJSON = new JSONObject(resultString);
-                    httpRequest.finish();
-
-                    int resultCode = responseJSON.getInt("result_code");
+                    int resultCode = response.getInt("result_code");
 
                     if (resultCode == 1) {
-                        String supermarketName = responseJSON.getJSONArray("result")
+                        String supermarketName = response.getJSONArray("result")
                                 .getJSONObject(0)
                                 .getString("nome");
                         binding.textSelectedSupermarket.setText(supermarketName);
                     }
-                }
 
-                catch (IOException | JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
+
+
+            //TODO: onFailure
+
         });
     }
 
