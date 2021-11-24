@@ -29,7 +29,7 @@
         android:maxLines="1"
         android:text="Nome do produto"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toTopOf="@+id/text_cart_product_price"
+        app:layout_constraintBottom_toTopOf="@+id/text_cart_product_total"
         app:layout_constraintEnd_toStartOf="@+id/edit_cart_product_qty"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/image_cart_product"
@@ -37,7 +37,7 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/text_cart_product_price"
+        android:id="@+id/text_cart_product_total"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
