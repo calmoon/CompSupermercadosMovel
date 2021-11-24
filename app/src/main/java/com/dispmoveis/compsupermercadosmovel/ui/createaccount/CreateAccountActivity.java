@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCreateAccountBinding;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
-import com.dispmoveis.compsupermercadosmovel.util.HttpRequest;
+import com.dispmoveis.compsupermercadosmovel.network.HttpRequest;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 
 import org.json.JSONException;

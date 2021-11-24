@@ -11,7 +11,7 @@ import com.dispmoveis.compsupermercadosmovel.ui.createaccount.CreateAccountActiv
 import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityLoginBinding;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
-import com.dispmoveis.compsupermercadosmovel.util.HttpRequest;
+import com.dispmoveis.compsupermercadosmovel.network.HttpRequest;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 
 import org.json.JSONException;

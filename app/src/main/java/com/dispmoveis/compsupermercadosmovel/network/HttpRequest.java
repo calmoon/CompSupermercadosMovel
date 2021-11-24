@@ -1,4 +1,4 @@
-package com.dispmoveis.compsupermercadosmovel.util;
+package com.dispmoveis.compsupermercadosmovel.network;
 
 import android.util.Base64;
 
