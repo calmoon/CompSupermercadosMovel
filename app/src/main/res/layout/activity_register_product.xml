@@ -22,7 +22,6 @@
         android:id="@+id/image_product"
         android:layout_width="135dp"
         android:layout_height="135dp"
-        android:background="@drawable/ic_image_placeholder"
         app:layout_constraintBottom_toTopOf="@+id/edit_product_price"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

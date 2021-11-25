@@ -1,29 +1,27 @@
 package com.dispmoveis.compsupermercadosmovel.model;
 
-import android.graphics.Bitmap;
-
 public class SupermarketItem {
 
     private String id, productName, priceDate, supermarketName;
     private Double price;
-    private Bitmap productImage;
+    private String productImageUrl;
 
     // Usado na página de informações de um produto
-    public SupermarketItem(String id, String productName, Double price, String priceDate, String supermarketName, Bitmap productImage) {
+    public SupermarketItem(String id, String productName, Double price, String priceDate, String supermarketName, String productImageUrl) {
         this.id = id;
         this.productName = productName;
         this.price = price;
         this.priceDate = priceDate;
         this.supermarketName = supermarketName;
-        this.productImage = productImage;
+        this.productImageUrl = productImageUrl;
     }
 
     // Usado em listagem de produtos
-    public SupermarketItem(String id, String productName, Double price, Bitmap productImage) {
+    public SupermarketItem(String id, String productName, Double price, String productImageUrl) {
         this.id = id;
         this.productName = productName;
         this.price = price;
-        this.productImage = productImage;
+        this.productImageUrl = productImageUrl;
     }
 
     public String getId() {
@@ -46,7 +44,7 @@ public class SupermarketItem {
         return supermarketName;
     }
 
-    public Bitmap getProductImage() {
-        return productImage;
+    public String getProductImageUrl() {
+        return productImageUrl;
     }
 }

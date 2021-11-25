@@ -2,7 +2,6 @@ package com.dispmoveis.compsupermercadosmovel.ui.cart;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
-import com.dispmoveis.compsupermercadosmovel.util.Util;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -54,19 +52,17 @@ public class CartActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
 
-                    String productName = data.getStringExtra( RegisterProductActivity.EXTRA_PRODUCT_NAME );
                     String itemId = data.getStringExtra( RegisterProductActivity.EXTRA_ITEM_ID );
+                    String productName = data.getStringExtra( RegisterProductActivity.EXTRA_PRODUCT_NAME );
                     Double itemPrice = data.getDoubleExtra( RegisterProductActivity.EXTRA_ITEM_PRICE, 0 );
                     Integer itemQty = data.getIntExtra( RegisterProductActivity.EXTRA_ITEM_QTY, 1 );
-
                     String imageUrl = data.getStringExtra( RegisterProductActivity.EXTRA_PRODUCT_IMAGE );
-                    Bitmap image = Util.getBitmapFromURL(imageUrl);
 
                     this.total += itemPrice * itemQty;
 
                     binding.textTotal.setText("Total:\nR$ " + decimalFormat.format(this.total));
 
-                    cartItems.add( new CartItemData(itemId, productName, itemPrice, itemQty, image) );
+                    cartItems.add( new CartItemData(itemId, productName, itemPrice, itemQty, imageUrl) );
                     cartAdapter.notifyItemInserted(cartItems.size()-1);
                 }
             }

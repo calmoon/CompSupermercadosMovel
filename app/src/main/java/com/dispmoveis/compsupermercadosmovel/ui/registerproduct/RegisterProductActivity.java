@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityRegisterProductBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
+import com.dispmoveis.compsupermercadosmovel.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
@@ -170,8 +171,8 @@ public class RegisterProductActivity extends AppCompatActivity {
                         if (resultCode == 1) {
                             JSONObject itemJSON = response.getJSONArray("result").getJSONObject(0);
 
-                            productImageUrl = itemJSON.getString("imagem");
-                            //binding.imageProduct.setImageBitmap( Util.getBitmapFromURL(productImageUrl) );
+                            productImageUrl = itemJSON.getString("imagem_url");
+                            Util.setBitmapFromURL(binding.imageProduct, productImageUrl);
 
                             binding.editProductPrice.setText(
                                     Double.toString(itemJSON.getDouble("preco_atual"))
@@ -188,30 +189,6 @@ public class RegisterProductActivity extends AppCompatActivity {
                 //TODO: onFailure
 
             });
-
-            /*
-            try {
-                JSONObject queryResponseJSON = ServerClient.select("itemInfo", supermarketItemId);
-                int resultCode = queryResponseJSON.getInt("result_code");
-
-                if (resultCode == 1) {
-                    JSONObject itemJSON = queryResponseJSON.getJSONArray("result").getJSONObject(0);
-
-                    productImageUrl = itemJSON.getString("imagem");
-                    binding.imageProduct.setImageBitmap( Util.getBitmapFromURL(productImageUrl) );
-
-                    binding.editProductPrice.setText(
-                            Double.toString(itemJSON.getDouble("preco_atual"))
-                    );
-
-                    binding.editProductName.setText(itemJSON.getString("nome"));
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-             */
 
         }
     }

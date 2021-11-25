@@ -77,15 +77,12 @@ public class ProductSearchViewModel extends ViewModel {
                             JSONObject itemJSON = supermarketItemsJSON.getJSONObject(i);
 
                             String id = itemJSON.getString("id");
-
                             String name = itemJSON.getString("nome");
-
                             double price = itemJSON.getDouble("preco_atual");
-
-                            String imageUrl = itemJSON.getString("imagem");
+                            String imageUrl = itemJSON.getString("imagem_url");
 
                             requestedSupermarketItems.add(
-                                    new SupermarketItem(id, name, price, null)
+                                    new SupermarketItem(id, name, price, imageUrl)
                             );
                         }
 

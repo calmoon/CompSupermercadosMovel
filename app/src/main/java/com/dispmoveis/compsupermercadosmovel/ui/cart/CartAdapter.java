@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterCartBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
+import com.dispmoveis.compsupermercadosmovel.util.Util;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -41,7 +42,7 @@ public class CartAdapter extends RecyclerView.Adapter {
         String textItemTotal = "R$ " + decimalFormat.format(itemTotal);
         String textItemQty = newCartItem.getQuantity().toString();
 
-        binding.imageProductCart.setImageBitmap( newCartItem.getProductImage() );
+        Util.setBitmapFromURL(binding.imageProductCart, newCartItem.getProductImageUrl());
         binding.textProductNameCart.setText( newCartItem.getProductName() );
         binding.textItemTotalCart.setText( textItemTotal );
         binding.editItemQtyCart.setText( textItemQty );
