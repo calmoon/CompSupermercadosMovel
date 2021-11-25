@@ -6,22 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.registerproduct.RegisterProductActivity">
 
-    <ImageButton
-        android:id="@+id/button_cancel_product"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close"
-        app:tint="#000000" />
-
     <com.elyeproj.loaderviewlibrary.LoaderImageView
         android:id="@+id/image_product"
-        android:layout_width="135dp"
-        android:layout_height="135dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/edit_product_price"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,8 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:text="R$"
+        android:textColor="#4CAF50"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/edit_product_price"
         app:layout_constraintEnd_toStartOf="@+id/edit_product_price"
@@ -48,14 +37,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:width="100dp"
-        android:ems="10"
-        android:gravity="center_horizontal"
+        android:background="@null"
+        android:gravity="center"
+        android:hint="0,00"
         android:inputType="numberDecimal"
+        android:maxEms="5"
         android:minHeight="48dp"
+        android:minEms="2"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#4CAF50"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/label_product_name"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/text_currency"
@@ -67,9 +59,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:ems="10"
         android:hint="Digite o nome do produto..."
         android:maxLines="1"
@@ -79,18 +69,6 @@
         app:layout_constraintBottom_toTopOf="@+id/label_product_qty"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_product_name" />
-
-    <TextView
-        android:id="@+id/label_product_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:paddingLeft="3dp"
-        android:text="Produto:"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/edit_product_name"
-        app:layout_constraintStart_toStartOf="@+id/edit_product_name"
         app:layout_constraintTop_toBottomOf="@+id/edit_product_price" />
 
     <EditText
@@ -185,10 +163,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:layout_marginBottom="24dp"
         android:text="+ Adicionar ao carrinho"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_preview_cart_total" />
+
+    <ImageButton
+        android:id="@+id/button_cancel_product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close"
+        app:tint="#000000" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
