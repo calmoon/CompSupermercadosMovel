@@ -3,6 +3,7 @@ package com.dispmoveis.compsupermercadosmovel.ui.cart;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -103,6 +104,7 @@ public class CartActivity extends AppCompatActivity {
                                     Toast.makeText(CartActivity.this,
                                             "Falha no servidor ao escanear.",
                                             Toast.LENGTH_LONG).show();
+                                    Log.e("HTTP_BARCODE_SCAN_FAIL", "Barcode scan response error - " + response.toString());
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
