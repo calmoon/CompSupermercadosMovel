@@ -18,7 +18,7 @@
         app:srcCompat="@drawable/ic_close"
         app:tint="#000000" />
 
-    <ImageView
+    <com.elyeproj.loaderviewlibrary.LoaderImageView
         android:id="@+id/image_product"
         android:layout_width="135dp"
         android:layout_height="135dp"
@@ -26,8 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:srcCompat="@drawable/ic_launcher_background" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/text_currency"

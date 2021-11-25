@@ -7,14 +7,13 @@
     android:layout_margin="8dp"
     android:background="@drawable/bg_adapter_product_search">
 
-    <ImageView
+    <com.elyeproj.loaderviewlibrary.LoaderImageView
         android:id="@+id/image_product_search"
         android:layout_width="@dimen/productSearchImageSize"
         android:layout_height="@dimen/productSearchImageSize"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_product_name_search"
