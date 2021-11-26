@@ -1,13 +1,13 @@
 package com.dispmoveis.compsupermercadosmovel.util;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 public class MoneyInputWatcher implements TextWatcher {

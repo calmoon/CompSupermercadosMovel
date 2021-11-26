@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         List<String> permissions = new ArrayList<>();
         permissions.add(Manifest.permission.CAMERA);
 
+        Config.currencyFormat.setMinimumFractionDigits(2);
+
         checkForPermissions(permissions);
     }
 

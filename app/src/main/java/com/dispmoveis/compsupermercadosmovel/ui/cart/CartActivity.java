@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,7 +25,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,16 +34,14 @@ import cz.msebera.android.httpclient.Header;
 
 public class CartActivity extends AppCompatActivity {
 
-    public static String EXTRA_CURRENT_CART_TOTAL = "cartTotal";
-    public static String EXTRA_CURRENT_ITEM_ID = "supermarketItemId";
+    public static final String EXTRA_CURRENT_CART_TOTAL = "cartTotal";
+    public static final String EXTRA_BARCODE_ITEM_ID = "supermarketItemId";
+
+    private final List<CartItemData> cartItems = new ArrayList<>();
+    private final CartAdapter cartAdapter = new CartAdapter(cartItems);
 
     private Double total = 0.0;
     private String supermarketId;
-
-    static DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
-    private List<CartItemData> cartItems = new ArrayList<>();
-    private CartAdapter cartAdapter = new CartAdapter(cartItems);
 
     private ActivityCartBinding binding;
 
@@ -61,7 +59,7 @@ public class CartActivity extends AppCompatActivity {
 
                     this.total += itemPrice * itemQty;
 
-                    binding.textTotal.setText("Total:\nR$ " + decimalFormat.format(this.total));
+                    binding.textTotal.setText("Total:\nR$ " + Config.currencyFormat.format(this.total));
 
                     cartItems.add( new CartItemData(itemId, productName, itemPrice, itemQty, imageUrl) );
                     cartAdapter.notifyItemInserted(cartItems.size()-1);
@@ -96,7 +94,7 @@ public class CartActivity extends AppCompatActivity {
                                             .getString("itemId");
                                     Intent i = new Intent(CartActivity.this, RegisterProductActivity.class)
                                             .putExtra(EXTRA_CURRENT_CART_TOTAL, total)
-                                            .putExtra(EXTRA_CURRENT_ITEM_ID, itemId);
+                                            .putExtra(EXTRA_BARCODE_ITEM_ID, itemId);
                                     registerProductLauncher.launch(i);
                                 }
 
@@ -132,7 +130,7 @@ public class CartActivity extends AppCompatActivity {
         String cartName = "Seu carrinho #" + getIntent().getStringExtra("cartHistoryItemsSize");
         binding.editCartName.setText(cartName);
 
-        binding.textTotal.setText("Total:\nR$ 0.00");
+        binding.textTotal.setText("Total:\nR$ " + Config.currencyFormat.format(total));
 
         binding.recyclerCart.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerCart.setAdapter(cartAdapter);
@@ -183,7 +181,7 @@ public class CartActivity extends AppCompatActivity {
                 String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
                 Intent i = new Intent()
                         .putExtra("cardName", binding.editCartName.getText().toString())
-                        .putExtra("cardTotal", decimalFormat.format(total))
+                        .putExtra("cardTotal", Config.currencyFormat.format(total))
                         .putExtra("cardSize", cardSize + " produtos")
                         .putExtra("cardDate", "Última modificação: " + date);
                 setResult(Activity.RESULT_OK, i);

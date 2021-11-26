@@ -11,18 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterProductSearchBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 
 public class ProductSearchAdapter extends RecyclerView.Adapter {
 
-    private Context context;
-    private List<SupermarketItem> supermarketItems;
-
-    static DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    private final Context context;
+    private final List<SupermarketItem> supermarketItems;
 
     private AdapterProductSearchBinding binding;
 
@@ -45,7 +43,7 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
 
         Util.setBitmapFromURL(binding.imageProductSearch, item.getProductImageUrl());
 
-        String textItemPrice = "R$ " + decimalFormat.format(item.getPrice());
+        String textItemPrice = "R$ " + Config.currencyFormat.format(item.getPrice());
         binding.textItemPriceSearch.setText(textItemPrice);
 
         binding.textProductNameSearch.setText(item.getProductName());

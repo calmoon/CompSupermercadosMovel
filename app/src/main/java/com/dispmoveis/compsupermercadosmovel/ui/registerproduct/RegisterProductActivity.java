@@ -12,16 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityRegisterProductBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.dispmoveis.compsupermercadosmovel.util.MoneyInputWatcher;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -37,14 +34,10 @@ public class RegisterProductActivity extends AppCompatActivity {
 
     private String productImageUrl;
     private String productName;
+    private String supermarketItemId;
     private Double itemPrice;
     private Integer itemQty;
     private Double itemTotal;
-
-    static Locale locale = Locale.GERMANY;
-    // Germany... ALEMANHA? POR QUÊ?
-    // Porque não há locale pro Brasil, mas a Alemanha usa o mesmo formato numérico (ex. 10.000,00)
-    static DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(locale);
 
     private ActivityRegisterProductBinding binding;
 
@@ -55,13 +48,11 @@ public class RegisterProductActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        decimalFormat.setMinimumFractionDigits(2);
-
         Intent i = getIntent();
-        String supermarketItemId = i.getStringExtra(CartActivity.EXTRA_CURRENT_ITEM_ID);
+        supermarketItemId = i.getStringExtra(CartActivity.EXTRA_BARCODE_ITEM_ID);
         currentCartTotal = i.getDoubleExtra(CartActivity.EXTRA_CURRENT_CART_TOTAL, 0.0);
 
-        String textCartTotal = "No seu carrinho: R$ " + decimalFormat.format(currentCartTotal);
+        String textCartTotal = "No seu carrinho: R$ " + Config.currencyFormat.format(currentCartTotal);
         binding.textPreviewCartTotal.setText(textCartTotal);
 
         binding.editProductQty.setText("1");
@@ -88,7 +79,7 @@ public class RegisterProductActivity extends AppCompatActivity {
         };
         binding.editProductQty.addTextChangedListener(textWatcher);
 
-        MoneyInputWatcher moneyInputWatcher = new MoneyInputWatcher(binding.editProductPrice, locale, true) {
+        MoneyInputWatcher moneyInputWatcher = new MoneyInputWatcher(binding.editProductPrice, Config.currencyLocale, true) {
             @Override
             public void afterTextChanged(Editable editable) {
                 super.afterTextChanged(editable);
@@ -110,6 +101,15 @@ public class RegisterProductActivity extends AppCompatActivity {
             public void onClick(View v) {
                 addToQuantity(-1);
                 updateTotals();
+            }
+        });
+
+        binding.buttonCancelProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                setResult(Activity.RESULT_CANCELED, i);
+                finish();
             }
         });
 
@@ -150,7 +150,7 @@ public class RegisterProductActivity extends AppCompatActivity {
     private void updateTotals() {
         String priceInput = binding.editProductPrice.getText().toString();
         try {
-            itemPrice = Util.currencyToBigDecimal(priceInput, locale).doubleValue();
+            itemPrice = Util.currencyToBigDecimal(priceInput, Config.currencyLocale).doubleValue();
         } catch (NumberFormatException | NullPointerException e) {
             itemPrice = 0.00;
         }
@@ -168,18 +168,18 @@ public class RegisterProductActivity extends AppCompatActivity {
 
         itemTotal = itemPrice * itemQty;
         String textProductTotal = "Total (produto x" + itemQty.toString() + "): R$ " +
-                decimalFormat.format(this.itemTotal);
+                Config.currencyFormat.format(this.itemTotal);
         binding.textProductTotal.setText(textProductTotal);
 
         Double cartTotalPreview = itemTotal + currentCartTotal;
-        String textCartTotal = "No seu carrinho: R$ " + decimalFormat.format(cartTotalPreview);
+        String textCartTotal = "No seu carrinho: R$ " + Config.currencyFormat.format(cartTotalPreview);
         binding.textPreviewCartTotal.setText(textCartTotal);
     }
 
     private void addToQuantity(Integer num) {
-        Integer result = Integer.parseInt(binding.editProductQty.getText().toString()) + num;
+        int result = Integer.parseInt(binding.editProductQty.getText().toString()) + num;
         if (result > 0) {
-            binding.editProductQty.setText(result.toString());
+            binding.editProductQty.setText(String.valueOf(result));
         }
     }
 
@@ -187,7 +187,6 @@ public class RegisterProductActivity extends AppCompatActivity {
         if (supermarketItemId != null) {
 
             ServerClient.select("itemInfo", supermarketItemId, new JsonHttpResponseHandler() {
-
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
@@ -212,7 +211,6 @@ public class RegisterProductActivity extends AppCompatActivity {
                 }
 
                 //TODO: onFailure
-
             });
 
         }

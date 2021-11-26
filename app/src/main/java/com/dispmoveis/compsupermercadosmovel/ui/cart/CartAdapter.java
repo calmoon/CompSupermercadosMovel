@@ -8,18 +8,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterCartBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter {
 
-    static DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    private final List<CartItemData> cartItems;
 
     private AdapterCartBinding binding;
-
-    private List<CartItemData> cartItems;
 
     public CartAdapter(List<CartItemData> cartItems) {
         this.cartItems = cartItems;
@@ -39,7 +37,7 @@ public class CartAdapter extends RecyclerView.Adapter {
 
         Double itemTotal = newCartItem.getPrice() * newCartItem.getQuantity();
 
-        String textItemTotal = "R$ " + decimalFormat.format(itemTotal);
+        String textItemTotal = "R$ " + Config.currencyFormat.format(itemTotal);
         String textItemQty = newCartItem.getQuantity().toString();
 
         Util.setBitmapFromURL(binding.imageProductCart, newCartItem.getProductImageUrl());
