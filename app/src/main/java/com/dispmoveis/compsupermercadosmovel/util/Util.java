@@ -17,10 +17,33 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
 public class Util {
+
+    public static BigDecimal currencyToBigDecimal(String currencyStr, Locale locale) {
+        String replaceable = String.format("[%s,.\\s]", NumberFormat.getCurrencyInstance(locale).getCurrency().getSymbol());
+
+        String cleanString = currencyStr.replaceAll(replaceable, "");
+
+        BigDecimal parsed;
+        try {
+            parsed = new BigDecimal(cleanString).setScale(
+                    2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR
+            );
+        }
+        catch (NumberFormatException e) {
+            parsed = new BigDecimal(0);
+        }
+
+        return parsed;
+    }
 
     public static void setBitmapFromURL(ImageView imageView, String imageUrl) {
         String[] allowedTypes = new String[] {
