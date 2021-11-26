@@ -153,48 +153,37 @@ public class CartActivity extends AppCompatActivity {
         });
 
         // Register the launcher and result handler
-        binding.buttonOptionBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ScanOptions options = new ScanOptions()
-                        .setDesiredBarcodeFormats(ScanOptions.EAN_13)
-                        .setPrompt("Aponte para um código de barras")
-                        .setOrientationLocked(false)
-                        .setBeepEnabled(false);
-                barcodeLauncher.launch(options);
-            }
+        binding.buttonOptionBarcode.setOnClickListener(v -> {
+            ScanOptions options = new ScanOptions()
+                    .setDesiredBarcodeFormats(ScanOptions.EAN_13)
+                    .setPrompt("Aponte para um código de barras")
+                    .setOrientationLocked(false)
+                    .setBeepEnabled(false);
+            barcodeLauncher.launch(options);
         });
 
-        binding.buttonOptionCatalog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(CartActivity.this, RegisterProductActivity.class)
-                        .putExtra(EXTRA_CURRENT_CART_TOTAL, total);
-                registerProductLauncher.launch(i);
-            }
+        binding.buttonOptionCatalog.setOnClickListener(v -> {
+            registerProductLauncher.launch(
+                    new Intent(CartActivity.this, RegisterProductActivity.class)
+                            .putExtra(EXTRA_CURRENT_CART_TOTAL, total)
+            );
         });
 
-        binding.buttonSaveCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Integer cardSize = cartItems.size();
-                String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                Intent i = new Intent()
-                        .putExtra("cardName", binding.editCartName.getText().toString())
-                        .putExtra("cardTotal", Config.currencyFormat.format(total))
-                        .putExtra("cardSize", cardSize + " produtos")
-                        .putExtra("cardDate", "Última modificação: " + date);
-                setResult(Activity.RESULT_OK, i);
-                finish();
-            }
+        binding.buttonSaveCart.setOnClickListener(v -> {
+            Integer cardSize = cartItems.size();
+            String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+            Intent resultIntent = new Intent()
+                    .putExtra("cardName", binding.editCartName.getText().toString())
+                    .putExtra("cardTotal", Config.currencyFormat.format(total))
+                    .putExtra("cardSize", cardSize + " produtos")
+                    .putExtra("cardDate", "Última modificação: " + date);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
         });
 
-        binding.buttonCancelCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(Activity.RESULT_CANCELED, new Intent());
-                finish();
-            }
+        binding.buttonCancelCart.setOnClickListener(v -> {
+            setResult(Activity.RESULT_CANCELED, new Intent());
+            finish();
         });
     }
 

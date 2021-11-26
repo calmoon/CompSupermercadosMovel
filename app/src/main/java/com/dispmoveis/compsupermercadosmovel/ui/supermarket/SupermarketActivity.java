@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivitySupermarketBinding;
 
 public class SupermarketActivity extends AppCompatActivity {
-
     private ActivitySupermarketBinding binding;
 
     @Override
@@ -20,22 +19,16 @@ public class SupermarketActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.buttonSaveSupermarket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent();
-                setResult(Activity.RESULT_OK, i);
-                finish();
-            }
+        binding.buttonSaveSupermarket.setOnClickListener(v -> {
+            Intent i = new Intent();
+            setResult(Activity.RESULT_OK, i);
+            finish();
         });
 
-        binding.buttonCancelSupermarket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent();
-                setResult(Activity.RESULT_CANCELED, i);
-                finish();
-            }
+        binding.buttonCancelSupermarket.setOnClickListener(v -> {
+            Intent i = new Intent();
+            setResult(Activity.RESULT_CANCELED, i);
+            finish();
         });
     }
 }

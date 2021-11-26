@@ -32,8 +32,8 @@ public class PreviousCartsActivity extends AppCompatActivity {
 
     private ActivityPreviousCartsBinding binding;
 
-    private List<PreviousCartsItemData> cartHistoryItems = new ArrayList<>();
-    private PreviousCartsAdapter CartHistoryAdapter = new PreviousCartsAdapter(cartHistoryItems);
+    private final List<PreviousCartsItemData> cartHistoryItems = new ArrayList<>();
+    private final PreviousCartsAdapter CartHistoryAdapter = new PreviousCartsAdapter(cartHistoryItems);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +68,9 @@ public class PreviousCartsActivity extends AppCompatActivity {
             }
         });
 
-        binding.buttonCreateCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(PreviousCartsActivity.this, SupermarketActivity.class);
-                startActivityForResult(i, NEW_SUPERMARKET_REQUEST);
-            }
+        binding.buttonCreateCart.setOnClickListener(v -> {
+            Intent i = new Intent(PreviousCartsActivity.this, SupermarketActivity.class);
+            startActivityForResult(i, NEW_SUPERMARKET_REQUEST);
         });
 
 

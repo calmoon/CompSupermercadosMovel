@@ -2,7 +2,6 @@ package com.dispmoveis.compsupermercadosmovel.ui.productsearch;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -48,11 +47,8 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
 
         binding.textProductNameSearch.setText(item.getProductName());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: lógica para enviar este item pro carrinho
-            }
+        holder.itemView.setOnClickListener(v -> {
+            //TODO: lógica para enviar este item pro carrinho
         });
     }
 
