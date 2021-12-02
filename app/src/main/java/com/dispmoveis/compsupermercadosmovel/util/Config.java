@@ -15,11 +15,7 @@ public class Config {
     public static final Locale currencyLocale = Locale.GERMANY;
     // Germany... ALEMANHA? POR QUÊ?
     // Porque não há locale pro Brasil, mas a Alemanha usa o mesmo formato numérico (ex. 10.000,00)
-    public static DecimalFormat currencyFormat = (DecimalFormat) NumberFormat.getNumberInstance(currencyLocale);
-
-    public Config() {
-        currencyFormat.setMinimumFractionDigits(2);
-    }
+    public static final DecimalFormat currencyFormat = (DecimalFormat) NumberFormat.getNumberInstance(currencyLocale);
 
     public static void setLogin(Context context, String login) {
         SharedPreferences mPrefs = context.getSharedPreferences("configs", 0);
