@@ -5,7 +5,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import java.util.Map;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class ServerClient {
 
@@ -13,8 +14,9 @@ public class ServerClient {
     private static final String SERVER_INSERT_FILE = "server_insert.php";
     private static final String SERVER_UPDATE_FILE = "server_update.php";
     private static final String SERVER_BLUESOFT_FILE = "bluesoftApi.php";
+    private static final String SERVER_S3_UPLOAD_FILE = "s3_image_upload.php";
 
-    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static final AsyncHttpClient client = new AsyncHttpClient();
 
     private static String getAbsoluteUrl(String relativeUrl) {
         return Config.SERVER_URL_BASE + relativeUrl;
@@ -34,14 +36,14 @@ public class ServerClient {
         params.put("id", id);
         client.get(getAbsoluteUrl(SERVER_SELECT_FILE), params, responseHandler);
     }
-    public static void insert(String table, Map<String, String> values, JsonHttpResponseHandler responseHandler) {
-        RequestParams params = new RequestParams(values);
+    public static void insert(String table, RequestParams values, JsonHttpResponseHandler responseHandler) {
+        RequestParams params = values;
         params.put("table", table);
         client.post(getAbsoluteUrl(SERVER_INSERT_FILE), params, responseHandler);
     }
 
-    public static void update(String table, String whereId, Map<String, String> values, JsonHttpResponseHandler responseHandler) {
-        RequestParams params = new RequestParams(values);
+    public static void update(String table, String whereId, RequestParams values, JsonHttpResponseHandler responseHandler) {
+        RequestParams params = values;
         params.put("table", table);
         params.put("id", whereId);
         client.post(getAbsoluteUrl(SERVER_UPDATE_FILE), params, responseHandler);
@@ -52,6 +54,17 @@ public class ServerClient {
         params.put("barcode", barcode);
         params.put("supermarketId", supermarketId);
         client.post(getAbsoluteUrl(SERVER_BLUESOFT_FILE), params, responseHandler);
+    }
+
+    public static void s3ImageUpload(String itemId, File imageFile, JsonHttpResponseHandler responseHandler) {
+        RequestParams params = new RequestParams();
+        params.put("itemId", itemId);
+        try {
+            params.put("userfile", imageFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        client.post(getAbsoluteUrl(SERVER_S3_UPLOAD_FILE), params, responseHandler);
     }
 
 }
