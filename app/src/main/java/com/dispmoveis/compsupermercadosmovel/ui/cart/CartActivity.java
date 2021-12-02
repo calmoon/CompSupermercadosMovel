@@ -100,7 +100,7 @@ public class CartActivity extends AppCompatActivity {
 
                                 else {
                                     Toast.makeText(CartActivity.this,
-                                            "Falha no servidor ao escanear.",
+                                            "Falha na resposta do servidor ao escanear.",
                                             Toast.LENGTH_LONG).show();
                                     Log.e("HTTP_BARCODE_SCAN_FAIL", "Barcode scan response error - " + response.toString());
                                 }
@@ -108,7 +108,6 @@ public class CartActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-
                         //TODO: onFailure
                     });
 

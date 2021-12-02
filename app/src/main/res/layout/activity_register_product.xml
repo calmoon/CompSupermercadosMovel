@@ -11,6 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/white"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/edit_product_price"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -187,12 +188,27 @@
         android:id="@+id/button_cancel_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_button_round_transparent"
+        android:minWidth="40dp"
+        android:minHeight="40dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/image_product"
         app:srcCompat="@drawable/ic_close"
-        app:tint="#000000" />
+        app:tint="@color/white" />
+
+    <ImageButton
+        android:id="@+id/button_change_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginTop="276dp"
+        android:background="@drawable/bg_button_round_transparent"
+        android:minWidth="40dp"
+        android:minHeight="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/image_product"
+        app:srcCompat="@drawable/ic_camera_plus"
+        app:tint="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
