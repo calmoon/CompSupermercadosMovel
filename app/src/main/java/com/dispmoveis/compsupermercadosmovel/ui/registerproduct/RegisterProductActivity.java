@@ -74,7 +74,7 @@ public class RegisterProductActivity extends AppCompatActivity {
         itemId = i.getStringExtra(CartActivity.EXTRA_BARCODE_ITEM_ID);
         currentCartTotal = i.getDoubleExtra(CartActivity.EXTRA_CURRENT_CART_TOTAL, 0.0);
 
-        String textCartTotal = "No seu carrinho: R$ " + Config.currencyFormat.format(currentCartTotal);
+        String textCartTotal = "No seu carrinho: R$ " + Config.getCurrencyFormat().format(currentCartTotal);
         binding.textPreviewCartTotal.setText(textCartTotal);
 
         binding.editProductQty.setText("1");
@@ -216,11 +216,11 @@ public class RegisterProductActivity extends AppCompatActivity {
         Double itemTotal = itemPrice * itemQty;
 
         String textProductTotal = "Total (produto x" + itemQty.toString() + "): R$ " +
-                Config.currencyFormat.format(itemTotal);
+                Config.getCurrencyFormat().format(itemTotal);
         binding.textProductTotal.setText(textProductTotal);
 
         Double cartTotalPreview = itemTotal + currentCartTotal;
-        String textCartTotal = "No seu carrinho: R$ " + Config.currencyFormat.format(cartTotalPreview);
+        String textCartTotal = "No seu carrinho: R$ " + Config.getCurrencyFormat().format(cartTotalPreview);
         binding.textPreviewCartTotal.setText(textCartTotal);
     }
 
@@ -247,7 +247,7 @@ public class RegisterProductActivity extends AppCompatActivity {
                             binding.editProductName.setText(itemJSON.getString("nome"));
 
                             dbItemPrice = itemJSON.getDouble("preco_atual");
-                            binding.editProductPrice.setText(Config.currencyFormat.format(dbItemPrice));
+                            binding.editProductPrice.setText(Config.getCurrencyFormat().format(dbItemPrice));
 
                             productImageUrl = itemJSON.getString("imagem_url");
                             Util.setBitmapFromURL(binding.imageProduct, productImageUrl);

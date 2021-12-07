@@ -37,7 +37,7 @@ public class CartAdapter extends RecyclerView.Adapter {
 
         Double itemTotal = newCartItem.getPrice() * newCartItem.getQuantity();
 
-        String textItemTotal = "R$ " + Config.currencyFormat.format(itemTotal);
+        String textItemTotal = "R$ " + Config.getCurrencyFormat().format(itemTotal);
         String textItemQty = newCartItem.getQuantity().toString();
 
         Util.setBitmapFromURL(binding.imageProductCart, newCartItem.getProductImageUrl());

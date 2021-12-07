@@ -59,7 +59,7 @@ public class CartActivity extends AppCompatActivity {
 
                     this.total += itemPrice * itemQty;
 
-                    binding.textTotal.setText("Total:\nR$ " + Config.currencyFormat.format(this.total));
+                    binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(this.total));
 
                     cartItems.add( new CartItemData(itemId, productName, itemPrice, itemQty, imageUrl) );
                     cartAdapter.notifyItemInserted(cartItems.size()-1);
@@ -129,7 +129,7 @@ public class CartActivity extends AppCompatActivity {
         String cartName = "Seu carrinho #" + getIntent().getStringExtra("cartHistoryItemsSize");
         binding.editCartName.setText(cartName);
 
-        binding.textTotal.setText("Total:\nR$ " + Config.currencyFormat.format(total));
+        binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(total));
 
         binding.recyclerCart.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerCart.setAdapter(cartAdapter);
@@ -173,7 +173,7 @@ public class CartActivity extends AppCompatActivity {
             String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
             Intent resultIntent = new Intent()
                     .putExtra("cardName", binding.editCartName.getText().toString())
-                    .putExtra("cardTotal", Config.currencyFormat.format(total))
+                    .putExtra("cardTotal", Config.getCurrencyFormat().format(total))
                     .putExtra("cardSize", cardSize + " produtos")
                     .putExtra("cardDate", "Última modificação: " + date);
             setResult(Activity.RESULT_OK, resultIntent);

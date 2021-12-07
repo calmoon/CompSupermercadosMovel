@@ -42,7 +42,7 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
 
         Util.setBitmapFromURL(binding.imageProductSearch, item.getProductImageUrl());
 
-        String textItemPrice = "R$ " + Config.currencyFormat.format(item.getPrice());
+        String textItemPrice = "R$ " + Config.getCurrencyFormat().format(item.getPrice());
         binding.textItemPriceSearch.setText(textItemPrice);
 
         binding.textProductNameSearch.setText(item.getProductName());
