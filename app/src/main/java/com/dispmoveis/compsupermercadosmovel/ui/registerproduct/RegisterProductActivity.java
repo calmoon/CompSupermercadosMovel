@@ -2,7 +2,9 @@ package com.dispmoveis.compsupermercadosmovel.ui.registerproduct;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -41,15 +43,13 @@ public class RegisterProductActivity extends AppCompatActivity {
     public static String EXTRA_PRODUCT_NAME = "productName";
     public static String EXTRA_PRODUCT_IMAGE = "productImage";
 
-    private Double currentCartTotal;
-
     private String itemId;
     private Integer itemQty;
     private Double itemPrice;
     private String productImageUrl;
 
-    private Double dbItemPrice;
-    private String inputImagePath = null;
+    private Double dbItemPrice, currentCartTotal;
+    private String capturedImagePath = null;
 
     private ActivityRegisterProductBinding binding;
 
@@ -57,8 +57,7 @@ public class RegisterProductActivity extends AppCompatActivity {
             new ActivityResultContracts.TakePicture(),
             success -> {
                 if (success) {
-                    binding.imageProduct.setImageBitmap(
-                            BitmapFactory.decodeFile(inputImagePath));
+                    loadCapturedImage();
                 }
             }
     );
@@ -151,27 +150,6 @@ public class RegisterProductActivity extends AppCompatActivity {
         });
     }
 
-    private void launchChangeImageContract() {
-        File tempFile = createTempImageFile();
-
-        if (tempFile == null) {
-            Toast.makeText(RegisterProductActivity.this,
-                    "Falha ao criar arquivo temporário.",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        inputImagePath = tempFile.getAbsolutePath();
-
-        Uri inputImageURI = FileProvider.getUriForFile(
-                this,
-                "com.dispmoveis.compsupermercadosmovel.fileprovider",
-                tempFile
-        );
-
-        changeImageLauncher.launch(inputImageURI);
-    }
-
     private File createTempImageFile() {
         File tempFile = null;
         try {
@@ -185,12 +163,59 @@ public class RegisterProductActivity extends AppCompatActivity {
         return tempFile;
     }
 
-    private void submitUserChanges() {
-        if (inputImagePath != null) {
-            submitProductImage();
+    private void launchChangeImageContract() {
+        File tempFile = createTempImageFile();
+
+        if (tempFile == null) {
+            Toast.makeText(RegisterProductActivity.this,
+                    "Falha ao criar arquivo temporário.",
+                    Toast.LENGTH_LONG).show();
+            return;
         }
-        if (!itemPrice.equals(dbItemPrice)) {
-            submitItemPrice();
+
+        capturedImagePath = tempFile.getAbsolutePath();
+
+        Uri inputImageURI = FileProvider.getUriForFile(
+                this,
+                "com.dispmoveis.compsupermercadosmovel.fileprovider",
+                tempFile
+        );
+
+        changeImageLauncher.launch(inputImageURI);
+    }
+
+    private void loadCapturedImage() {
+        try {
+            Bitmap capturedImage = BitmapFactory.decodeFile(capturedImagePath);
+            Log.d("SET_CAPTURED_IMAGE_PATH", capturedImagePath);
+
+            ExifInterface ei = new ExifInterface(capturedImagePath);
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+
+            int rotationAngle;
+
+            switch(orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotationAngle = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotationAngle = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotationAngle = 270;
+                    break;
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    rotationAngle = 0;
+            }
+
+            binding.imageProduct.setImageBitmap(
+                    Util.rotateImage(capturedImage, rotationAngle)
+            );
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -232,42 +257,17 @@ public class RegisterProductActivity extends AppCompatActivity {
         updateTotals();
     }
 
-    private void loadItemInfo(String supermarketItemId) {
-        if (supermarketItemId != null) {
-
-            ServerClient.select("itemInfo", supermarketItemId, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        int resultCode = response.getInt("result_code");
-
-                        if (resultCode == 1) {
-                            JSONObject itemJSON = response.getJSONArray("result").getJSONObject(0);
-
-                            binding.editProductName.setText(itemJSON.getString("nome"));
-
-                            dbItemPrice = itemJSON.getDouble("preco_atual");
-                            binding.editProductPrice.setText(Config.getCurrencyFormat().format(dbItemPrice));
-
-                            productImageUrl = itemJSON.getString("imagem_url");
-                            Util.setBitmapFromURL(binding.imageProduct, productImageUrl);
-
-                            binding.editProductName.setEnabled(false);
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                //TODO: onFailure
-            });
-
+    private void submitUserChanges() {
+        if (capturedImagePath != null) {
+            submitProductImage();
+        }
+        if (!itemPrice.equals(dbItemPrice)) {
+            submitItemPrice();
         }
     }
 
     private void submitProductImage() {
-        File f = new File(inputImagePath);
+        File f = new File(capturedImagePath);
         if (f.exists()) {
             ServerClient.s3ImageUpload(itemId, f, new JsonHttpResponseHandler() {
                 @Override
@@ -319,6 +319,40 @@ public class RegisterProductActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void loadItemInfo(String supermarketItemId) {
+        if (supermarketItemId != null) {
+
+            ServerClient.select("itemInfo", supermarketItemId, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        int resultCode = response.getInt("result_code");
+
+                        if (resultCode == 1) {
+                            JSONObject itemJSON = response.getJSONArray("result").getJSONObject(0);
+
+                            binding.editProductName.setText(itemJSON.getString("nome"));
+
+                            dbItemPrice = itemJSON.getDouble("preco_atual");
+                            binding.editProductPrice.setText(Config.getCurrencyFormat().format(dbItemPrice));
+
+                            productImageUrl = itemJSON.getString("imagem_url");
+                            Util.setBitmapFromURL(binding.imageProduct, productImageUrl);
+
+                            binding.editProductName.setEnabled(false);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //TODO: onFailure
+            });
+
+        }
     }
 
 }
