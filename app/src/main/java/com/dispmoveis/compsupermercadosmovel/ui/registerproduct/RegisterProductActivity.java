@@ -37,11 +37,8 @@ import cz.msebera.android.httpclient.Header;
 
 public class RegisterProductActivity extends AppCompatActivity {
 
-    public static String EXTRA_ITEM_ID = "itemId";
-    public static String EXTRA_ITEM_QTY = "itemQty";
-    public static String EXTRA_ITEM_PRICE = "itemPrice";
-    public static String EXTRA_PRODUCT_NAME = "productName";
-    public static String EXTRA_PRODUCT_IMAGE = "productImage";
+    public static final String EXTRA_CURRENT_CART_TOTAL = "cartTotal";
+    public static final String EXTRA_SELECTED_ITEM_ID = "supermarketItemId";
 
     private String itemId;
     private Integer itemQty;
@@ -70,8 +67,8 @@ public class RegisterProductActivity extends AppCompatActivity {
         setContentView(view);
 
         Intent i = getIntent();
-        itemId = i.getStringExtra(CartActivity.EXTRA_BARCODE_ITEM_ID);
-        currentCartTotal = i.getDoubleExtra(CartActivity.EXTRA_CURRENT_CART_TOTAL, 0.0);
+        itemId = i.getStringExtra(EXTRA_SELECTED_ITEM_ID);
+        currentCartTotal = i.getDoubleExtra(EXTRA_CURRENT_CART_TOTAL, 0.0);
 
         String textCartTotal = "No seu carrinho: R$ " + Config.getCurrencyFormat().format(currentCartTotal);
         binding.textPreviewCartTotal.setText(textCartTotal);
@@ -128,9 +125,7 @@ public class RegisterProductActivity extends AppCompatActivity {
             finish();
         });
 
-        binding.buttonChangeImage.setOnClickListener(v -> {
-            launchChangeImageContract();
-        });
+        binding.buttonChangeImage.setOnClickListener(v -> launchChangeImageContract());
 
         binding.buttonAddToCart.setOnClickListener(v -> {
             String productName = binding.editProductName.getText().toString();
@@ -138,11 +133,8 @@ public class RegisterProductActivity extends AppCompatActivity {
                 submitUserChanges();
 
                 Intent resultIntent = new Intent()
-                        .putExtra(EXTRA_ITEM_ID, itemId)
-                        .putExtra(EXTRA_ITEM_QTY, itemQty)
-                        .putExtra(EXTRA_ITEM_PRICE, itemPrice)
-                        .putExtra(EXTRA_PRODUCT_NAME, productName)
-                        .putExtra(EXTRA_PRODUCT_IMAGE, productImageUrl);
+                        .putExtra(CartActivity.EXTRA_ITEM_ID, itemId)
+                        .putExtra(CartActivity.EXTRA_ITEM_QTY, itemQty);
 
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();

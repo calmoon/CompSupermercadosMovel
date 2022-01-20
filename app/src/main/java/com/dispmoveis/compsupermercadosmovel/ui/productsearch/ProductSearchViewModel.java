@@ -1,10 +1,8 @@
 package com.dispmoveis.compsupermercadosmovel.ui.productsearch;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
@@ -21,36 +19,11 @@ import cz.msebera.android.httpclient.Header;
 
 public class ProductSearchViewModel extends ViewModel {
 
-    static public class ProductSearchViewModelFactory implements ViewModelProvider.Factory {
-
-        String supermarketId;
-
-        public ProductSearchViewModelFactory(String supermarketId) {
-            this.supermarketId = supermarketId;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            //TODO: usar o return comentado quando quando não for mais necessário
-            //      executar a activity de forma isolada
-            //return (T) new ProductSearchViewModel(supermarketId);
-            return (T) new ProductSearchViewModel("1");
-        }
-
-    }
-
     private String supermarketId;
     private MutableLiveData<List<SupermarketItem>> mutableSupermarketItems;
 
-    public ProductSearchViewModel(String supermarketId) {
+    public void setSupermarketId(String supermarketId) {
         this.supermarketId = supermarketId;
-    }
-
-    //TODO: remover esse construtor quando não for mais necessário
-    //      executar a activity de forma isolada
-    public ProductSearchViewModel() {
-        this.supermarketId = "1";
     }
 
     public LiveData<List<SupermarketItem>> getSupermarketItems() {

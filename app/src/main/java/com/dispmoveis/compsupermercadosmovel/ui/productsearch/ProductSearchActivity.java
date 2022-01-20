@@ -1,8 +1,12 @@
 package com.dispmoveis.compsupermercadosmovel.ui.productsearch;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,6 +16,7 @@ import com.dispmoveis.compsupermercadosmovel.R;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityProductSearchBinding;
 import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
+import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -24,7 +29,21 @@ import cz.msebera.android.httpclient.Header;
 
 public class ProductSearchActivity extends AppCompatActivity {
 
+    public static final String EXTRA_SUPERMARKET_ID = "ProductSearchActivity_SupermarketId";
+
+    double currentCartTotal;
+
     private ActivityProductSearchBinding binding;
+
+    final ActivityResultLauncher editSelectedProductLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    setResult(Activity.RESULT_OK, result.getData());
+                    finish();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +52,16 @@ public class ProductSearchActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        //TODO: usar o código comentado quando quando não for mais
-        //      necessário executar a activity de forma isolada
-        /*
-        String supermarketId = getIntent().getStringExtra("supermarketId");
+        Intent i = getIntent();
+        String supermarketId = i.getStringExtra(EXTRA_SUPERMARKET_ID);
+        currentCartTotal = i.getDoubleExtra(RegisterProductActivity.EXTRA_CURRENT_CART_TOTAL, 0.0);
+
         loadSupermarketName(supermarketId);
-        */
-        loadSupermarketName("1");
 
         ProductSearchViewModel productSearchViewModel = new ViewModelProvider(this)
                 .get(ProductSearchViewModel.class);
+
+        productSearchViewModel.setSupermarketId(supermarketId);
 
         productSearchViewModel.getSupermarketItems().observe(this, new Observer<List<SupermarketItem>>() {
             @Override

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
+import com.dispmoveis.compsupermercadosmovel.ui.productsearch.ProductSearchActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.journeyapps.barcodescanner.ScanContract;
@@ -34,8 +35,8 @@ import cz.msebera.android.httpclient.Header;
 
 public class CartActivity extends AppCompatActivity {
 
-    public static final String EXTRA_CURRENT_CART_TOTAL = "cartTotal";
-    public static final String EXTRA_BARCODE_ITEM_ID = "supermarketItemId";
+    public static final String EXTRA_ITEM_ID = "itemId";
+    public static final String EXTRA_ITEM_QTY = "itemQty";
 
     private final List<CartItemData> cartItems = new ArrayList<>();
     private final CartAdapter cartAdapter = new CartAdapter(cartItems);
@@ -45,24 +46,16 @@ public class CartActivity extends AppCompatActivity {
 
     private ActivityCartBinding binding;
 
-    private final ActivityResultLauncher registerProductLauncher = registerForActivityResult(
+    private final ActivityResultLauncher addProductLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
 
-                    String itemId = data.getStringExtra( RegisterProductActivity.EXTRA_ITEM_ID );
-                    String productName = data.getStringExtra( RegisterProductActivity.EXTRA_PRODUCT_NAME );
-                    Double itemPrice = data.getDoubleExtra( RegisterProductActivity.EXTRA_ITEM_PRICE, 0 );
-                    Integer itemQty = data.getIntExtra( RegisterProductActivity.EXTRA_ITEM_QTY, 1 );
-                    String imageUrl = data.getStringExtra( RegisterProductActivity.EXTRA_PRODUCT_IMAGE );
+                    String itemId = data.getStringExtra( EXTRA_ITEM_ID );
+                    int itemQty = data.getIntExtra( EXTRA_ITEM_QTY, 1 );
 
-                    this.total += itemPrice * itemQty;
-
-                    binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(this.total));
-
-                    cartItems.add( new CartItemData(itemId, productName, itemPrice, itemQty, imageUrl) );
-                    cartAdapter.notifyItemInserted(cartItems.size()-1);
+                    loadItemInfo(itemId, itemQty);
                 }
             }
         );
@@ -93,9 +86,9 @@ public class CartActivity extends AppCompatActivity {
                                     String itemId = response.getJSONObject("result")
                                             .getString("itemId");
                                     Intent i = new Intent(CartActivity.this, RegisterProductActivity.class)
-                                            .putExtra(EXTRA_CURRENT_CART_TOTAL, total)
-                                            .putExtra(EXTRA_BARCODE_ITEM_ID, itemId);
-                                    registerProductLauncher.launch(i);
+                                            .putExtra(RegisterProductActivity.EXTRA_CURRENT_CART_TOTAL, total)
+                                            .putExtra(RegisterProductActivity.EXTRA_SELECTED_ITEM_ID, itemId);
+                                    addProductLauncher.launch(i);
                                 }
 
                                 else {
@@ -162,9 +155,10 @@ public class CartActivity extends AppCompatActivity {
         });
 
         binding.buttonOptionCatalog.setOnClickListener(v -> {
-            registerProductLauncher.launch(
-                    new Intent(CartActivity.this, RegisterProductActivity.class)
-                            .putExtra(EXTRA_CURRENT_CART_TOTAL, total)
+            addProductLauncher.launch(
+                    new Intent(CartActivity.this, ProductSearchActivity.class)
+                            .putExtra(RegisterProductActivity.EXTRA_CURRENT_CART_TOTAL, total)
+                            .putExtra(ProductSearchActivity.EXTRA_SUPERMARKET_ID, supermarketId)
             );
         });
 
@@ -184,6 +178,41 @@ public class CartActivity extends AppCompatActivity {
             setResult(Activity.RESULT_CANCELED, new Intent());
             finish();
         });
+    }
+
+    private void loadItemInfo(String supermarketItemId, int itemQty) {
+        if (supermarketItemId != null) {
+
+            ServerClient.select("itemInfo", supermarketItemId, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        int resultCode = response.getInt("result_code");
+
+                        if (resultCode == 1) {
+                            JSONObject itemJSON = response.getJSONArray("result").getJSONObject(0);
+
+                            String productName = itemJSON.getString("nome");
+                            Double itemPrice = itemJSON.getDouble("preco_atual");
+                            String imageUrl = itemJSON.getString("imagem_url");
+
+                            total += itemPrice * itemQty;
+
+                            binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(total));
+
+                            cartItems.add( new CartItemData(supermarketItemId, productName, itemPrice, itemQty, imageUrl) );
+                            cartAdapter.notifyItemInserted(cartItems.size()-1);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //TODO: onFailure
+            });
+
+        }
     }
 
 }

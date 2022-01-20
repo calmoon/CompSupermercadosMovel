@@ -1,6 +1,7 @@
 package com.dispmoveis.compsupermercadosmovel.ui.productsearch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterProductSearchBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
+import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 
@@ -18,7 +20,7 @@ import java.util.List;
 
 public class ProductSearchAdapter extends RecyclerView.Adapter {
 
-    private final Context context;
+    private Context context;
     private final List<SupermarketItem> supermarketItems;
 
     private AdapterProductSearchBinding binding;
@@ -31,8 +33,9 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         binding = AdapterProductSearchBinding
-                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+                .inflate(LayoutInflater.from(context), parent, false);
         return new CustomViewHolder(binding.getRoot());
     }
 
@@ -47,8 +50,13 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
 
         binding.textProductNameSearch.setText(item.getProductName());
 
+        Double currentCartTotal = ((ProductSearchActivity) context).currentCartTotal;
+
         holder.itemView.setOnClickListener(v -> {
-            //TODO: lógica para enviar este item pro carrinho
+            Intent i = new Intent(context, RegisterProductActivity.class)
+                    .putExtra(RegisterProductActivity.EXTRA_SELECTED_ITEM_ID, item.getId())
+                    .putExtra(RegisterProductActivity.EXTRA_CURRENT_CART_TOTAL, currentCartTotal);
+            ((ProductSearchActivity) context).editSelectedProductLauncher.launch(i);
         });
     }
 
