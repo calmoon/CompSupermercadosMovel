@@ -1,5 +1,6 @@
 package com.dispmoveis.compsupermercadosmovel.ui.cart;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,12 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
+import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.productsearch.ProductSearchActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
+import com.dispmoveis.compsupermercadosmovel.ui.supermarket.SupermarketActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.permissionx.guolindev.PermissionX;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -146,12 +150,32 @@ public class CartActivity extends AppCompatActivity {
 
         // Register the launcher and result handler
         binding.buttonOptionBarcode.setOnClickListener(v -> {
-            ScanOptions options = new ScanOptions()
-                    .setDesiredBarcodeFormats(ScanOptions.EAN_13)
-                    .setPrompt("Aponte para um código de barras")
-                    .setOrientationLocked(false)
-                    .setBeepEnabled(false);
-            barcodeLauncher.launch(options);
+            PermissionX.init(this)
+                    .permissions(Manifest.permission.CAMERA)
+                    .onExplainRequestReason((scope, deniedList) ->
+                            scope.showRequestReasonDialog(deniedList, "Para usar essa funcionalidade " +
+                                    "é preciso conceder a permissão ao app.", "OK")
+                    )
+                    .onForwardToSettings((scope, deniedList) ->
+                            scope.showForwardToSettingsDialog(deniedList, "Você precisa conceder" +
+                                    "essa permissão manualmente.", "OK", "Cancel")
+                    )
+                    .request( (allGranted, grantedList, deniedList) ->
+                            {
+                                if (allGranted) {
+                                    ScanOptions options = new ScanOptions()
+                                            .setDesiredBarcodeFormats(ScanOptions.EAN_13)
+                                            .setPrompt("Aponte para um código de barras")
+                                            .setOrientationLocked(false)
+                                            .setBeepEnabled(false);
+                                    barcodeLauncher.launch(options);
+                                }
+                                else {
+                                    Toast.makeText(this, "Não é possível acessar a " +
+                                            "funcionalidade sem dar acesso a permissão", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                    );
         });
 
         binding.buttonOptionCatalog.setOnClickListener(v -> {
