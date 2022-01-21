@@ -1,5 +1,6 @@
 package com.dispmoveis.compsupermercadosmovel.ui.previouscarts;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +23,7 @@ import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.login.LoginActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.supermarket.SupermarketActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
+import com.permissionx.guolindev.PermissionX;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +72,28 @@ public class PreviousCartsActivity extends AppCompatActivity {
         });
 
         binding.buttonCreateCart.setOnClickListener(v -> {
-            Intent i = new Intent(PreviousCartsActivity.this, SupermarketActivity.class);
-            startActivityForResult(i, NEW_SUPERMARKET_REQUEST);
+            PermissionX.init(this)
+                    .permissions(Manifest.permission.ACCESS_FINE_LOCATION)
+                    .onExplainRequestReason((scope, deniedList) ->
+                            scope.showRequestReasonDialog(deniedList, "Para usar essa funcionalidade " +
+                                    "é preciso conceder a permissão ao app.", "OK")
+                            )
+                    .onForwardToSettings((scope, deniedList) ->
+                            scope.showForwardToSettingsDialog(deniedList, "Você precisa conceder" +
+                                    "essa permissão manualmente.", "OK", "Cancel")
+                            )
+                    .request( (allGranted, grantedList, deniedList) ->
+                            {
+                                if (allGranted) {
+                                    Intent i = new Intent(PreviousCartsActivity.this, SupermarketActivity.class);
+                                    startActivityForResult(i, NEW_SUPERMARKET_REQUEST);
+                                }
+                                else {
+                                    Toast.makeText(this, "Não é possível acessar a " +
+                                            "funcionalidade sem dar acesso a permissão", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            );
         });
 
 
