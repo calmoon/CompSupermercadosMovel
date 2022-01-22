@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -46,31 +48,41 @@ public class SupermarketActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        deviceLocation = "(" + location.getLongitude() + "," +
-                    location.getLatitude() + ")";
+                        deviceLocation = "(" + location.getLatitude() + "," +
+                                location.getLongitude() + ")";
+
+                        ServerClient.select("nearestSupermarkets", deviceLocation, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                try {
+                                    int resultCode = response.getInt("result_code");
+
+                                    if (resultCode == 1) {
+                                        JSONArray supermarketsJSON = response.getJSONArray("result");
+                                        JSONObject itemJSON = supermarketsJSON.getJSONObject(0);
+                                        id = itemJSON.getInt("id");
+                                        nome = itemJSON.getString("nome");
+                                        binding.editSupermarketName.setText(nome);
+                                    }
+                                    else if (resultCode == 0) {
+                                        Toast.makeText(SupermarketActivity.this,
+                                                "Não há supermercados próximos registrados.",
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
+                                        Toast.makeText(SupermarketActivity.this,
+                                                "não foi possivel consultar", Toast.LENGTH_LONG).show();
+                                        Log.e("Super", "Erro de conssulta - " + response.toString());
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
                     }
                 });
-
-        ServerClient.select("nearestSupermarkets", deviceLocation, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    int resultCode = response.getInt("result_code");
-
-                    if (resultCode == 1) {
-                        JSONArray supermarketsJSON = response.getJSONArray("result");
-                        JSONObject itemJSON = supermarketsJSON.getJSONObject(0);
-                        id = itemJSON.getInt("id");
-                        nome = itemJSON.getString("nome");
-                        binding.editSupermarketName.setText(nome);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
 
         binding.buttonSaveSupermarket.setOnClickListener(v -> {
             if (binding.editSupermarketName.getText().toString() == nome) {
@@ -89,7 +101,7 @@ public class SupermarketActivity extends AppCompatActivity {
                         try {
                             int resultCode = response.getInt("result_code");
                             if (resultCode == 1) {
-
+                                ServerClient.select();
                             }
 
                         } catch (JSONException e) {
