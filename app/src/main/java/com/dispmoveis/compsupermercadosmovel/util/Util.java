@@ -7,11 +7,6 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.widget.ImageView;
-
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -21,8 +16,6 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
-
-import cz.msebera.android.httpclient.Header;
 
 public class Util {
 
@@ -51,36 +44,7 @@ public class Util {
         return parsed;
     }
 
-    public static void setBitmapFromURL(ImageView imageView, String imageUrl) {
-        String[] allowedTypes = new String[] {
-                "image/jpeg",
-                "image/jpg",
-                "image/png",
-                "image/bmp",
-                "image/gif",
-                "binary/octet-stream",
-                "application/octet-stream"
-        };
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(imageUrl, new BinaryHttpResponseHandler(allowedTypes) {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
-                Bitmap image = BitmapFactory.decodeByteArray(binaryData, 0, binaryData.length);
-                if (image != null) {
-                    imageView.setImageBitmap(image);
-                } else {
-                    onFailure(statusCode, headers, binaryData, new NullPointerException());
-                }
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] binaryData, Throwable error) {
-                Log.e("HTTP_BITMAP_URL_FAIL",
-                        "Failed to load bitmap from URL. Error: " + error.getMessage()
-                                + ". HTTP Status: " + statusCode
-                                + ". URL: " + imageUrl);
-            }
-        });
-    }
+
 
     public static int calculateNoOfColumns(Context context, float columnWidthDp) { // For example columnWidthdp=180
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();

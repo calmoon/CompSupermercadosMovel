@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterProductSearchBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
-import com.dispmoveis.compsupermercadosmovel.util.Util;
 
 import java.util.List;
 
@@ -43,7 +43,9 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         SupermarketItem item = supermarketItems.get(position);
 
-        Util.setBitmapFromURL(binding.imageProductSearch, item.getProductImageUrl());
+        Glide.with(context)
+                .load(item.getProductImageUrl())
+                .into(binding.imageProductSearch);
 
         String textItemPrice = "R$ " + Config.getCurrencyFormat().format(item.getPrice());
         binding.textItemPriceSearch.setText(textItemPrice);
@@ -64,4 +66,15 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return supermarketItems.size();
     }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
 }

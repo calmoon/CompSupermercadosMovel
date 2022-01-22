@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityRegisterProductBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
@@ -331,7 +332,9 @@ public class RegisterProductActivity extends AppCompatActivity {
                             binding.editProductPrice.setText(Config.getCurrencyFormat().format(dbItemPrice));
 
                             productImageUrl = itemJSON.getString("imagem_url");
-                            Util.setBitmapFromURL(binding.imageProduct, productImageUrl);
+                            Glide.with(RegisterProductActivity.this)
+                                .load(productImageUrl)
+                                .into(binding.imageProduct);
 
                             binding.editProductName.setEnabled(false);
                         }
