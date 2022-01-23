@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -122,8 +123,8 @@ public class PreviousCartsActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == NEW_SUPERMARKET_REQUEST) {
                 Intent i = new Intent(PreviousCartsActivity.this, CartActivity.class);
-                Integer cartHistoryItemsSize = cartHistoryItems.size() + 1;
-                i.putExtra("cartHistoryItemsSize", cartHistoryItemsSize.toString());
+                int supermarketID = data.getIntExtra("supermarketID", 0);
+                i.putExtra("supermarketID", supermarketID);
                 startActivityForResult(i, NEW_ITEM_REQUEST);
             }
             if (requestCode == NEW_ITEM_REQUEST) {
