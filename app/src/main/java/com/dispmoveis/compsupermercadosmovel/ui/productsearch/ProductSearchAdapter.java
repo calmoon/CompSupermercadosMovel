@@ -25,8 +25,7 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
 
     private AdapterProductSearchBinding binding;
 
-    public ProductSearchAdapter(Context context, List<SupermarketItem> supermarketItems) {
-        this.context = context;
+    public ProductSearchAdapter(List<SupermarketItem> supermarketItems) {
         this.supermarketItems = supermarketItems;
     }
 

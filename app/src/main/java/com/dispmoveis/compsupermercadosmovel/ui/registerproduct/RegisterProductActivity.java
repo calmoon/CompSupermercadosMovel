@@ -2,11 +2,9 @@ package com.dispmoveis.compsupermercadosmovel.ui.registerproduct;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,6 +31,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -55,7 +55,11 @@ public class RegisterProductActivity extends AppCompatActivity {
             new ActivityResultContracts.TakePicture(),
             success -> {
                 if (success) {
-                    loadCapturedImage();
+                    File file = new File(capturedImagePath);
+                    Uri imageUri = Uri.fromFile(file);
+                    Glide.with(this)
+                            .load(imageUri)
+                            .into(binding.imageProduct);
                 }
             }
     );
@@ -143,21 +147,27 @@ public class RegisterProductActivity extends AppCompatActivity {
         });
     }
 
-    private File createTempImageFile() {
-        File tempFile = null;
-        try {
-            tempFile = File.createTempFile("temp-image-" + itemId, ".png", getCacheDir());
-            tempFile.delete();
-            tempFile.createNewFile();
-            tempFile.deleteOnExit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return tempFile;
+    private File createTempImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File tempImageFile = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        tempImageFile.deleteOnExit();
+        return tempImageFile;
     }
 
     private void launchChangeImageContract() {
-        File tempFile = createTempImageFile();
+        File tempFile = null;
+        try {
+            tempFile = createTempImageFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (tempFile == null) {
             Toast.makeText(RegisterProductActivity.this,
@@ -175,41 +185,6 @@ public class RegisterProductActivity extends AppCompatActivity {
         );
 
         changeImageLauncher.launch(inputImageURI);
-    }
-
-    private void loadCapturedImage() {
-        try {
-            Bitmap capturedImage = BitmapFactory.decodeFile(capturedImagePath);
-            Log.d("SET_CAPTURED_IMAGE_PATH", capturedImagePath);
-
-            ExifInterface ei = new ExifInterface(capturedImagePath);
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_UNDEFINED);
-
-            int rotationAngle;
-
-            switch(orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotationAngle = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotationAngle = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotationAngle = 270;
-                    break;
-                case ExifInterface.ORIENTATION_NORMAL:
-                default:
-                    rotationAngle = 0;
-            }
-
-            binding.imageProduct.setImageBitmap(
-                    Util.rotateImage(capturedImage, rotationAngle)
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void updateTotals() {
@@ -261,7 +236,7 @@ public class RegisterProductActivity extends AppCompatActivity {
 
     private void submitProductImage() {
         File f = new File(capturedImagePath);
-        if (f.exists()) {
+        if (f.exists() && !f.isDirectory()) {
             ServerClient.s3ImageUpload(itemId, f, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -333,8 +308,8 @@ public class RegisterProductActivity extends AppCompatActivity {
 
                             productImageUrl = itemJSON.getString("imagem_url");
                             Glide.with(RegisterProductActivity.this)
-                                .load(productImageUrl)
-                                .into(binding.imageProduct);
+                                    .load(productImageUrl)
+                                    .into(binding.imageProduct);
 
                             binding.editProductName.setEnabled(false);
                         }
