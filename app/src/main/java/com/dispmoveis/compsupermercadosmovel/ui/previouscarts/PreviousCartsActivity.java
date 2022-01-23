@@ -20,14 +20,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dispmoveis.compsupermercadosmovel.R;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityPreviousCartsBinding;
+import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.login.LoginActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.supermarket.SupermarketActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.permissionx.guolindev.PermissionX;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class PreviousCartsActivity extends AppCompatActivity {
 
@@ -122,10 +133,59 @@ public class PreviousCartsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == NEW_SUPERMARKET_REQUEST) {
-                Intent i = new Intent(PreviousCartsActivity.this, CartActivity.class);
-                int supermarketID = data.getIntExtra("supermarketID", 0);
-                i.putExtra("supermarketID", supermarketID);
-                startActivityForResult(i, NEW_ITEM_REQUEST);
+                int userID = Config.getUserId(PreviousCartsActivity.this);
+                int supermarketID = data.getIntExtra("supermarketId", 0);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String currentDateTime = simpleDateFormat.format(new Date());
+
+                RequestParams params = new RequestParams();
+                params.put("nome", "Sem Nome");
+                params.put("data", currentDateTime);
+                params.put("id_usuario", userID);
+                params.put("id_supermercado", supermarketID);
+
+                ServerClient.insert("carrinho", params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            int resultCode = response.getInt("result_code");
+                            if (resultCode == 1) {
+                                ServerClient.select("lastId", "carrinho", new JsonHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        try {
+                                            int resultCode = response.getInt("result_code");
+                                            if (resultCode == 1) {
+                                                JSONArray carrinhoIDJSON = response.getJSONArray("result");
+                                                JSONObject itemJSON = carrinhoIDJSON.getJSONObject(0);
+
+                                                Intent i = new Intent(PreviousCartsActivity.this, CartActivity.class);
+                                                i.putExtra("carrinhoId", itemJSON.getInt("max"));
+                                                startActivityForResult(i, NEW_ITEM_REQUEST);
+                                            }
+                                            else {
+                                                Toast.makeText(PreviousCartsActivity.this,
+                                                        "Erro ao fazer consulta.", Toast.LENGTH_LONG).show();
+                                                Log.e("Super", "Erro de conssulta - " + response.toString());
+                                            }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+                            else {
+                                Toast.makeText(PreviousCartsActivity.this,
+                                        "Erro ao fazer inserção.", Toast.LENGTH_LONG).show();
+                                Log.e("Super", "Erro de conssulta - " + response.toString());
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
             if (requestCode == NEW_ITEM_REQUEST) {
                 String cardName = data.getStringExtra("cardName");

@@ -43,7 +43,7 @@ public class SupermarketAdapter extends RecyclerView.Adapter {
         binding.textSupermarketName.setText(supermarketsData.nome);
         holder.itemView.setOnClickListener(v -> {
             Intent i = new Intent();
-            i.putExtra("supermarketID", supermarketsData.id);
+            i.putExtra("supermarketId", supermarketsData.id);
             ((SupermarketActivity)context).setResult(Activity.RESULT_OK, i);
             ((SupermarketActivity)context).finish();
         });

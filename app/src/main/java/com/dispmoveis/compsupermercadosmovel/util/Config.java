@@ -44,14 +44,14 @@ public class Config {
         return mPrefs.getString("password", "");
     }
 
-    public static void setNotifications(Context context, boolean isEnable) {
+    public static void setUserId(Context context, int id) {
         SharedPreferences mPrefs = context.getSharedPreferences("configs", 0);
         SharedPreferences.Editor mEditor = mPrefs.edit();
-        mEditor.putBoolean("notications", isEnable).commit();
+        mEditor.putInt("userId", id).commit();
     }
 
-    public static boolean getNotificationsStatus(Context context) {
+    public static int getUserId(Context context) {
         SharedPreferences mPrefs = context.getSharedPreferences("configs", 0);
-        return mPrefs.getBoolean("notications", true);
+        return mPrefs.getInt("userId", 0);
     }
 }

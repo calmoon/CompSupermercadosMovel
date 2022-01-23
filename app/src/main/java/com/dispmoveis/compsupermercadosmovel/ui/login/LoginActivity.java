@@ -14,6 +14,7 @@ import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActiv
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,9 +59,17 @@ public class LoginActivity extends AppCompatActivity {
                                 public void run() {
                                     Config.setLogin(LoginActivity.this, login);
                                     Config.setPassword(LoginActivity.this, password);
-                                    Toast.makeText(LoginActivity.this, "Login realizado com sucesso", Toast.LENGTH_LONG).show();
-                                    Intent i = new Intent(LoginActivity.this, PreviousCartsActivity.class);
-                                    startActivity(i);
+                                    try {
+                                        JSONArray userJSON = jsonObject.getJSONArray("result");
+                                        JSONObject itemJSON = userJSON.getJSONObject(0);
+                                        Config.setUserId(LoginActivity.this, itemJSON.getInt("id"));
+                                        Toast.makeText(LoginActivity.this, "Login realizado com sucesso", Toast.LENGTH_LONG).show();
+                                        Intent i = new Intent(LoginActivity.this, PreviousCartsActivity.class);
+                                        startActivity(i);
+                                    } catch (JSONException e) {
+                                        Toast.makeText(LoginActivity.this, "Login não foi realizado com sucesso", Toast.LENGTH_LONG).show();
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
                         }

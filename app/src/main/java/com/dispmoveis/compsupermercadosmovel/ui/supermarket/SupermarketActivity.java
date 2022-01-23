@@ -111,18 +111,18 @@ public class SupermarketActivity extends AppCompatActivity {
                     try {
                         int resultCode = response.getInt("result_code");
                         if (resultCode == 1) {
-                            ServerClient.select("lastSupermarket", new JsonHttpResponseHandler() {
+                            ServerClient.select("lastId", "supermercado", new JsonHttpResponseHandler() {
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     try {
                                         int resultCode = response.getInt("result_code");
 
                                         if (resultCode == 1) {
-                                            JSONArray supermarketIDJSON = response.getJSONArray("result");
-                                            JSONObject itemJSON = supermarketIDJSON.getJSONObject(0);
+                                            JSONArray supermarketIdJSON = response.getJSONArray("result");
+                                            JSONObject itemJSON = supermarketIdJSON.getJSONObject(0);
 
                                             Intent i = new Intent();
-                                            i.putExtra("supermarketID", itemJSON.getInt("max"));
+                                            i.putExtra("supermarketId", itemJSON.getInt("max"));
                                             setResult(Activity.RESULT_OK, i);
                                             finish();
                                         }
