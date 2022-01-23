@@ -68,7 +68,7 @@ public class RegisterProductActivity extends AppCompatActivity {
         if (capturedImagePath != null)
             outState.putString("capturedImagePath", capturedImagePath);
 
-        if (binding.editProductName.isEnabled()) {
+        if (binding.editProductName.isFocusable()) {
             outState.putString("productName", binding.editProductName.getText().toString());
         }
 
@@ -365,7 +365,9 @@ public class RegisterProductActivity extends AppCompatActivity {
                             if (dbProductName.equals("")) {
                                 binding.editProductPrice.setHint("Produto sem nome! Defina um.");
                             } else {
-                                binding.editProductName.setEnabled(false);
+                                binding.editProductName.setKeyListener(null);
+                                binding.editProductName.setFocusable(false);
+                                binding.editProductName.clearFocus();
                             }
                         }
 
