@@ -21,13 +21,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:gravity="center|start"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:maxLines="2"
         android:text="Nome do produto"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/text_item_total_cart"
         app:layout_constraintEnd_toStartOf="@+id/edit_item_qty_cart"
         app:layout_constraintHorizontal_bias="0.5"
@@ -42,6 +42,8 @@
         android:layout_marginTop="4dp"
         android:text="R$ 0,00"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#4CAF50"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/image_product_cart"
         app:layout_constraintEnd_toEndOf="@+id/text_product_name_cart"
         app:layout_constraintStart_toStartOf="@+id/text_product_name_cart"
@@ -61,38 +63,25 @@
         android:id="@+id/edit_item_qty_cart"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="30dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:ems="10"
         android:gravity="center_horizontal|center_vertical"
         android:inputType="number"
         android:text="1"
-        app:layout_constraintBottom_toBottomOf="@+id/button_remove_from_cart"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_remove_from_cart"
-        app:layout_constraintTop_toTopOf="@+id/button_remove_from_cart"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/label_qtd_cart" />
 
-    <ImageButton
-        android:id="@+id/button_cart_qty_add"
-        android:layout_width="0dp"
-        android:layout_height="20dp"
-        android:background="@null"
+    <TextView
+        android:id="@+id/label_qtd_cart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Qtd."
         app:layout_constraintBottom_toTopOf="@+id/edit_item_qty_cart"
         app:layout_constraintEnd_toEndOf="@+id/edit_item_qty_cart"
         app:layout_constraintStart_toStartOf="@+id/edit_item_qty_cart"
-        app:srcCompat="@drawable/ic_plus"
-        app:tint="?android:attr/colorForeground" />
-
-    <ImageButton
-        android:id="@+id/button_cart_qty_sub"
-        android:layout_width="0dp"
-        android:layout_height="20dp"
-        android:background="@null"
-        app:layout_constraintEnd_toEndOf="@+id/edit_item_qty_cart"
-        app:layout_constraintStart_toStartOf="@+id/edit_item_qty_cart"
-        app:layout_constraintTop_toBottomOf="@+id/edit_item_qty_cart"
-        app:srcCompat="@drawable/ic_minus"
-        app:tint="?android:attr/colorForeground" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
