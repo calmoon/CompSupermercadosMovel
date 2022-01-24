@@ -59,6 +59,8 @@ public class RegisterProductActivity extends AppCompatActivity {
             success -> {
                 if (success) {
                     loadCapturedImage();
+                } else {
+                    capturedImagePath = null;
                 }
             }
     );
@@ -165,8 +167,8 @@ public class RegisterProductActivity extends AppCompatActivity {
                 submitUserChanges();
 
                 Intent resultIntent = new Intent()
-                        .putExtra(CartActivity.EXTRA_ITEM_ID, itemId)
-                        .putExtra(CartActivity.EXTRA_ITEM_QTY, formItemQty);
+                        .putExtra(CartActivity.EXTRA_NEW_ITEM_ID, itemId)
+                        .putExtra(CartActivity.EXTRA_NEW_ITEM_QTY, formItemQty);
 
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
@@ -237,10 +239,10 @@ public class RegisterProductActivity extends AppCompatActivity {
         try {
             formItemQty = Integer.parseInt(binding.editProductQty.getText().toString());
         } catch (NumberFormatException e) {
-            formItemQty = 0;
+            formItemQty = 1;
         }
 
-        if (formItemQty == 0) {
+        if (formItemQty <= 0) {
             formItemQty = 1;
             binding.editProductQty.setText("1");
         }
@@ -370,13 +372,24 @@ public class RegisterProductActivity extends AppCompatActivity {
                                 binding.editProductName.clearFocus();
                             }
                         }
+                        else {
+                            onFailure(statusCode, headers, response.toString(), new InternalError());
+                        }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
 
-                // TODO: onFailure
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.e("HTTP_LOAD_PRODUCT_FAIL", "Response: " + responseString);
+                    Toast.makeText(RegisterProductActivity.this,
+                            "Falha ao carregar o produto.",
+                            Toast.LENGTH_LONG).show();
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                }
             });
 
         }
