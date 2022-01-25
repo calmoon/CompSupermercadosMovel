@@ -1,5 +1,8 @@
 package com.dispmoveis.compsupermercadosmovel.network;
 
+import android.content.Context;
+
+import com.dispmoveis.compsupermercadosmovel.ui.main.MainActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -67,4 +70,8 @@ public class ServerClient {
         client.post(getAbsoluteUrl(SERVER_S3_UPLOAD_FILE), params, responseHandler);
     }
 
+    public static void login(String username, String password, JsonHttpResponseHandler responseHandler){
+        client.setBasicAuth(username, password);
+        client.post(getAbsoluteUrl(SERVER_SELECT_FILE + "?queryType=verifyLogin"), responseHandler);
+    }
 }
