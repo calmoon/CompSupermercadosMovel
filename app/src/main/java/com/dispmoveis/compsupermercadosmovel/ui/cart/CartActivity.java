@@ -17,10 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
-import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.productsearch.ProductSearchActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
-import com.dispmoveis.compsupermercadosmovel.ui.supermarket.SupermarketActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
@@ -31,19 +29,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
 public class CartActivity extends AppCompatActivity {
 
-    public static final String EXTRA_ITEM_ID = "itemId";
-    public static final String EXTRA_ITEM_QTY = "itemQty";
+    public static final String EXTRA_CART_ID = "CartActivity_cartId";
+    public static final String EXTRA_NEW_ITEM_ID = "itemId";
+    public static final String EXTRA_NEW_ITEM_QTY = "itemQty";
 
-    private final List<CartItemData> cartItems = new ArrayList<>();
-    private final CartAdapter cartAdapter = new CartAdapter(cartItems);
+    private final CartAdapter cartAdapter = new CartAdapter();
 
     private Double total = 0.0;
     private String supermarketId;
@@ -56,10 +52,10 @@ public class CartActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
 
-                    String itemId = data.getStringExtra( EXTRA_ITEM_ID );
-                    int itemQty = data.getIntExtra( EXTRA_ITEM_QTY, 1 );
+                    String itemId = data.getStringExtra(EXTRA_NEW_ITEM_ID);
+                    int itemQty = data.getIntExtra(EXTRA_NEW_ITEM_QTY, 1 );
 
-                    loadItemInfo(itemId, itemQty);
+                    addItemToCart(itemId, itemQty);
                 }
             }
         );
@@ -94,18 +90,20 @@ public class CartActivity extends AppCompatActivity {
                                             .putExtra(RegisterProductActivity.EXTRA_SELECTED_ITEM_ID, itemId);
                                     addProductLauncher.launch(i);
                                 }
-
                                 else {
-                                    Toast.makeText(CartActivity.this,
-                                            "Falha na resposta do servidor ao escanear.",
-                                            Toast.LENGTH_LONG).show();
-                                    Log.e("HTTP_BARCODE_SCAN_FAIL", "Barcode scan response error - " + response.toString());
+                                    onFailure(statusCode, headers, response.toString(), new InternalError());
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                        //TODO: onFailure
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.e("HTTP_BARCODE_SCAN_FAIL", "Barcode scan response error - " + responseString);
+                            Toast.makeText(CartActivity.this,
+                                    "Falha na resposta do servidor ao escanear.",
+                                    Toast.LENGTH_LONG).show();
+                        }
                     });
 
                 }
@@ -121,6 +119,7 @@ public class CartActivity extends AppCompatActivity {
         Intent i = getIntent();
         // TODO: usar o código comentado quando se tornar cabível
         //supermarketId = i.getStringExtra("supermarketId");
+        //String cartId = i.getStringExtra(EXTRA_CART_ID);
         supermarketId = "1";
 
         String cartName = "Seu carrinho #" + getIntent().getStringExtra("cartHistoryItemsSize");
@@ -187,7 +186,7 @@ public class CartActivity extends AppCompatActivity {
         });
 
         binding.buttonSaveCart.setOnClickListener(v -> {
-            Integer cardSize = cartItems.size();
+            Integer cardSize = cartAdapter.getItemCount();
             String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
             Intent resultIntent = new Intent()
                     .putExtra("cardName", binding.editCartName.getText().toString())
@@ -204,7 +203,13 @@ public class CartActivity extends AppCompatActivity {
         });
     }
 
-    private void loadItemInfo(String supermarketItemId, int itemQty) {
+    void reflectItemQtyChange(Double oldItemPrice, Double newItemPrice) {
+        total -= oldItemPrice;
+        total += newItemPrice;
+        binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(total));
+    }
+
+    private void addItemToCart(String supermarketItemId, int itemQty) {
         if (supermarketItemId != null) {
 
             ServerClient.select("itemInfo", supermarketItemId, new JsonHttpResponseHandler() {
@@ -224,8 +229,7 @@ public class CartActivity extends AppCompatActivity {
 
                             binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(total));
 
-                            cartItems.add( new CartItemData(supermarketItemId, productName, itemPrice, itemQty, imageUrl) );
-                            cartAdapter.notifyItemInserted(cartItems.size()-1);
+                            cartAdapter.additem( new CartItemData(supermarketItemId, productName, itemPrice, itemQty, imageUrl) );
                         }
 
                     } catch (JSONException e) {
