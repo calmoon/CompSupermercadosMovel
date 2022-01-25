@@ -2,6 +2,7 @@ package com.dispmoveis.compsupermercadosmovel.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -9,10 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityLoginBinding;
 import com.dispmoveis.compsupermercadosmovel.network.HttpRequest;
+import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.createaccount.CreateAccountActivity;
+import com.dispmoveis.compsupermercadosmovel.ui.main.MainActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.dispmoveis.compsupermercadosmovel.util.Util;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -38,52 +44,38 @@ public class LoginActivity extends AppCompatActivity {
             final String login = binding.editUsername.getText().toString();
             final String password = binding.editPassword.getText().toString();
 
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            executorService.execute(new Runnable() {
-                @Override
-                public void run() {
-                    HttpRequest httpRequest = new HttpRequest(Config.SERVER_URL_BASE +
-                            "server_select.php?queryType=verifyLogin", "POST", "UTF-8");
-                    httpRequest.setBasicAuth(login, password);
+            ServerClient.login(login, password, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                int resultCode = response.getInt("result_code");
+                                if (resultCode == 1) {
+                                    JSONArray usuarioJSON = response.getJSONArray("result");
+                                    JSONObject itemJSON = usuarioJSON.getJSONObject(0);
 
-                    try {
-                        InputStream is = httpRequest.execute();
-                        String result = Util.inputStream2String(is, "UTF-8");
-                        httpRequest.finish();
+                                    Config.setUserId(LoginActivity.this, itemJSON.getInt("id"));
+                                    Config.setLogin(LoginActivity.this, itemJSON.getString("email"));
+                                    Config.setPassword(LoginActivity.this, itemJSON.getString("senha"));
 
-                        JSONObject jsonObject = new JSONObject(result);
-                        final int resultCode = jsonObject.getInt("result_code");
-                        if (resultCode == 1) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Config.setLogin(LoginActivity.this, login);
-                                    Config.setPassword(LoginActivity.this, password);
-                                    try {
-                                        JSONArray userJSON = jsonObject.getJSONArray("result");
-                                        JSONObject itemJSON = userJSON.getJSONObject(0);
-                                        Config.setUserId(LoginActivity.this, itemJSON.getInt("id"));
-                                        Toast.makeText(LoginActivity.this, "Login realizado com sucesso", Toast.LENGTH_LONG).show();
-                                        Intent i = new Intent(LoginActivity.this, PreviousCartsActivity.class);
-                                        startActivity(i);
-                                    } catch (JSONException e) {
-                                        Toast.makeText(LoginActivity.this, "Login não foi realizado com sucesso", Toast.LENGTH_LONG).show();
-                                        e.printStackTrace();
-                                    }
+                                    Toast.makeText(LoginActivity.this, "Login realizado com sucesso", Toast.LENGTH_LONG).show();
+
+                                    Intent i = new Intent(LoginActivity.this, PreviousCartsActivity.class);
+                                    startActivity(i);
+                                    finish();
                                 }
-                            });
+                                else if (resultCode == 0) {
+                                    binding.editPassword.setText("");
+                                    Toast.makeText(LoginActivity.this, "Login ou senha incorretos", Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    Toast.makeText(LoginActivity.this, "Erro na conexão com o banco.", Toast.LENGTH_LONG).show();
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                        else if (resultCode == 0) {
-                            Toast.makeText(LoginActivity.this, "Login ou senha incorretos", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(LoginActivity.this, "Erro ao realizar login", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+                    });
         });
         
         binding.buttonSignUp.setOnClickListener(v -> {

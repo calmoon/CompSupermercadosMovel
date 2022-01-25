@@ -1,5 +1,8 @@
 package com.dispmoveis.compsupermercadosmovel.network;
 
+import android.content.Context;
+
+import com.dispmoveis.compsupermercadosmovel.ui.main.MainActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -7,6 +10,8 @@ import com.loopj.android.http.RequestParams;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerClient {
 
@@ -45,7 +50,36 @@ public class ServerClient {
     public static void update(String table, String whereId, RequestParams values, JsonHttpResponseHandler responseHandler) {
         RequestParams params = values;
         params.put("table", table);
-        params.put("id", whereId);
+
+        Map<String, String> whereConditions = new HashMap<>();
+        whereConditions.put("id", whereId);
+        params.put("where", whereConditions);
+
+        client.post(getAbsoluteUrl(SERVER_UPDATE_FILE), params, responseHandler);
+    }
+
+    public static void update(String table, Map<String, String> whereConditions, RequestParams values, JsonHttpResponseHandler responseHandler) {
+        RequestParams params = values;
+        params.put("table", table);
+        params.put("where", whereConditions);
+        client.post(getAbsoluteUrl(SERVER_UPDATE_FILE), params, responseHandler);
+    }
+
+    public static void delete(String table, String whereId, JsonHttpResponseHandler responseHandler) {
+        RequestParams params = new RequestParams();
+        params.put("table", table);
+
+        Map<String, String> whereConditions = new HashMap<>();
+        whereConditions.put("id", whereId);
+        params.put("where", whereConditions);
+
+        client.post(getAbsoluteUrl(SERVER_UPDATE_FILE), params, responseHandler);
+    }
+
+    public static void delete(String table, Map<String, String> whereConditions, JsonHttpResponseHandler responseHandler) {
+        RequestParams params = new RequestParams();
+        params.put("table", table);
+        params.put("where", whereConditions);
         client.post(getAbsoluteUrl(SERVER_UPDATE_FILE), params, responseHandler);
     }
 
@@ -67,4 +101,8 @@ public class ServerClient {
         client.post(getAbsoluteUrl(SERVER_S3_UPLOAD_FILE), params, responseHandler);
     }
 
+    public static void login(String username, String password, JsonHttpResponseHandler responseHandler){
+        client.setBasicAuth(username, password);
+        client.post(getAbsoluteUrl(SERVER_SELECT_FILE + "?queryType=verifyLogin"), responseHandler);
+    }
 }
