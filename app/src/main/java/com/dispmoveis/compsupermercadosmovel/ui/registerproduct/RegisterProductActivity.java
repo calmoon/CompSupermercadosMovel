@@ -2,11 +2,9 @@ package com.dispmoveis.compsupermercadosmovel.ui.registerproduct;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,9 +13,11 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityRegisterProductBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
@@ -32,6 +32,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -40,17 +42,19 @@ public class RegisterProductActivity extends AppCompatActivity {
     public static final String EXTRA_CURRENT_CART_TOTAL = "cartTotal";
     public static final String EXTRA_SELECTED_ITEM_ID = "supermarketItemId";
 
-    private String itemId;
-    private Integer itemQty;
-    private Double itemPrice;
-    private String productImageUrl;
-
-    private Double dbItemPrice, currentCartTotal;
+    // Form data
     private String capturedImagePath = null;
+    private String formProductName;
+    private Integer formItemQty;
+    private Double formItemPrice = null;
+
+    // External data
+    private String itemId;
+    private Double dbItemPrice, currentCartTotal;
 
     private ActivityRegisterProductBinding binding;
 
-    private final ActivityResultLauncher changeImageLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Uri> changeImageLauncher = registerForActivityResult(
             new ActivityResultContracts.TakePicture(),
             success -> {
                 if (success) {
@@ -58,6 +62,40 @@ public class RegisterProductActivity extends AppCompatActivity {
                 }
             }
     );
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        if (capturedImagePath != null)
+            outState.putString("capturedImagePath", capturedImagePath);
+
+        if (binding.editProductName.isFocusable()) {
+            outState.putString("productName", binding.editProductName.getText().toString());
+        }
+
+        if (formItemPrice != null && !formItemPrice.equals(dbItemPrice)) {
+            outState.putDouble("itemPrice", formItemPrice);
+        }
+
+        outState.putInt("itemQty", formItemQty);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey("capturedImagePath"))
+            capturedImagePath = savedInstanceState.getString("capturedImagePath");
+
+        if (savedInstanceState.containsKey("productName"))
+            formProductName = savedInstanceState.getString("productName");
+
+        if (savedInstanceState.containsKey("itemPrice"))
+            formItemPrice = savedInstanceState.getDouble("itemPrice");
+
+        formItemQty = savedInstanceState.getInt("itemQty");
+
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +108,7 @@ public class RegisterProductActivity extends AppCompatActivity {
         itemId = i.getStringExtra(EXTRA_SELECTED_ITEM_ID);
         currentCartTotal = i.getDoubleExtra(EXTRA_CURRENT_CART_TOTAL, 0.0);
 
-        String textCartTotal = "No seu carrinho: R$ " + Config.getCurrencyFormat().format(currentCartTotal);
-        binding.textPreviewCartTotal.setText(textCartTotal);
-
-        binding.editProductQty.setText("1");
-
-        loadItemInfo(itemId);
-        updateTotals();
+        loadItemInfo();
 
         // Só mostra o botão de alterar imagem depois dela carregar
         binding.buttonChangeImage.setVisibility(View.INVISIBLE);
@@ -129,12 +161,12 @@ public class RegisterProductActivity extends AppCompatActivity {
 
         binding.buttonAddToCart.setOnClickListener(v -> {
             String productName = binding.editProductName.getText().toString();
-            if (!productName.isEmpty() && itemPrice != 0) {
+            if (!productName.isEmpty() && formItemPrice != 0) {
                 submitUserChanges();
 
                 Intent resultIntent = new Intent()
                         .putExtra(CartActivity.EXTRA_ITEM_ID, itemId)
-                        .putExtra(CartActivity.EXTRA_ITEM_QTY, itemQty);
+                        .putExtra(CartActivity.EXTRA_ITEM_QTY, formItemQty);
 
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
@@ -142,21 +174,27 @@ public class RegisterProductActivity extends AppCompatActivity {
         });
     }
 
-    private File createTempImageFile() {
-        File tempFile = null;
-        try {
-            tempFile = File.createTempFile("temp-image-" + itemId, ".png", getCacheDir());
-            tempFile.delete();
-            tempFile.createNewFile();
-            tempFile.deleteOnExit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return tempFile;
+    private File createTempImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File tempImageFile = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        tempImageFile.deleteOnExit();
+        return tempImageFile;
     }
 
     private void launchChangeImageContract() {
-        File tempFile = createTempImageFile();
+        File tempFile = null;
+        try {
+            tempFile = createTempImageFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (tempFile == null) {
             Toast.makeText(RegisterProductActivity.this,
@@ -178,61 +216,38 @@ public class RegisterProductActivity extends AppCompatActivity {
 
     private void loadCapturedImage() {
         try {
-            Bitmap capturedImage = BitmapFactory.decodeFile(capturedImagePath);
-            Log.d("SET_CAPTURED_IMAGE_PATH", capturedImagePath);
-
-            ExifInterface ei = new ExifInterface(capturedImagePath);
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_UNDEFINED);
-
-            int rotationAngle;
-
-            switch(orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotationAngle = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotationAngle = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotationAngle = 270;
-                    break;
-                case ExifInterface.ORIENTATION_NORMAL:
-                default:
-                    rotationAngle = 0;
-            }
-
-            binding.imageProduct.setImageBitmap(
-                    Util.rotateImage(capturedImage, rotationAngle)
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            File file = new File(capturedImagePath);
+            Uri imageUri = Uri.fromFile(file);
+            Glide.with(this)
+                    .load(imageUri)
+                    .into(binding.imageProduct);
+        } catch (Exception e) {
+            Log.w("LAYOUT_STATE_CHANGE", "Layout state change. " + e.getMessage());
         }
     }
 
     private void updateTotals() {
         String priceInput = binding.editProductPrice.getText().toString();
         try {
-            itemPrice = Util.currencyToBigDecimal(priceInput, Config.currencyLocale).doubleValue();
+            formItemPrice = Util.currencyToBigDecimal(priceInput, Config.currencyLocale).doubleValue();
         } catch (NumberFormatException | NullPointerException e) {
-            itemPrice = 0.00;
+            formItemPrice = 0.00;
         }
 
         try {
-            itemQty = Integer.parseInt(binding.editProductQty.getText().toString());
+            formItemQty = Integer.parseInt(binding.editProductQty.getText().toString());
         } catch (NumberFormatException e) {
-            itemQty = 0;
+            formItemQty = 0;
         }
 
-        if (itemQty == 0) {
-            itemQty = 1;
+        if (formItemQty == 0) {
+            formItemQty = 1;
             binding.editProductQty.setText("1");
         }
 
-        Double itemTotal = itemPrice * itemQty;
+        Double itemTotal = formItemPrice * formItemQty;
 
-        String textProductTotal = "Total (produto x" + itemQty.toString() + "): R$ " +
+        String textProductTotal = "Total (produto x" + formItemQty.toString() + "): R$ " +
                 Config.getCurrencyFormat().format(itemTotal);
         binding.textProductTotal.setText(textProductTotal);
 
@@ -253,28 +268,28 @@ public class RegisterProductActivity extends AppCompatActivity {
         if (capturedImagePath != null) {
             submitProductImage();
         }
-        if (!itemPrice.equals(dbItemPrice)) {
+        if (!formItemPrice.equals(dbItemPrice)) {
             submitItemPrice();
         }
     }
 
     private void submitProductImage() {
         File f = new File(capturedImagePath);
-        if (f.exists()) {
+        if (f.exists() && !f.isDirectory()) {
             ServerClient.s3ImageUpload(itemId, f, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         if (response.getInt("result_code") != 1) {
-                            onFailure(statusCode, headers, new InternalError(), response);
+                            onFailure(statusCode, headers, response.toString(), new InternalError());
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.e("S3_IMAGE_UPLOAD_FAIL", errorResponse.toString());
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.e("S3_IMAGE_UPLOAD_FAIL", "Response: " + responseString);
                     Toast.makeText(RegisterProductActivity.this,
                             "Falha ao atualizar a imagem do produto.",
                             Toast.LENGTH_LONG).show();
@@ -284,39 +299,40 @@ public class RegisterProductActivity extends AppCompatActivity {
         else {
             Log.e("S3_IMAGE_UPLOAD_FAIL", f.toString());
             Toast.makeText(RegisterProductActivity.this,
-                    "Falha ao atualizar a imagem do produto.",
+                    "Falha ao atualizar a imagem do produto: arquivo inválido.",
                     Toast.LENGTH_LONG).show();
         }
     }
 
     private void submitItemPrice() {
         RequestParams values = new RequestParams();
-        values.put("preco_atual", itemPrice.toString());
+        values.put("preco_atual", formItemPrice.toString());
 
         ServerClient.update("item", itemId, values, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     if (response.getInt("result_code") != 1) {
-                        onFailure(statusCode, headers, new InternalError(), response);
+                        onFailure(statusCode, headers, response.toString(), new InternalError());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("ALTER_PRICE_FAIL", "Response: " + responseString);
                 Toast.makeText(RegisterProductActivity.this,
-                        "Falha ao atualizar o preço do produto",
+                        "Falha ao atualizar o preço do produto.",
                         Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    private void loadItemInfo(String supermarketItemId) {
-        if (supermarketItemId != null) {
+    private void loadItemInfo() {
+        if (itemId != null) {
 
-            ServerClient.select("itemInfo", supermarketItemId, new JsonHttpResponseHandler() {
+            ServerClient.select("itemInfo", itemId, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
@@ -325,15 +341,34 @@ public class RegisterProductActivity extends AppCompatActivity {
                         if (resultCode == 1) {
                             JSONObject itemJSON = response.getJSONArray("result").getJSONObject(0);
 
-                            binding.editProductName.setText(itemJSON.getString("nome"));
+                            String dbProductName = itemJSON.getString("nome");
+                            if (formProductName != null) {
+                                binding.editProductName.setText(formProductName);
+                            } else {
+                                binding.editProductName.setText(dbProductName);
+                            }
 
                             dbItemPrice = itemJSON.getDouble("preco_atual");
-                            binding.editProductPrice.setText(Config.getCurrencyFormat().format(dbItemPrice));
+                            if (formItemPrice == null)
+                                formItemPrice = dbItemPrice;
+                            binding.editProductPrice.setText(Config.getCurrencyFormat().format(formItemPrice));
 
-                            productImageUrl = itemJSON.getString("imagem_url");
-                            Util.setBitmapFromURL(binding.imageProduct, productImageUrl);
+                            if (capturedImagePath != null) {
+                                loadCapturedImage();
+                            } else {
+                                String productImageUrl = itemJSON.getString("imagem_url");
+                                Glide.with(RegisterProductActivity.this)
+                                        .load(productImageUrl)
+                                        .into(binding.imageProduct);
+                            }
 
-                            binding.editProductName.setEnabled(false);
+                            if (dbProductName.equals("")) {
+                                binding.editProductPrice.setHint("Produto sem nome! Defina um.");
+                            } else {
+                                binding.editProductName.setKeyListener(null);
+                                binding.editProductName.setFocusable(false);
+                                binding.editProductName.clearFocus();
+                            }
                         }
 
                     } catch (JSONException e) {
@@ -341,7 +376,7 @@ public class RegisterProductActivity extends AppCompatActivity {
                     }
                 }
 
-                //TODO: onFailure
+                // TODO: onFailure
             });
 
         }

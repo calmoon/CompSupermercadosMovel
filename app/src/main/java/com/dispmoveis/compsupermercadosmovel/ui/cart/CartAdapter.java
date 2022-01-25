@@ -1,15 +1,16 @@
 package com.dispmoveis.compsupermercadosmovel.ui.cart;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterCartBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
-import com.dispmoveis.compsupermercadosmovel.util.Util;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class CartAdapter extends RecyclerView.Adapter {
 
     private final List<CartItemData> cartItems;
 
+    private Context context;
     private AdapterCartBinding binding;
 
     public CartAdapter(List<CartItemData> cartItems) {
@@ -26,8 +28,9 @@ public class CartAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         binding = AdapterCartBinding
-                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+                .inflate(LayoutInflater.from(context), parent, false);
         return new CustomViewHolder(binding.getRoot());
     }
 
@@ -40,7 +43,10 @@ public class CartAdapter extends RecyclerView.Adapter {
         String textItemTotal = "R$ " + Config.getCurrencyFormat().format(itemTotal);
         String textItemQty = newCartItem.getQuantity().toString();
 
-        Util.setBitmapFromURL(binding.imageProductCart, newCartItem.getProductImageUrl());
+        Glide.with(context)
+            .load(newCartItem.getProductImageUrl())
+            .into(binding.imageProductCart);
+
         binding.textProductNameCart.setText( newCartItem.getProductName() );
         binding.textItemTotalCart.setText( textItemTotal );
         binding.editItemQtyCart.setText( textItemQty );
