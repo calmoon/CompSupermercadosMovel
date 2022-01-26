@@ -48,7 +48,7 @@ public class PreviousCartsActivity extends AppCompatActivity {
     private ActivityPreviousCartsBinding binding;
 
     private final List<PreviousCartsItemData> cartHistoryItems = new ArrayList<>();
-    private final PreviousCartsAdapter CartHistoryAdapter = new PreviousCartsAdapter(cartHistoryItems);
+    private final PreviousCartsAdapter CartHistoryAdapter = new PreviousCartsAdapter(this, cartHistoryItems);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

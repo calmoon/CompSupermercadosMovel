@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,7 +73,8 @@ public class SupermarketActivity extends AppCompatActivity {
 
                                             supermarketsDataList.add(supermarketsData);
                                         }
-                                        SupermarketAdapter supermarketAdapter = new SupermarketAdapter(supermarketsDataList);
+                                        SupermarketAdapter supermarketAdapter =
+                                                new SupermarketAdapter(SupermarketActivity.this, supermarketsDataList);
                                         binding.recyclerSupermarkets.setLayoutManager(new LinearLayoutManager(SupermarketActivity.this));
                                         binding.recyclerSupermarkets.setAdapter(supermarketAdapter);
                                         binding.recyclerSupermarkets.setVisibility(View.VISIBLE);

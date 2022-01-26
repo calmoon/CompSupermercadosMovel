@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dispmoveis.compsupermercadosmovel.R;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterSupermarketBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
 
@@ -17,27 +18,26 @@ import java.util.List;
 
 public class SupermarketAdapter extends RecyclerView.Adapter {
 
-    private AdapterSupermarketBinding binding;
+    private final List<SupermarketsData> supermarketsDataList;
 
-    private List<SupermarketsData> supermarketsDataList;
+    private final Context context;
 
-    private Context context;
-
-    public SupermarketAdapter(List<SupermarketsData> supermarketsDataList) {
+    public SupermarketAdapter(Context context, List<SupermarketsData> supermarketsDataList) {
+        this.context = context;
         this.supermarketsDataList = supermarketsDataList;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        this.context = parent.getContext();
-        binding = AdapterSupermarketBinding
-                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new CustomViewHolder(binding.getRoot());
+        View view = LayoutInflater.from(context).inflate(R.layout.adapter_supermarket, parent, false);
+        return new CustomViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        AdapterSupermarketBinding binding = AdapterSupermarketBinding.bind(holder.itemView);
+
         SupermarketsData supermarketsData = this.supermarketsDataList.get(position);
 
         binding.textSupermarketName.setText(supermarketsData.nome);

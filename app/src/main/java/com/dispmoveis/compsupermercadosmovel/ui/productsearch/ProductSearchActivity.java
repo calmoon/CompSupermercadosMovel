@@ -67,7 +67,7 @@ public class ProductSearchActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<SupermarketItem> supermarketItems) {
                 binding.recyclerProductSearch.setAdapter(
-                        new ProductSearchAdapter(supermarketItems)
+                        new ProductSearchAdapter(ProductSearchActivity.this, supermarketItems)
                 );
             }
         });
