@@ -160,7 +160,7 @@ public class PreviousCartsActivity extends AppCompatActivity {
                                                 JSONObject itemJSON = carrinhoIDJSON.getJSONObject(0);
 
                                                 Intent i = new Intent(PreviousCartsActivity.this, CartActivity.class);
-                                                i.putExtra("carrinhoId", itemJSON.getInt("max"));
+                                                i.putExtra(CartActivity.EXTRA_CART_ID, String.valueOf(itemJSON.getInt("max")));
                                                 startActivityForResult(i, NEW_ITEM_REQUEST);
                                             }
                                             else {
