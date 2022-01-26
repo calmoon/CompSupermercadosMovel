@@ -1,8 +1,5 @@
 package com.dispmoveis.compsupermercadosmovel.network;
 
-import android.content.Context;
-
-import com.dispmoveis.compsupermercadosmovel.ui.main.MainActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -18,6 +15,7 @@ public class ServerClient {
     private static final String SERVER_SELECT_FILE = "server_select.php";
     private static final String SERVER_INSERT_FILE = "server_insert.php";
     private static final String SERVER_UPDATE_FILE = "server_update.php";
+    private static final String SERVER_DELETE_FILE = "server_delete.php";
     private static final String SERVER_BLUESOFT_FILE = "bluesoftApi.php";
     private static final String SERVER_S3_UPLOAD_FILE = "s3_image_upload.php";
 
@@ -73,14 +71,14 @@ public class ServerClient {
         whereConditions.put("id", whereId);
         params.put("where", whereConditions);
 
-        client.post(getAbsoluteUrl(SERVER_UPDATE_FILE), params, responseHandler);
+        client.post(getAbsoluteUrl(SERVER_DELETE_FILE), params, responseHandler);
     }
 
     public static void delete(String table, Map<String, String> whereConditions, JsonHttpResponseHandler responseHandler) {
         RequestParams params = new RequestParams();
         params.put("table", table);
         params.put("where", whereConditions);
-        client.post(getAbsoluteUrl(SERVER_UPDATE_FILE), params, responseHandler);
+        client.post(getAbsoluteUrl(SERVER_DELETE_FILE), params, responseHandler);
     }
 
     public static void bluesoftProductInfo(String barcode, String supermarketId, JsonHttpResponseHandler responseHandler) {
