@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.NumberPicker;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -56,15 +57,31 @@ public class CartAdapter extends RecyclerView.Adapter {
         binding.textItemTotalCart.setText( textItemTotal );
         binding.editItemQtyCart.setText( textItemQty );
 
-        // TODO: NumberPicker - isso aqui é temporário
+        binding.editItemQtyCart.setKeyListener(null);
         binding.editItemQtyCart.setFocusable(false);
         binding.editItemQtyCart.setOnClickListener(v -> {
-            aCartItem.setQuantity(aCartItem.getQuantity() + 1);
-            notifyItemChanged(position);
-            ((CartActivity) context).reflectItemQtyChange(
-                    aCartItem.getPrice()*aCartItem.getQuantity(),
-                    aCartItem.getPrice()*aCartItem.getQuantity()+1
-            );
+            int oldQty = aCartItem.getQuantity();
+            View pickerView = LayoutInflater.from(context).inflate(R.layout.dialog_number_picker, null);
+            NumberPicker np = pickerView.findViewById(R.id.number_picker);
+            np.setWrapSelectorWheel(false);
+            np.setMinValue(1);
+            np.setMaxValue(100);
+            np.setValue(oldQty);
+            new AlertDialog.Builder(context)
+                    .setIcon(ContextCompat.getDrawable(context, R.drawable.ic_edit))
+                    .setTitle(aCartItem.getProductName())
+                    .setView(pickerView)
+                    .setPositiveButton("Ok", (dialog, which) -> {
+                        int newQty = np.getValue();
+                        ((CartActivity) context).reflectItemQtyChange(
+                                aCartItem.getPrice() * oldQty,
+                                aCartItem.getPrice() * newQty
+                        );
+                        aCartItem.setQuantity(newQty);
+                        notifyItemChanged(position);
+                        dialog.dismiss();
+                    })
+                    .show();
         });
 
         binding.buttonRemoveFromCart.setOnClickListener(v -> new AlertDialog.Builder(context)
@@ -73,7 +90,8 @@ public class CartAdapter extends RecyclerView.Adapter {
                 .setMessage(aCartItem.getProductName())
                 .setPositiveButton("Remover", (dialog, which) -> removeItem(position))
                 .setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel())
-                .show());
+                .show()
+        );
     }
 
     @Override
@@ -100,15 +118,15 @@ public class CartAdapter extends RecyclerView.Adapter {
     private void removeItem(int position) {
         CartItemData removedItem = cartItems.get(position);
 
-        cartItems.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, cartItems.size());
-
         // Update cart total
         ((CartActivity) context).reflectItemQtyChange(
                 removedItem.getQuantity()*removedItem.getPrice(),
                 0.0
         );
+
+        cartItems.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, cartItems.size());
 
         removedItemIds.add(removedItem.getId());
     }
