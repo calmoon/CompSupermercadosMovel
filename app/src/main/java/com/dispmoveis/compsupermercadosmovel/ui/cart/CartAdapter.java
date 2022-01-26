@@ -22,13 +22,17 @@ import java.util.List;
 public class CartAdapter extends RecyclerView.Adapter {
 
     private final List<CartItemData> cartItems = new ArrayList<>();
+    private final List<String> removedItemIds = new ArrayList<>();
 
-    Context context;
+    private final Context context;
+
+    public CartAdapter(Context context) {
+        this.context = context;
+    }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.adapter_cart, parent, false);
         return new CustomViewHolder(view);
     }
@@ -52,71 +56,24 @@ public class CartAdapter extends RecyclerView.Adapter {
         binding.textItemTotalCart.setText( textItemTotal );
         binding.editItemQtyCart.setText( textItemQty );
 
-        /*
-        binding.editItemQtyCart.addTextChangedListener(new TextWatcher() {
-            boolean _ignore = false; // indicates if the change was made by the TextWatcher itself.
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (_ignore)
-                    return;
-                _ignore = true; // prevent infinite loop
-
-                int newQty;
-
-                try {
-                    newQty = Integer.parseInt(binding.editItemQtyCart.getText().toString());
-                } catch (NumberFormatException e) {
-                    newQty = 1;
-                }
-
-                if (newQty <= 0) {
-                    newQty = 1;
-                    binding.editItemQtyCart.setText("1");
-                }
-
-                Double oldItemTotal = aCartItem.getPrice() * aCartItem.getQuantity();
-                Double newItemTotal = aCartItem.getPrice() * newQty;
-
-                aCartItem.setQuantity(newQty);
-
-                binding.textItemTotalCart.setText("R$ " +  Config.getCurrencyFormat().format(newItemTotal) );
-
-                ((CartActivity) context).reflectItemQtyChange(oldItemTotal, newItemTotal);
-
-                _ignore = false; // release, so the TextWatcher start to listen again.
-            }
+        // TODO: NumberPicker - isso aqui é temporário
+        binding.editItemQtyCart.setFocusable(false);
+        binding.editItemQtyCart.setOnClickListener(v -> {
+            aCartItem.setQuantity(aCartItem.getQuantity() + 1);
+            notifyItemChanged(position);
+            ((CartActivity) context).reflectItemQtyChange(
+                    aCartItem.getPrice()*aCartItem.getQuantity(),
+                    aCartItem.getPrice()*aCartItem.getQuantity()+1
+            );
         });
-         */
 
-        binding.buttonRemoveFromCart.setOnClickListener(v -> {
-            new AlertDialog.Builder(context)
-                    .setIcon(ContextCompat.getDrawable(context, R.drawable.ic_trash))
-                    .setTitle("Remover do carrinho?")
-                    .setMessage(aCartItem.getProductName())
-                    .setPositiveButton("Remover", (dialog, which) -> {
-                        cartItems.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, cartItems.size());
-                        ((CartActivity) context).reflectItemQtyChange(
-                                aCartItem.getQuantity()*aCartItem.getPrice(),
-                                0.0
-                        );
-                        if (cartItems.size() == 0) {
-                            cartItems.clear();
-                            notifyItemRangeChanged(0, cartItems.size());
-                        }
-                    })
-                    .setNegativeButton("Cancelar", (dialog, which) -> {
-                        dialog.cancel();
-                    })
-                    .show();
-        });
+        binding.buttonRemoveFromCart.setOnClickListener(v -> new AlertDialog.Builder(context)
+                .setIcon(ContextCompat.getDrawable(context, R.drawable.ic_trash))
+                .setTitle("Remover do carrinho?")
+                .setMessage(aCartItem.getProductName())
+                .setPositiveButton("Remover", (dialog, which) -> removeItem(position))
+                .setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel())
+                .show());
     }
 
     @Override
@@ -124,9 +81,44 @@ public class CartAdapter extends RecyclerView.Adapter {
         return cartItems.size();
     }
 
+    List<CartItemData> getCartItems() {
+        return cartItems;
+    }
+
+    List<String> getRemovedItemIds() {
+        return removedItemIds;
+    }
+
     void additem(CartItemData newItem) {
         cartItems.add(newItem);
         notifyItemInserted(cartItems.size()-1);
         notifyItemRangeChanged(cartItems.size()-1, cartItems.size());
+
+        removedItemIds.remove(newItem.getId());
+    }
+
+    private void removeItem(int position) {
+        CartItemData removedItem = cartItems.get(position);
+
+        cartItems.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, cartItems.size());
+
+        // Update cart total
+        ((CartActivity) context).reflectItemQtyChange(
+                removedItem.getQuantity()*removedItem.getPrice(),
+                0.0
+        );
+
+        removedItemIds.add(removedItem.getId());
+    }
+
+    boolean containsItem(String itemId) {
+        for(CartItemData checkedItem : cartItems) {
+            if(checkedItem != null && checkedItem.getId().equals(itemId)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

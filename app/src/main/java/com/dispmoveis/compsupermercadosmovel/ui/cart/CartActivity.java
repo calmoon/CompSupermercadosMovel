@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,39 +24,57 @@ import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.permissionx.guolindev.PermissionX;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
 public class CartActivity extends AppCompatActivity {
-
+    // Received from PreviousCartsActivity:
     public static final String EXTRA_CART_ID = "CartActivity_cartId";
-    public static final String EXTRA_NEW_ITEM_ID = "itemId";
-    public static final String EXTRA_NEW_ITEM_QTY = "itemQty";
+    // Received from RegisterProductActivity (addProductLauncher):
+    public static final String EXTRA_NEW_ITEM_ID = "CartActivity_itemId";
+    public static final String EXTRA_NEW_ITEM_QTY = "CartActivity_itemQty";
 
-    private final CartAdapter cartAdapter = new CartAdapter();
-
-    private Double total = 0.0;
+    // DB Stuff
+    private String cartId;
     private String supermarketId;
+    private final List<String> dbCartItemIds = new ArrayList<>();
+
+    // Activity stuff
+    private Double total = 0.0;
+    private final CartAdapter cartAdapter = new CartAdapter(this);
 
     private ActivityCartBinding binding;
 
-    private final ActivityResultLauncher addProductLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> addProductLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
 
+                    assert data != null;
                     String itemId = data.getStringExtra(EXTRA_NEW_ITEM_ID);
-                    int itemQty = data.getIntExtra(EXTRA_NEW_ITEM_QTY, 1 );
+                    int itemQty = data.getIntExtra(EXTRA_NEW_ITEM_QTY, 1);
 
-                    addItemToCart(itemId, itemQty);
+                    if (!cartAdapter.containsItem(itemId) && itemId != null)
+                        addItemToCart(itemId, itemQty);
+                    else
+                        Toast.makeText(CartActivity.this,
+                                "Este item já está no carrinho!",
+                                Toast.LENGTH_LONG).show();
+
                 }
             }
         );
@@ -117,13 +136,11 @@ public class CartActivity extends AppCompatActivity {
         setContentView(view);
 
         Intent i = getIntent();
-        // TODO: usar o código comentado quando se tornar cabível
-        //supermarketId = i.getStringExtra("supermarketId");
-        //String cartId = i.getStringExtra(EXTRA_CART_ID);
-        supermarketId = "1";
+        cartId = i.getStringExtra(EXTRA_CART_ID);
 
-        String cartName = "Seu carrinho #" + getIntent().getStringExtra("cartHistoryItemsSize");
-        binding.editCartName.setText(cartName);
+        if (cartId != null) {
+            loadCart(cartId);
+        }
 
         binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(total));
 
@@ -137,7 +154,7 @@ public class CartActivity extends AppCompatActivity {
 
         binding.recyclerCart.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if(dy > 0){
                     binding.buttonAddItem.hide();
                 } else{
@@ -186,15 +203,7 @@ public class CartActivity extends AppCompatActivity {
         });
 
         binding.buttonSaveCart.setOnClickListener(v -> {
-            Integer cardSize = cartAdapter.getItemCount();
-            String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-            Intent resultIntent = new Intent()
-                    .putExtra("cardName", binding.editCartName.getText().toString())
-                    .putExtra("cardTotal", Config.getCurrencyFormat().format(total))
-                    .putExtra("cardSize", cardSize + " produtos")
-                    .putExtra("cardDate", "Última modificação: " + date);
-            setResult(Activity.RESULT_OK, resultIntent);
-            finish();
+            submitCart();
         });
 
         binding.buttonCancelCart.setOnClickListener(v -> {
@@ -209,38 +218,203 @@ public class CartActivity extends AppCompatActivity {
         binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(total));
     }
 
-    private void addItemToCart(String supermarketItemId, int itemQty) {
-        if (supermarketItemId != null) {
+    private void loadCart(@NonNull String cartId) {
+        // Load cart info:
+        ServerClient.select("cartInfo", cartId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    if (response.getInt("result_code") == 1) {
+                        JSONObject cartInfoJSON = response.getJSONArray("result").getJSONObject(0);
+                        CartActivity.this.supermarketId = cartInfoJSON.getString("id_supermercado");
+                        binding.editCartName.setText( cartInfoJSON.getString("nome") );
+                    } else
+                        onFailure(statusCode, headers, response.toString(), new InternalError());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("CART_LOAD_INFO", "Failed to load cart info - " + responseString);
+            }
+        });
 
-            ServerClient.select("itemInfo", supermarketItemId, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        int resultCode = response.getInt("result_code");
+        // Load cart items:
+        ServerClient.select("cartItems", cartId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    int resultCode = response.getInt("result_code");
+                    if (resultCode == 1) {
+                        JSONArray supermarketItemsJSON = response.getJSONArray("result");
 
-                        if (resultCode == 1) {
-                            JSONObject itemJSON = response.getJSONArray("result").getJSONObject(0);
+                        for (int i = 0; i < supermarketItemsJSON.length(); i++) {
+                            JSONObject itemJSON = supermarketItemsJSON.getJSONObject(i);
 
+                            String itemId = itemJSON.getString("id");
                             String productName = itemJSON.getString("nome");
                             Double itemPrice = itemJSON.getDouble("preco_atual");
                             String imageUrl = itemJSON.getString("imagem_url");
+                            int itemQty = itemJSON.getInt("quantidade");
 
                             total += itemPrice * itemQty;
+                            if (i == supermarketItemsJSON.length()-1)
+                                binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(total));
 
-                            binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(total));
+                            dbCartItemIds.add(itemId);
 
-                            cartAdapter.additem( new CartItemData(supermarketItemId, productName, itemPrice, itemQty, imageUrl) );
+                            cartAdapter.additem( new CartItemData(itemId, productName, itemPrice, itemQty, imageUrl) );
                         }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("CART_LOAD_ITEMS", "Failed to load cart items - " + responseString);
+            }
+        });
+    }
 
+    private void addItemToCart(@NonNull String supermarketItemId, int itemQty) {
+        ServerClient.select("itemInfo", supermarketItemId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    int resultCode = response.getInt("result_code");
+
+                    if (resultCode == 1) {
+                        JSONObject itemJSON = response.getJSONArray("result").getJSONObject(0);
+
+                        String productName = itemJSON.getString("nome");
+                        Double itemPrice = itemJSON.getDouble("preco_atual");
+                        String imageUrl = itemJSON.getString("imagem_url");
+
+                        total += itemPrice * itemQty;
+
+                        binding.textTotal.setText("Total:\nR$ " + Config.getCurrencyFormat().format(total));
+
+                        cartAdapter.additem( new CartItemData(supermarketItemId, productName, itemPrice, itemQty, imageUrl) );
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //TODO: onFailure
+        });
+    }
+
+    private void submitCart() {
+        List<CartItemData> submittedItems = cartAdapter.getCartItems();
+        List<String> deletedItemIds = cartAdapter.getRemovedItemIds();
+
+        // Delete removed items
+        for (String removedId : deletedItemIds) {
+            Map<String, String> whereConditions = new HashMap<>();
+            whereConditions.put("id_carrinho", cartId);
+            whereConditions.put("id_item", removedId);
+            ServerClient.delete("carrinho_item", whereConditions, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        if (response.getInt("result_code") <= 0)
+                            onFailure(statusCode, headers, response.toString(), new InternalError());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
-                //TODO: onFailure
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.e("CART_REMOVE_ITEM_FAIL", "Failed to update item quantity - " + responseString);
+                }
             });
+        }
+
+        // Per-item changes
+        for (CartItemData item : submittedItems) {
+            String itemId = item.getId();
+            RequestParams values = new RequestParams();
+
+            // If item already in DB cart, update:
+            if (dbCartItemIds.contains(itemId)) {
+                Map<String, String> whereConditions = new HashMap<>();
+                whereConditions.put("id_carrinho", cartId);
+                whereConditions.put("id_item", itemId);
+
+                values.put("quantidade", item.getQuantity());
+
+                ServerClient.update("carrinho_item", whereConditions, values, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            if (response.getInt("result_code") <= 0)
+                                onFailure(statusCode, headers, response.toString(), new InternalError());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.e("CART_QTY_UPDATE_FAIL", "Failed to update item quantity - " + responseString);
+                    }
+                });
+            }
+            // Else if item not in DB cart, insert:
+            else {
+                values.put("id_carrinho", cartId);
+                values.put("id_item", item.getId());
+                values.put("quantidade", item.getQuantity());
+                ServerClient.insert("carrinho_item", values, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            if (response.getInt("result_code") <= 0)
+                                onFailure(statusCode, headers, response.toString(), new InternalError());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.e("CART_ITEM_INSERT_FAIL", "Failed to insert cart item - " + responseString);
+                    }
+                });
+            }
 
         }
+
+        // Update cart title
+        String submittedCartTitle = binding.editCartName.getText().toString();
+        ServerClient.update("carrinho", cartId, new RequestParams("nome", submittedCartTitle), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    if (response.getInt("result_code") <= 0)
+                        onFailure(statusCode, headers, response.toString(), new InternalError());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("CART_TITLE_UPDATE_FAIL", "Failed to update cart title - " + responseString);
+            }
+        });
+
+        // Finish activty
+        Integer cardSize = cartAdapter.getItemCount();
+        String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+        Intent resultIntent = new Intent()
+                .putExtra("cardName", binding.editCartName.getText().toString())
+                .putExtra("cardTotal", Config.getCurrencyFormat().format(total))
+                .putExtra("cardSize", cardSize + " produtos")
+                .putExtra("cardDate", "Última modificação: " + date);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
     }
 
 }
