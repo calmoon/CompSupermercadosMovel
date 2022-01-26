@@ -44,8 +44,8 @@ public class SupermarketAdapter extends RecyclerView.Adapter {
         holder.itemView.setOnClickListener(v -> {
             Intent i = new Intent();
             i.putExtra("supermarketId", supermarketsData.id);
-            ((SupermarketActivity)context).setResult(Activity.RESULT_OK, i);
-            ((SupermarketActivity)context).finish();
+            ((SupermarketActivity) context).setResult(Activity.RESULT_OK, i);
+            ((SupermarketActivity) context).finish();
         });
     }
 

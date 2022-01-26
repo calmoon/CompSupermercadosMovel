@@ -1,6 +1,7 @@
 package com.dispmoveis.compsupermercadosmovel.ui.previouscarts;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dispmoveis.compsupermercadosmovel.R;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterPreviousCartsBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
+import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
+import com.dispmoveis.compsupermercadosmovel.util.Config;
 
 import java.util.List;
 
 public class PreviousCartsAdapter extends RecyclerView.Adapter{
 
-    private final List<PreviousCartsItemData> cartHistoryItems;
-
     private final Context context;
+    private List<PreviousCartsItem> cartHistoryItems;
 
-    public PreviousCartsAdapter(Context context, List<PreviousCartsItemData> cartHistoryItems){
+    public PreviousCartsAdapter(Context context, List<PreviousCartsItem> cartHistoryItems) {
         this.context = context;
         this.cartHistoryItems = cartHistoryItems;
     }
@@ -28,20 +30,34 @@ public class PreviousCartsAdapter extends RecyclerView.Adapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.adapter_previous_carts, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.adapter_previous_carts,
+                parent, false);
         return new CustomViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        PreviousCartsItem itemData = this.cartHistoryItems.get(position);
+
         AdapterPreviousCartsBinding binding = AdapterPreviousCartsBinding.bind(holder.itemView);
 
-        PreviousCartsItemData itemData = this.cartHistoryItems.get(position);
+        binding.textCartName.setText(itemData.getName());
+        binding.textCartLastModified.setText(itemData.getDate());
+        binding.textCartItemQty.setText(String.valueOf(itemData.getQtdItems()));
 
-        binding.textCartName.setText(itemData.cartTitle);
-        binding.textCartTotal.setText(itemData.cartTotal);
-        binding.textCartItemQty.setText(itemData.qtyOfItems);
-        binding.textCartLastModified.setText(itemData.date);
+        String textCartTotal = "R$ " + Config.getCurrencyFormat().format(itemData.getTotal());
+        binding.textCartTotal.setText(textCartTotal);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent i = new Intent(context, CartActivity.class)
+                    .putExtra(CartActivity.EXTRA_CART_ID, String.valueOf(itemData.getId()));
+            context.startActivity(i);
+            ((PreviousCartsActivity) context).finish();
+        });
+
+        binding.buttonDeleteCart.setOnClickListener(v -> {
+            //xupa cu
+        });
     }
 
     @Override

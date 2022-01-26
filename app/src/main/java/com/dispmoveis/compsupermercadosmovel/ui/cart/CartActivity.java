@@ -406,14 +406,7 @@ public class CartActivity extends AppCompatActivity {
         });
 
         // Finish activty
-        Integer cardSize = cartAdapter.getItemCount();
-        String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-        Intent resultIntent = new Intent()
-                .putExtra("cardName", binding.editCartName.getText().toString())
-                .putExtra("cardTotal", Config.getCurrencyFormat().format(total))
-                .putExtra("cardSize", cardSize + " produtos")
-                .putExtra("cardDate", "Última modificação: " + date);
-        setResult(Activity.RESULT_OK, resultIntent);
+        setResult(Activity.RESULT_OK);
         finish();
     }
 

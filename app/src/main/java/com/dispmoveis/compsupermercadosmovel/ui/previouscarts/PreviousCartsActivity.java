@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,10 +47,11 @@ public class PreviousCartsActivity extends AppCompatActivity {
     static  int NEW_SUPERMARKET_REQUEST = 1;
     static int NEW_ITEM_REQUEST = 2;
 
+    private PreviousCartsViewModel previousCartsViewModel;
+
     private ActivityPreviousCartsBinding binding;
 
-    private final List<PreviousCartsItemData> cartHistoryItems = new ArrayList<>();
-    private final PreviousCartsAdapter CartHistoryAdapter = new PreviousCartsAdapter(this, cartHistoryItems);
+    private int userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +60,32 @@ public class PreviousCartsActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        userID = Config.getUserId(PreviousCartsActivity.this);
+
         //String login = Config.getLogin(PreviousCartsActivity.this);
         //binding.textWebData.setText("Olá " + login);
 
         binding.toolbarHome.setTitle("Seus carrinhos");
         setSupportActionBar(binding.toolbarHome);
 
+        previousCartsViewModel = new ViewModelProvider(this)
+                .get(PreviousCartsViewModel.class);
+        previousCartsViewModel.setUserId(String.valueOf(userID));
+
+        previousCartsViewModel.getPreviousCartsItems().observe(this, new Observer<List<PreviousCartsItem>>() {
+            @Override
+            public void onChanged(List<PreviousCartsItem> previousCartsItems) {
+                binding.recyclerCartHistory.setAdapter(
+                        new PreviousCartsAdapter(PreviousCartsActivity.this, previousCartsItems)
+                );
+                if (previousCartsItems.isEmpty()) {
+                    binding.textNoCarts.setVisibility(View.VISIBLE);
+                }
+                else { binding.textNoCarts.setVisibility(View.GONE); }
+            }
+        });
+
         binding.recyclerCartHistory.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerCartHistory.setAdapter(CartHistoryAdapter);
         binding.recyclerCartHistory.setHasFixedSize(true);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
@@ -133,7 +154,6 @@ public class PreviousCartsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == NEW_SUPERMARKET_REQUEST) {
-                int userID = Config.getUserId(PreviousCartsActivity.this);
                 int supermarketID = data.getIntExtra("supermarketId", 0);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String currentDateTime = simpleDateFormat.format(new Date());
@@ -159,8 +179,8 @@ public class PreviousCartsActivity extends AppCompatActivity {
                                                 JSONArray carrinhoIDJSON = response.getJSONArray("result");
                                                 JSONObject itemJSON = carrinhoIDJSON.getJSONObject(0);
 
-                                                Intent i = new Intent(PreviousCartsActivity.this, CartActivity.class);
-                                                i.putExtra(CartActivity.EXTRA_CART_ID, String.valueOf(itemJSON.getInt("max")));
+                                                Intent i = new Intent(PreviousCartsActivity.this, CartActivity.class)
+                                                        .putExtra(CartActivity.EXTRA_CART_ID, String.valueOf(itemJSON.getInt("max")));
                                                 startActivityForResult(i, NEW_ITEM_REQUEST);
                                             }
                                             else {
@@ -188,20 +208,7 @@ public class PreviousCartsActivity extends AppCompatActivity {
                 });
             }
             if (requestCode == NEW_ITEM_REQUEST) {
-                String cardName = data.getStringExtra("cardName");
-                String cardTotal = data.getStringExtra("cardTotal");
-                String cardSize = data.getStringExtra("cardSize");
-                String cardDate = data.getStringExtra("cardDate");
-
-                PreviousCartsItemData newCartHistoryItemData = new PreviousCartsItemData();
-                newCartHistoryItemData.cartTitle = cardName;
-                newCartHistoryItemData.cartTotal = "R$ " + cardTotal;
-                newCartHistoryItemData.qtyOfItems = cardSize;
-                newCartHistoryItemData.date = cardDate;
-
-                cartHistoryItems.add(newCartHistoryItemData);
-                CartHistoryAdapter.notifyItemInserted(cartHistoryItems.size()-1);
-
+                previousCartsViewModel.reloadCartList();
                 binding.textNoCarts.setVisibility(View.GONE);
             }
         }
