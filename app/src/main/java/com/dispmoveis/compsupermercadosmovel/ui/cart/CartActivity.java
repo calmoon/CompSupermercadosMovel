@@ -2,6 +2,7 @@ package com.dispmoveis.compsupermercadosmovel.ui.cart;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,10 +13,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dispmoveis.compsupermercadosmovel.R;
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCartBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.productsearch.ProductSearchActivity;
@@ -207,8 +210,16 @@ public class CartActivity extends AppCompatActivity {
         });
 
         binding.buttonCancelCart.setOnClickListener(v -> {
-            setResult(Activity.RESULT_CANCELED, new Intent());
-            finish();
+            new AlertDialog.Builder(this)
+                .setIcon(ContextCompat.getDrawable(this, R.drawable.ic_close))
+                .setTitle("Cancelar alterações?")
+                .setMessage("Se tiver feito alterações, elas serão perdidas. Tem certeza?")
+                .setPositiveButton("Sim, cancelar", (dialog, which) -> {
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                })
+                .setNegativeButton("Voltar", (dialog, which) -> dialog.cancel())
+                .show();
         });
     }
 
