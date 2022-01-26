@@ -51,12 +51,10 @@ public class PreviousCartsAdapter extends RecyclerView.Adapter{
         holder.itemView.setOnClickListener(v -> {
             Intent i = new Intent(context, CartActivity.class)
                     .putExtra(CartActivity.EXTRA_CART_ID, String.valueOf(itemData.getId()));
-            context.startActivity(i);
-            ((PreviousCartsActivity) context).finish();
+            ((PreviousCartsActivity) context).startActivityForResult(i, PreviousCartsActivity.NEW_ITEM_REQUEST);
         });
 
         binding.buttonDeleteCart.setOnClickListener(v -> {
-            //xupa cu
         });
     }
 
