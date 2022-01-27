@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dispmoveis.compsupermercadosmovel.R;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterSupermarketBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
+import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class SupermarketAdapter extends RecyclerView.Adapter {
         binding.textSupermarketName.setText(supermarketsData.nome);
         holder.itemView.setOnClickListener(v -> {
             Intent i = new Intent();
-            i.putExtra("supermarketId", supermarketsData.id);
+            i.putExtra(PreviousCartsActivity.EXTRA_SUPERMARKET_ID, supermarketsData.id);
             ((SupermarketActivity) context).setResult(Activity.RESULT_OK, i);
             ((SupermarketActivity) context).finish();
         });

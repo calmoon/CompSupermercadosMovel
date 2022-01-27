@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivitySupermarketBinding;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
+import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -122,7 +123,7 @@ public class SupermarketActivity extends AppCompatActivity {
                                             JSONObject itemJSON = supermarketIdJSON.getJSONObject(0);
 
                                             Intent i = new Intent();
-                                            i.putExtra("supermarketId", itemJSON.getInt("max"));
+                                            i.putExtra(PreviousCartsActivity.EXTRA_SUPERMARKET_ID, itemJSON.getInt("max"));
                                             setResult(Activity.RESULT_OK, i);
                                             finish();
                                         }
