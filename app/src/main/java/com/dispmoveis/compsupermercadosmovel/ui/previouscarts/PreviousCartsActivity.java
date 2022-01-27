@@ -35,23 +35,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
 public class PreviousCartsActivity extends AppCompatActivity {
 
-    static  int NEW_SUPERMARKET_REQUEST = 1;
-    static int NEW_ITEM_REQUEST = 2;
+    public static final int NEW_SUPERMARKET_REQUEST = 1;
+    public static final int NEW_ITEM_REQUEST = 2;
+    public static final String EXTRA_SUPERMARKET_ID = "PreviousCartsActivity_supermarketId";
 
-    private PreviousCartsViewModel previousCartsViewModel;
+    public PreviousCartsViewModel previousCartsViewModel;
 
     private ActivityPreviousCartsBinding binding;
 
     private int userID;
+    private int nextPreviousCartsQty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +61,8 @@ public class PreviousCartsActivity extends AppCompatActivity {
 
         userID = Config.getUserId(PreviousCartsActivity.this);
 
-        //String login = Config.getLogin(PreviousCartsActivity.this);
-        //binding.textWebData.setText("Olá " + login);
-
-        binding.toolbarHome.setTitle("Seus carrinhos");
+        String userName = Config.getUserName(PreviousCartsActivity.this).split(" ")[0];
+        binding.toolbarHome.setTitle("Bem-vindo(a), " + userName);
         setSupportActionBar(binding.toolbarHome);
 
         previousCartsViewModel = new ViewModelProvider(this)
@@ -78,6 +75,7 @@ public class PreviousCartsActivity extends AppCompatActivity {
                 binding.recyclerCartHistory.setAdapter(
                         new PreviousCartsAdapter(PreviousCartsActivity.this, previousCartsItems)
                 );
+                nextPreviousCartsQty = previousCartsItems.size() + 1;
                 if (previousCartsItems.isEmpty()) {
                     binding.textNoCarts.setVisibility(View.VISIBLE);
                 }
@@ -154,13 +152,11 @@ public class PreviousCartsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == NEW_SUPERMARKET_REQUEST) {
-                int supermarketID = data.getIntExtra("supermarketId", 0);
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String currentDateTime = simpleDateFormat.format(new Date());
+                int supermarketID = data.getIntExtra(EXTRA_SUPERMARKET_ID, 0);
+                String cartName = "Seu Carrinho #" + nextPreviousCartsQty;
 
                 RequestParams params = new RequestParams();
-                params.put("nome", "Sem Nome");
-                params.put("data", currentDateTime);
+                params.put("nome", cartName);
                 params.put("id_usuario", userID);
                 params.put("id_supermercado", supermarketID);
 
