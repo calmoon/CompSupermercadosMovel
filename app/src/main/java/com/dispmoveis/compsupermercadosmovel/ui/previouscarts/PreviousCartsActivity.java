@@ -178,6 +178,7 @@ public class PreviousCartsActivity extends AppCompatActivity {
                                                 Intent i = new Intent(PreviousCartsActivity.this, CartActivity.class)
                                                         .putExtra(CartActivity.EXTRA_CART_ID, String.valueOf(itemJSON.getInt("max")));
                                                 startActivityForResult(i, NEW_ITEM_REQUEST);
+                                                previousCartsViewModel.reloadCartList();
                                             }
                                             else {
                                                 Toast.makeText(PreviousCartsActivity.this,
