@@ -398,9 +398,14 @@ public class CartActivity extends AppCompatActivity {
 
         }
 
-        // Update cart title
+        // Update cart title/date
         String submittedCartTitle = binding.editCartName.getText().toString();
-        ServerClient.update("carrinho", cartId, new RequestParams("nome", submittedCartTitle), new JsonHttpResponseHandler() {
+
+        RequestParams values = new RequestParams();
+        values.put("nome", submittedCartTitle);
+        values.put("data", "now()");
+
+        ServerClient.update("carrinho", cartId, values, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
