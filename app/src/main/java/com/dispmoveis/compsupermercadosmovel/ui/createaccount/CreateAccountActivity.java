@@ -30,6 +30,12 @@ public class CreateAccountActivity extends AppCompatActivity {
         setContentView(view);
         
         binding.buttonCreateAccount.setOnClickListener(v -> {
+            final String newFullName = binding.editSignupFullname.getText().toString();
+            if(newFullName.isEmpty()) {
+                Toast.makeText(CreateAccountActivity.this, "Campo de nome não preenchido", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             final String newLogin = binding.editSignupUser.getText().toString();
             if(newLogin.isEmpty()) {
                 Toast.makeText(CreateAccountActivity.this, "Campo de login não preenchido", Toast.LENGTH_LONG).show();
@@ -54,6 +60,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
 
             RequestParams params = new RequestParams();
+            params.put("nome", newFullName);
             params.put("email", newLogin);
             params.put("senha", newPassword);
             ServerClient.insert("usuario", params, new JsonHttpResponseHandler() {
