@@ -144,6 +144,7 @@ public class PreviousCartsActivity extends AppCompatActivity {
         Config.setPassword(PreviousCartsActivity.this, "");
         Intent i = new Intent(PreviousCartsActivity.this, LoginActivity.class);
         startActivity(i);
+        finish();
         return true;
     }
 
