@@ -165,6 +165,18 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
+        binding.buttonSaveCart.setOnClickListener(v -> submitCart());
+
+        binding.buttonCancelCart.setOnClickListener(v -> showDiscardConfirmationAlert());
+
+        binding.buttonOptionCatalog.setOnClickListener(v -> {
+            addProductLauncher.launch(
+                    new Intent(CartActivity.this, ProductSearchActivity.class)
+                            .putExtra(RegisterProductActivity.EXTRA_CURRENT_CART_TOTAL, total)
+                            .putExtra(ProductSearchActivity.EXTRA_SUPERMARKET_ID, supermarketId)
+            );
+        });
+
         // Register the launcher and result handler
         binding.buttonOptionBarcode.setOnClickListener(v -> {
             PermissionX.init(this)
@@ -194,31 +206,24 @@ public class CartActivity extends AppCompatActivity {
                             }
                     );
         });
+    }
 
-        binding.buttonOptionCatalog.setOnClickListener(v -> {
-            addProductLauncher.launch(
-                    new Intent(CartActivity.this, ProductSearchActivity.class)
-                            .putExtra(RegisterProductActivity.EXTRA_CURRENT_CART_TOTAL, total)
-                            .putExtra(ProductSearchActivity.EXTRA_SUPERMARKET_ID, supermarketId)
-            );
-        });
+    @Override
+    public void onBackPressed() {
+        showDiscardConfirmationAlert();
+    }
 
-        binding.buttonSaveCart.setOnClickListener(v -> {
-            submitCart();
-        });
-
-        binding.buttonCancelCart.setOnClickListener(v -> {
-            new AlertDialog.Builder(this)
-                .setIcon(ContextCompat.getDrawable(this, R.drawable.ic_close))
-                .setTitle("Descartar alterações?")
-                .setMessage("Se tiver feito alterações, elas serão perdidas. Tem certeza?")
-                .setPositiveButton("Descartar", (dialog, which) -> {
-                    setResult(Activity.RESULT_CANCELED);
-                    finish();
-                })
-                .setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel())
-                .show();
-        });
+    private void showDiscardConfirmationAlert() {
+        new AlertDialog.Builder(this)
+            .setIcon(ContextCompat.getDrawable(this, R.drawable.ic_close))
+            .setTitle("Descartar alterações?")
+            .setMessage("Se tiver feito alterações, elas serão perdidas. Tem certeza?")
+            .setPositiveButton("Descartar", (dialog, which) -> {
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+            })
+            .setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel())
+            .show();
     }
 
     void reflectItemQtyChange(Double oldItemPrice, Double newItemPrice) {
