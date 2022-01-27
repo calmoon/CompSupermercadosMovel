@@ -80,6 +80,11 @@ public class ProductSearchActivity extends AppCompatActivity {
         );
         binding.recyclerProductSearch.setHasFixedSize(true);
 
+        binding.buttonCancelProductSearch.setOnClickListener(v -> {
+            setResult(Activity.RESULT_CANCELED);
+            finish();
+        });
+
         binding.buttonSortPrice.setOnClickListener(v -> {
             boolean ascending = productSearchViewModel.toggleSortOrder();
             if (ascending) {
