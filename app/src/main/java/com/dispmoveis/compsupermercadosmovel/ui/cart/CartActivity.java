@@ -34,9 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,13 +210,13 @@ public class CartActivity extends AppCompatActivity {
         binding.buttonCancelCart.setOnClickListener(v -> {
             new AlertDialog.Builder(this)
                 .setIcon(ContextCompat.getDrawable(this, R.drawable.ic_close))
-                .setTitle("Cancelar alterações?")
+                .setTitle("Descartar alterações?")
                 .setMessage("Se tiver feito alterações, elas serão perdidas. Tem certeza?")
-                .setPositiveButton("Sim, cancelar", (dialog, which) -> {
+                .setPositiveButton("Descartar", (dialog, which) -> {
                     setResult(Activity.RESULT_CANCELED);
                     finish();
                 })
-                .setNegativeButton("Voltar", (dialog, which) -> dialog.cancel())
+                .setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel())
                 .show();
         });
     }
