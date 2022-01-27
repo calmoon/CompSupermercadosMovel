@@ -38,7 +38,11 @@ public class PreviousCartsViewModel extends ViewModel {
                 try {
                     int resultCode = response.getInt("result_code");
 
-                    if (resultCode == 1) {
+                    if (resultCode == 0) {
+                        mutablePreviousCartsItems.postValue(new ArrayList<>());
+                    }
+
+                    else if (resultCode == 1) {
                         JSONArray previousCartsItemsJSON = response.getJSONArray("result");
 
                         List<PreviousCartsItem> requestedPreviousCartsItems = new ArrayList<>();
@@ -59,6 +63,7 @@ public class PreviousCartsViewModel extends ViewModel {
 
                         mutablePreviousCartsItems.postValue(requestedPreviousCartsItems);
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
