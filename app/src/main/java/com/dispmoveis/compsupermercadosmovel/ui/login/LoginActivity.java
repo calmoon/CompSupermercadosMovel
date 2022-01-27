@@ -2,30 +2,21 @@ package com.dispmoveis.compsupermercadosmovel.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityLoginBinding;
-import com.dispmoveis.compsupermercadosmovel.network.HttpRequest;
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.createaccount.CreateAccountActivity;
-import com.dispmoveis.compsupermercadosmovel.ui.main.MainActivity;
 import com.dispmoveis.compsupermercadosmovel.ui.previouscarts.PreviousCartsActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
-import com.dispmoveis.compsupermercadosmovel.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -54,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                                     JSONObject itemJSON = usuarioJSON.getJSONObject(0);
 
                                     Config.setUserId(LoginActivity.this, itemJSON.getInt("id"));
+                                    Config.setUserName(LoginActivity.this, itemJSON.getString("nome"));
                                     Config.setLogin(LoginActivity.this, itemJSON.getString("email"));
                                     Config.setPassword(LoginActivity.this, itemJSON.getString("senha"));
 

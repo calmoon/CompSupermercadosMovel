@@ -2,9 +2,11 @@ package com.dispmoveis.compsupermercadosmovel.ui.previouscarts;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,10 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dispmoveis.compsupermercadosmovel.R;
 import com.dispmoveis.compsupermercadosmovel.databinding.AdapterPreviousCartsBinding;
 import com.dispmoveis.compsupermercadosmovel.model.CustomViewHolder;
+import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
 import com.dispmoveis.compsupermercadosmovel.ui.cart.CartActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class PreviousCartsAdapter extends RecyclerView.Adapter{
 
@@ -55,6 +64,23 @@ public class PreviousCartsAdapter extends RecyclerView.Adapter{
         });
 
         binding.buttonDeleteCart.setOnClickListener(v -> {
+            ServerClient.delete("carrinho", String.valueOf(itemData.getId()), new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        int resultCode = response.getInt("result_code");
+                        if (resultCode == 1) {
+                            ((PreviousCartsActivity) context).previousCartsViewModel.reloadCartList();
+                        }
+                        else {
+                            Toast.makeText(context,"Erro ao fazer consulta.", Toast.LENGTH_LONG).show();
+                            Log.e("Super", "Erro de conssulta - " + response.toString());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         });
     }
 
