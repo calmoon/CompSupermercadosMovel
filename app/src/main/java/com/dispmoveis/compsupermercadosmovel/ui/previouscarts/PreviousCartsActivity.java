@@ -153,7 +153,7 @@ public class PreviousCartsActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == NEW_SUPERMARKET_REQUEST) {
                 int supermarketID = data.getIntExtra(EXTRA_SUPERMARKET_ID, 0);
-                String cartName = "Seu Carrinho #" + nextPreviousCartsQty;
+                String cartName = "Seu carrinho #" + nextPreviousCartsQty;
 
                 RequestParams params = new RequestParams();
                 params.put("nome", cartName);

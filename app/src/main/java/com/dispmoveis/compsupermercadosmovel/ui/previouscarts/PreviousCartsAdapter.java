@@ -29,7 +29,7 @@ import cz.msebera.android.httpclient.Header;
 public class PreviousCartsAdapter extends RecyclerView.Adapter{
 
     private final Context context;
-    private List<PreviousCartsItem> cartHistoryItems;
+    private final List<PreviousCartsItem> cartHistoryItems;
 
     public PreviousCartsAdapter(Context context, List<PreviousCartsItem> cartHistoryItems) {
         this.context = context;
@@ -52,7 +52,9 @@ public class PreviousCartsAdapter extends RecyclerView.Adapter{
 
         binding.textCartName.setText(itemData.getName());
         binding.textCartLastModified.setText(itemData.getDate());
-        binding.textCartItemQty.setText(String.valueOf(itemData.getQtdItems()));
+
+        String textCartItemQty = itemData.getQtdItems() + " itens";
+        binding.textCartItemQty.setText(textCartItemQty);
 
         String textCartTotal = "R$ " + Config.getCurrencyFormat().format(itemData.getTotal());
         binding.textCartTotal.setText(textCartTotal);
