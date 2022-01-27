@@ -8,17 +8,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dispmoveis.compsupermercadosmovel.databinding.ActivityCreateAccountBinding;
-import com.dispmoveis.compsupermercadosmovel.network.HttpRequest;
-import com.dispmoveis.compsupermercadosmovel.util.Config;
-import com.dispmoveis.compsupermercadosmovel.util.Util;
+import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import cz.msebera.android.httpclient.Header;
 
 
 public class CreateAccountActivity extends AppCompatActivity {
@@ -56,50 +53,22 @@ public class CreateAccountActivity extends AppCompatActivity {
                 return;
             }
 
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            executorService.execute(new Runnable() {
+            RequestParams params = new RequestParams();
+            params.put("email", newLogin);
+            params.put("senha", newPassword);
+            ServerClient.insert("usuario", params, new JsonHttpResponseHandler() {
                 @Override
-                public void run() {
-                    HttpRequest httpRequest = new HttpRequest(Config.SERVER_URL_BASE + "server_insert.php", "POST", "UTF-8");
-                    httpRequest.addParam("table", "usuario");
-                    httpRequest.addParam("email", newLogin);
-                    httpRequest.addParam("senha", newPassword);
-
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
-                        InputStream is = httpRequest.execute();
-                        String result = Util.inputStream2String(is, "UTF-8");
-                        httpRequest.finish();
-
-                        JSONObject jsonObject = new JSONObject(result);
-                        final int result_code = jsonObject.getInt("result_code");
-                        if(result_code == 1) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(CreateAccountActivity.this, "Novo usuario registrado com sucesso", Toast.LENGTH_LONG).show();
-                                    finish();
-                                }
-                            });
-                        }
-                        else if (result_code == 0){
-                            final String error = jsonObject.getString("result");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(CreateAccountActivity.this, error, Toast.LENGTH_LONG).show();
-                                }
-                            });
+                        int resultCode = response.getInt("result_code");
+                        if (resultCode == 1) {
+                            Toast.makeText(CreateAccountActivity.this, "Novo usuário registrado com sucesso.", Toast.LENGTH_LONG).show();
+                            finish();
                         }
                         else {
-                            final String error = jsonObject.getString("result");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(CreateAccountActivity.this, error, Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            Toast.makeText(CreateAccountActivity.this, "Erro ao criar novo usuário", Toast.LENGTH_LONG).show();
                         }
-                    } catch (IOException | JSONException e) {
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
