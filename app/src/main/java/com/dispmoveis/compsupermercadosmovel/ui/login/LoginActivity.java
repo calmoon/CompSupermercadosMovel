@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                                     JSONObject itemJSON = usuarioJSON.getJSONObject(0);
 
                                     Config.setUserId(LoginActivity.this, itemJSON.getInt("id"));
+                                    Config.setUserName(LoginActivity.this, itemJSON.getString("nome"));
                                     Config.setLogin(LoginActivity.this, itemJSON.getString("email"));
                                     Config.setPassword(LoginActivity.this, itemJSON.getString("senha"));
 

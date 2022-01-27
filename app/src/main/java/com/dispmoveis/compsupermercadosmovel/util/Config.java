@@ -54,4 +54,15 @@ public class Config {
         SharedPreferences mPrefs = context.getSharedPreferences("configs", 0);
         return mPrefs.getInt("userId", 0);
     }
+
+    public static void setUserName(Context context, String name) {
+        SharedPreferences mPrefs = context.getSharedPreferences("configs", 0);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString("userName", name).commit();
+    }
+
+    public static String getUserName(Context context) {
+        SharedPreferences mPrefs = context.getSharedPreferences("configs", 0);
+        return mPrefs.getString("userName", "");
+    }
 }
