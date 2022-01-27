@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,6 +38,7 @@ public class ProductSearchActivity extends AppCompatActivity {
 
     double currentCartTotal;
 
+    private ProductSearchAdapter productSearchAdapter;
     private ActivityProductSearchBinding binding;
 
     final ActivityResultLauncher editSelectedProductLauncher = registerForActivityResult(
@@ -67,9 +72,8 @@ public class ProductSearchActivity extends AppCompatActivity {
         productSearchViewModel.getSupermarketItems().observe(this, new Observer<List<SupermarketItem>>() {
             @Override
             public void onChanged(List<SupermarketItem> supermarketItems) {
-                binding.recyclerProductSearch.setAdapter(
-                        new ProductSearchAdapter(ProductSearchActivity.this, supermarketItems)
-                );
+                productSearchAdapter = new ProductSearchAdapter(ProductSearchActivity.this, supermarketItems);
+                binding.recyclerProductSearch.setAdapter(productSearchAdapter);
             }
         });
 
@@ -79,6 +83,28 @@ public class ProductSearchActivity extends AppCompatActivity {
                 new GridLayoutManager(ProductSearchActivity.this, numberOfColumns)
         );
         binding.recyclerProductSearch.setHasFixedSize(true);
+
+        binding.buttonProductSearch.setOnClickListener(v -> {
+            // Set focus on search box and show keyboard
+            binding.editProductSearch.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0f, 0f, 0));
+            binding.editProductSearch.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0f, 0f, 0));
+        });
+
+        binding.editProductSearch.addTextChangedListener(new TextWatcher() {
+            boolean _ignore = false; // indicates if the change was made by the TextWatcher itself.
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (_ignore)
+                    return;
+                _ignore = true; // prevent infinite loop
+                productSearchAdapter.filter(s.toString());
+                _ignore = false; // release, so the TextWatcher start to listen again.
+            }
+        });
 
         binding.buttonCancelProductSearch.setOnClickListener(v -> {
             setResult(Activity.RESULT_CANCELED);

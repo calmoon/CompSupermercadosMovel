@@ -17,18 +17,21 @@ import com.dispmoveis.compsupermercadosmovel.model.SupermarketItem;
 import com.dispmoveis.compsupermercadosmovel.ui.registerproduct.RegisterProductActivity;
 import com.dispmoveis.compsupermercadosmovel.util.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class ProductSearchAdapter extends RecyclerView.Adapter {
 
     private final List<SupermarketItem> supermarketItems;
+    private final List<SupermarketItem> supermarketItemsCopy = new ArrayList<>();
 
     private final Context context;
 
     public ProductSearchAdapter(Context context, List<SupermarketItem> supermarketItems) {
         this.context = context;
         this.supermarketItems = supermarketItems;
+        this.supermarketItemsCopy.addAll(supermarketItems);
     }
 
     @NonNull
@@ -66,6 +69,21 @@ public class ProductSearchAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return supermarketItems.size();
+    }
+
+    public void filter (String searchText) {
+        supermarketItems.clear();
+        if(searchText.isEmpty()) {
+            supermarketItems.addAll(supermarketItemsCopy);
+        } else {
+            searchText = searchText.toLowerCase();
+            for (SupermarketItem item: supermarketItemsCopy) {
+                if(item.getProductName().toLowerCase().contains(searchText)) {
+                    supermarketItems.add(item);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     /*
