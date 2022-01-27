@@ -4,15 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/text_cart_supermarket"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:text="Supermercado Sei-Lá"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_cart_item_qty"
+        app:layout_constraintEnd_toEndOf="@+id/text_cart_name"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/text_cart_name"
+        app:layout_constraintTop_toBottomOf="@+id/text_cart_name" />
+
     <ImageView
         android:id="@+id/image_cart"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/text_cart_last_modified"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_shopping_cart" />
@@ -22,17 +38,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:ellipsize="end"
+        android:gravity="center|start"
         android:maxLines="2"
         android:text="Seu carrinho #0"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toTopOf="@+id/text_cart_item_qty"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/text_cart_supermarket"
         app:layout_constraintEnd_toStartOf="@+id/text_cart_total"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/image_cart"
-        app:layout_constraintTop_toTopOf="@+id/image_cart"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
@@ -45,21 +64,23 @@
         android:text="0 produtos"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/image_cart"
+        app:layout_constraintBottom_toTopOf="@+id/text_cart_last_modified"
         app:layout_constraintEnd_toEndOf="@+id/text_cart_name"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/text_cart_name"
-        app:layout_constraintTop_toBottomOf="@+id/text_cart_name" />
+        app:layout_constraintTop_toBottomOf="@+id/text_cart_supermarket" />
 
     <TextView
         android:id="@+id/text_cart_total"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginEnd="16dp"
         android:text="R$ 0,00"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#4CAF50"
         android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/image_cart"
         app:layout_constraintEnd_toStartOf="@+id/button_delete_cart"
         app:layout_constraintTop_toBottomOf="@+id/label_cart_total" />
@@ -78,16 +99,14 @@
         android:id="@+id/text_cart_last_modified"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="16dp"
-        android:text="Última modificação: 01/01/1999"
+        android:text="01/01/1999"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/text_cart_name"
+        app:layout_constraintTop_toBottomOf="@+id/text_cart_item_qty" />
 
     <TextView
         android:id="@+id/label_cart_total"
@@ -95,6 +114,7 @@
         android:layout_height="wrap_content"
         android:text="Total:"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textSize="17sp"
         app:layout_constraintBottom_toTopOf="@+id/text_cart_total"
         app:layout_constraintEnd_toEndOf="@+id/text_cart_total"
         app:layout_constraintStart_toStartOf="@+id/text_cart_total"

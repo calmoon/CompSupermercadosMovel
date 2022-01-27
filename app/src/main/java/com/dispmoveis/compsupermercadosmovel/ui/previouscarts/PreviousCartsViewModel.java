@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.dispmoveis.compsupermercadosmovel.network.ServerClient;
-import com.dispmoveis.compsupermercadosmovel.util.Config;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -48,12 +47,13 @@ public class PreviousCartsViewModel extends ViewModel {
 
                             int id = itemJSON.getInt("id");
                             String name = itemJSON.getString("nome");
+                            String supermarketName = itemJSON.getString("nome_supermercado");
                             String date = itemJSON.getString("data");
                             int  qtdItems = itemJSON.getInt("qtd_itens");
                             double total = itemJSON.getDouble("total");
 
                             requestedPreviousCartsItems.add(
-                                    new PreviousCartsItem(id, name, date, qtdItems, total)
+                                    new PreviousCartsItem(id, name, supermarketName, date, qtdItems, total)
                             );
                         }
 

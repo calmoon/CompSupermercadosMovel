@@ -2,15 +2,17 @@ package com.dispmoveis.compsupermercadosmovel.ui.previouscarts;
 
 public class PreviousCartsItem {
 
-    private int id;
-    private String name;
-    private String date;
-    private int qtdItems;
-    private double total;
+    private final int id;
+    private final String name;
+    private final String date;
+    private final String supermarketName;
+    private final int qtdItems;
+    private final double total;
 
-    public PreviousCartsItem(int id, String name, String date, int qtdItems, double total) {
+    public PreviousCartsItem(int id, String name, String supermarketName, String date, int qtdItems, double total) {
         this.id = id;
         this.name = name;
+        this.supermarketName = supermarketName;
         this.date = date;
         this.qtdItems = qtdItems;
         this.total = total;
@@ -25,4 +27,8 @@ public class PreviousCartsItem {
     public int getQtdItems() { return qtdItems; }
 
     public double getTotal() { return total; }
+
+    public String getSupermarketName() {
+        return supermarketName;
+    }
 }

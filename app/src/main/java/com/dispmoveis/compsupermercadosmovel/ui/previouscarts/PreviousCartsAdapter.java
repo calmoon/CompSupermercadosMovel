@@ -53,7 +53,10 @@ public class PreviousCartsAdapter extends RecyclerView.Adapter{
         AdapterPreviousCartsBinding binding = AdapterPreviousCartsBinding.bind(holder.itemView);
 
         binding.textCartName.setText(itemData.getName());
+
         binding.textCartLastModified.setText(itemData.getDate());
+
+        binding.textCartSupermarket.setText(itemData.getSupermarketName());
 
         String textCartItemQty = itemData.getQtdItems() + " itens";
         binding.textCartItemQty.setText(textCartItemQty);
