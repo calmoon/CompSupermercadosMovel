@@ -1,5 +1,6 @@
 package com.dispmoveis.compsupermercadosmovel.ui.previouscarts;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dispmoveis.compsupermercadosmovel.R;
@@ -65,25 +67,33 @@ public class PreviousCartsAdapter extends RecyclerView.Adapter{
             ((PreviousCartsActivity) context).startActivityForResult(i, PreviousCartsActivity.NEW_ITEM_REQUEST);
         });
 
-        binding.buttonDeleteCart.setOnClickListener(v -> {
-            ServerClient.delete("carrinho", String.valueOf(itemData.getId()), new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        int resultCode = response.getInt("result_code");
-                        if (resultCode == 1) {
-                            ((PreviousCartsActivity) context).previousCartsViewModel.reloadCartList();
+        binding.buttonDeleteCart.setOnClickListener(v -> new AlertDialog.Builder(context)
+                .setIcon(ContextCompat.getDrawable(context, R.drawable.ic_trash))
+                .setTitle("Excluir carrinho?")
+                .setMessage("Tem certeza que quer excluir '" + itemData.getName() + "'?")
+                .setPositiveButton("Excluir", (dialog, which) -> {
+                    ServerClient.delete("carrinho", String.valueOf(itemData.getId()), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                int resultCode = response.getInt("result_code");
+                                if (resultCode == 1) {
+                                    ((PreviousCartsActivity) context).previousCartsViewModel.reloadCartList();
+                                }
+                                else {
+                                    Toast.makeText(context,"Erro ao fazer consulta.", Toast.LENGTH_LONG).show();
+                                    Log.e("Super", "Erro de conssulta - " + response.toString());
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                        else {
-                            Toast.makeText(context,"Erro ao fazer consulta.", Toast.LENGTH_LONG).show();
-                            Log.e("Super", "Erro de conssulta - " + response.toString());
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        });
+                    });
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel())
+                .show()
+        );
+
     }
 
     @Override
