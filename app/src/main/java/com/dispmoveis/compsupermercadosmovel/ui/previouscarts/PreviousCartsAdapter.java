@@ -92,6 +92,7 @@ public class PreviousCartsAdapter extends RecyclerView.Adapter{
                             }
                         }
                     });
+                    dialog.dismiss();
                 })
                 .setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel())
                 .show()

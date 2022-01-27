@@ -50,7 +50,7 @@ public class PreviousCartsActivity extends AppCompatActivity {
     private ActivityPreviousCartsBinding binding;
 
     private int userID;
-    private int nextPreviousCartsQty;
+    private int nextPreviousCartsQty = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
