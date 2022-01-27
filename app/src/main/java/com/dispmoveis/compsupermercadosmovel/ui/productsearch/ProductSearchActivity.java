@@ -2,6 +2,7 @@ package com.dispmoveis.compsupermercadosmovel.ui.productsearch;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -77,8 +78,19 @@ public class ProductSearchActivity extends AppCompatActivity {
         binding.recyclerProductSearch.setLayoutManager(
                 new GridLayoutManager(ProductSearchActivity.this, numberOfColumns)
         );
-
         binding.recyclerProductSearch.setHasFixedSize(true);
+
+        binding.buttonSortPrice.setOnClickListener(v -> {
+            boolean ascending = productSearchViewModel.toggleSortOrder();
+            if (ascending) {
+                binding.buttonSortPrice.setCompoundDrawablesWithIntrinsicBounds(
+                        0, 0, R.drawable.ic_arrow_up_compact, 0);
+            } else {
+                binding.buttonSortPrice.setCompoundDrawablesWithIntrinsicBounds(
+                        0, 0, R.drawable.ic_arrow_down_compact, 0);
+            }
+            binding.buttonSortPrice.setTextColor(Color.parseColor("#3F51B5"));
+        });
     }
 
     private void loadSupermarketName(String supermarketId) {

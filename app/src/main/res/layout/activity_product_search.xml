@@ -97,7 +97,7 @@
         android:text="Preço"
         android:textAllCaps="false"
         android:textColor="#3F51B5"
-        app:icon="@drawable/ic_arrow_down_compact"
+        app:icon="@drawable/ic_minus"
         app:iconGravity="textEnd"
         app:iconPadding="0dp"
         app:iconTint="#3F51B5"

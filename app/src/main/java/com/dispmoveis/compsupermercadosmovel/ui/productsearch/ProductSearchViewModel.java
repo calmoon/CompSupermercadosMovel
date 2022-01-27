@@ -13,6 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -21,6 +23,10 @@ public class ProductSearchViewModel extends ViewModel {
 
     private String supermarketId;
     private MutableLiveData<List<SupermarketItem>> mutableSupermarketItems;
+
+    private Boolean sortAscending = false;
+    private final Comparator<SupermarketItem> compareByPriceAscending =
+            (SupermarketItem item1, SupermarketItem item2) -> item1.getPrice().compareTo(item2.getPrice());
 
     public void setSupermarketId(String supermarketId) {
         this.supermarketId = supermarketId;
@@ -69,6 +75,16 @@ public class ProductSearchViewModel extends ViewModel {
             //TODO: onFailure
 
         });
+    }
+
+    boolean toggleSortOrder() {
+        sortAscending = !sortAscending;
+        if (sortAscending)
+            Collections.sort(mutableSupermarketItems.getValue(), compareByPriceAscending);
+        else
+            Collections.sort(mutableSupermarketItems.getValue(), Collections.reverseOrder(compareByPriceAscending));
+        mutableSupermarketItems.postValue(mutableSupermarketItems.getValue());
+        return sortAscending;
     }
 
     void reloadProductList() {
